@@ -61,6 +61,8 @@ Add the corresponding dependency to your project, like
 libraryDependencies += "org.plotly-scala" %%% "plotly-render" % "0.1.0"
 ```
 
+Note that there are no version published for scala 2.10 yet, because of the limitation of case classes to 22 members with it.
+
 From your code, add some imports for plotly,
 ```scala
 import plotly._, element._, layout._, Plotly._
