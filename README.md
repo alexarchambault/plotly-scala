@@ -1,0 +1,159 @@
+# plotly-scala
+
+Scala bindings for [plotly.js](https://plot.ly/javascript/)
+
+[![Build Status](https://travis-ci.org/alexarchambault/plotly-scala.svg?branch=master)](https://travis-ci.org/alexarchambault/plotly-scala)
+[![Join the chat at https://gitter.im/alexarchambault/plotly-scala](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/alexarchambault/plotly-scala?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Maven Central](https://img.shields.io/maven-central/v/org.plotly-scala/core_2.11.svg)](https://maven-badges.herokuapp.com/maven-central/org.plotly-scala/core_2.11)
+[![ScalaDoc](http://javadoc-badge.appspot.com/org.plotly-scala/core_2.11.svg?label=scaladoc)](http://javadoc-badge.appspot.com/org.plotly-scala/core_2.11)
+
+[Demo](https://alexarchambault.github.io/plotly-scala/)
+
+*plotly-scala* is a Scala library able to output JSON that can be passed to [plotly.js](https://plot.ly/javascript/). Its classes closely follow the API of plotly.js, so that one can use plotly-scala by following the [documentation](https://plot.ly/javascript/) of plotly.js. These classes can be converted to JSON, that can be fed directly to plotly.js.
+
+It can be used from [jupyter-scala](https://github.com/alexarchambault/jupyter-scala), from scala-js, or from a Scala REPL like [Ammonite](https://github.com/lihaoyi/Ammonite), to plot things straightaway in the browser.
+
+It runs demos of the plotly.js documentation during its tests, to ensure that it is fine with all their features. That allows it to reliably cover a wide range of the plotly.js features - namely, all the examples of the supported sections of the plotly.js documentation are guaranteed to be fine.
+
+## Table of content
+
+1. [Quick start](#quick-start)
+2. [Rationale](#rationale)
+3. [Internals](#internals)
+4. [Supported features](#supported-features)
+
+## Quick start
+
+### From jupyter-scala
+
+Simply add the `"org.plotly-scala" %% "plotly-jupyter-scala" % "0.1.0"` dependency to the notebook, like
+```scala
+classpath.add("org.plotly-scala" %% "plotly-jupyter-scala" % "0.1.0")
+```
+
+In a subsequent cell, initialize plotly-scala with
+```scala
+import plotly._
+import plotly.element._
+import plotly.layout._
+import plotly.JupyterScala._
+
+plotly.JupyterScala.init()
+```
+
+Then plot charts with, e.g.
+```scala
+val (x, y) = Seq(
+  "Banana" -> 10,
+  "Apple" -> 8,
+  "Grapefruit" -> 5
+).unzip
+
+Bar(x, y).plot()
+```
+
+See this [notebook demo](https://gist.github.com/alexarchambault/b9e0b0441c0a804e0f11e1bcbb687afe) for a full example (rendered via Github gist, so the plots cannot be visualized from the link though).
+
+### From scala-js
+
+Add the corresponding dependency to your project, like
+```scala
+libraryDependencies += "org.plotly-scala" %%% "plotly-render" % "0.1.0"
+```
+
+From your code, add some imports for plotly,
+```scala
+import plotly._, element._, layout._, Plotly._
+```
+
+Then define plots like
+```scala
+val x = 0.0 to 10.0 by 0.1
+val y1 = x.map(d => 2.0 * d + util.Random.nextGaussian())
+val y2 = x.map(math.exp)
+
+val plot = Seq(
+  Scatter(
+    x, y1, name = "Approx twice"
+  ),
+  Scatter(
+    x, y2, name = "Exp"
+  )
+)
+```
+and plot them with
+```scala
+plot.plot(
+  title = "Curves"
+)
+```
+
+
+### From Ammonite
+
+Load the corresponding dependency, and some imports, like
+```scala
+import $ivy.`org.plotly-scala::plotly-render:0.1.0`
+import plotly._, element._, layout._, Plotly._
+```
+
+Then plot things like
+```scala
+val labels = Seq("Banana", "Banano", "Grapefruit")
+val valuesA = labels.map(_ => util.Random.nextGaussian())
+val valuesB = labels.map(_ => 0.5 + util.Random.nextGaussian())
+
+Seq(
+  Bar(labels, valuesA, name = "A"),
+  Bar(labels, valuesB, name = "B")
+).plot(
+  title = "Level"
+)
+```
+
+
+## Rationale
+
+Most high-level Javascript libraries for plotting have well designed APIs, enforcing immutability and almost relying on typed objects, although not explicitly. Yet, the few existing Scala libraries for plotting still try to mimick [matplotlib](http://matplotlib.org/) or Matlab, and have APIs requiring users to mutate things, in order to do plots. They also tend to lack a lot of features, especially compared to the current high-end Javascript plotting libraries. *plotly-scala* aims at filling this gap, by providing a reliable bridge from Scala towards the renowned [plotly.js](https://plot.ly/javascript/).
+
+## Internals
+
+*plotly-scala* consists in a bunch of definitions, mostly case classes and sealed class hierarchies, closely following the API of plotly.js. It also contains JSON codecs for those, allowing to convert them to JSON that can be passed straightaway to plotly.js.
+
+Having the ability to convert these classes to JSON, the codecs can also go the other way around: from plotly.js-compatible JSON to plotly-scala Scala classes. This way of going is used by the tests of plotly-scala, to ensure that the examples of the plotly.js documentation, illustrating a wide range of the features of plotly.js, can be represented via the classes of plotly-scala. Namely, the Javascript examples of the documentation of plotly.js are run inside a [Rhino](https://developer.mozilla.org/en-US/docs/Mozilla/Projects/Rhino) VM, with mocks of the plotly API. These mocks allow to keep the Javascript objects passed to the plotly.js API, and convert them to JSON. These JSON objects are then validated against the codecs of plotly-scala, to ensure that all their fields can be decoded by them. If these are fine, this gives a proof that all the features of the examples have a counterpart in plotly-scala.
+
+Internally, plotly-scala uses [circe](https://github.com/travisbrown/circe) (along with custom codec derivation mechanisms) to convert things to JSON, then render them. The circe objects don't appear in the plotly-scala API - circe is only used internally. The plotly-scala API only returns JSON strings, that can be passed to plotly.js. In subsequent versions, plotly-scala will likely try to shade circe and its dependencies, or switch to a more lightweight JSON library.
+
+## Supported features
+
+plotly-scala supports the features illustrated in the following sections of the plotly.js documentation:
+- [Scatter Plots](https://plot.ly/javascript/line-and-scatter/),
+- [Bubble Charts](https://plot.ly/javascript/bubble-charts/),
+- [Line Charts](https://plot.ly/javascript/line-charts/),
+- [Bar Charts](https://plot.ly/javascript/bar-charts/),
+- [Horizontal Bar Charts](https://plot.ly/javascript/horizontal-bar-charts/),
+- [Filled Area Plots](https://plot.ly/javascript/filled-area-plots/),
+- [Time Series](https://plot.ly/javascript/time-series/),
+- [Subplots](https://plot.ly/javascript/subplots/),
+- [Multiple Axes](https://plot.ly/javascript/multiple-axes/),
+- [Histograms](https://plot.ly/javascript/histograms/),
+- [Log Plots](https://plot.ly/javascript/log-plot/).
+
+Some of these are illustrated in the [demo](https://alexarchambault.github.io/plotly-scala/) page.
+
+## Adding support for extra plotly.js features
+
+The following workflow can be followed to add support for extra sections of the plotly.js documentation:
+- find the corresponding directory in the [source](https://github.com/plotly/documentation/tree/gh-pages/_posts/plotly_js) of the plotly.js documentation. These directories can also be found in the sources of plotly-scala, under `plotly-documentation/_posts/plotly_js`, if its repository has been cloned with the `--recursive` option,
+- enabling testing of the corresponding documentation section examples in the `DocumentationTests` class, around [this line](https://github.com/alexarchambault/plotly-scala/blob/master/tests/src/test/scala/plotly/doc/DocumentationTests.scala#L224),
+- running the tests with `sbt ~test`,
+- fixing the possible Javascript typos in the plotly-documentation submodule in the plotly-scala sources, so that the enabled JS snippets run fine with Rhino from the tests, then committing these fixes, either to [https://github.com/alexarchambault/plotly-documentation](`alexarchambault/plotly-documentation`) or [https://github.com/plotly/documentation](`plotly/documentation`),
+- add the required fields / class definitions, and possibly codecs, to have the added tests pass.
+
+## About
+
+Battlefield tested since early 2016 at [Teads.tv](http://teads.tv)
+
+Released under the LGPL v3 license, copyright 2016 Alexandre Archambault.
+
+Parts based on the original plotly.js API, which is copyright 2016 Plotly, Inc.
