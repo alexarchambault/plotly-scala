@@ -7,4 +7,5 @@ object BarMode {
   case object   Group extends BarMode("group")
   case object   Stack extends BarMode("stack")
   case object Overlay extends BarMode("overlay")
+  case object Relative extends BarMode("relative")
 }
