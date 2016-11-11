@@ -223,6 +223,7 @@ class DocumentationTests extends FlatSpec with Matchers {
     "line_and_scatter",
     "line-plots",
     "bar",
+    "candlestick-charts",
     "horizontal-bar",
     // TODO? Pie charts
     "time-series",
