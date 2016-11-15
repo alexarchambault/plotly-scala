@@ -1,7 +1,9 @@
 package io.circe.altgeneric
 package derive
 
-import cats.data.Xor
+import cats.implicits._
+//import cats.syntax.either._
+//import cats.instances.either._
 import io.circe._
 
 abstract class JsonSumCodec {
@@ -45,16 +47,16 @@ class JsonSumObjCodec extends JsonSumCodec {
     }
 
   def decodeEmpty(cursor: HCursor): Decoder.Result[Nothing] =
-    Xor.left(DecodingFailure(
+    Either.left(DecodingFailure(
       s"unrecognized type(s): ${cursor.fields.getOrElse(Nil).mkString(", ")}",
       cursor.history
     ))
   def decodeField[A](name: String, cursor: HCursor, decode: Decoder[A]): Decoder.Result[Either[ACursor, A]] =
     cursor.downField(toJsonName(name)).either match {
-      case Xor.Left(_) =>
-        Xor.right(Left(ACursor.ok(cursor)))
-      case Xor.Right(content) =>
-        decode(content).map(Right(_))
+      case Left(_) =>
+        Either.right(Left(ACursor.ok(cursor)))
+      case Right(content) =>
+        decode(content).right.map(Right(_))
     }
 }
 
@@ -74,7 +76,7 @@ class JsonSumTypeFieldCodec extends JsonSumCodec {
     }
 
   def decodeEmpty(cursor: HCursor): Decoder.Result[Nothing] =
-    Xor.Left(DecodingFailure(
+    Either.left(DecodingFailure(
       cursor.downField(typeField).focus match {
         case None => "no type found"
         case Some(type0) => s"unrecognized type: $type0"
@@ -83,9 +85,9 @@ class JsonSumTypeFieldCodec extends JsonSumCodec {
     ))
   def decodeField[A](name: String, cursor: HCursor, decode: Decoder[A]): Decoder.Result[Either[ACursor, A]] =
     cursor.downField(typeField).as[String] match {
-      case Xor.Right(name0) if toTypeValue(name) == name0 =>
-        decode(cursor).map(Right(_))
+      case Right(name0) if toTypeValue(name) == name0 =>
+        decode(cursor).right.map(Right(_))
       case _ =>
-        Xor.Right(Left(ACursor.ok(cursor)))
+        Either.right(Left(ACursor.ok(cursor)))
     }
 }

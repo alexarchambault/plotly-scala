@@ -1,7 +1,9 @@
 package io.circe.altgeneric
 package derive
 
-import cats.data.Xor
+import cats.implicits._
+//import cats.syntax.either._
+//import cats.instances.either._
 import shapeless._
 import shapeless.labelled.{FieldType, field}
 import io.circe.Decoder
@@ -85,7 +87,7 @@ object HListProductDecoder {
       Decoder.instance { c =>
         productCodec
           .decodeEmpty(c)
-          .map(_ => HNil)
+          .right.map(_ => HNil)
       }
     }
 
@@ -100,9 +102,9 @@ object HListProductDecoder {
 
       Decoder.instance { c =>
         for {
-          x <- productCodec.decodeField(key.value.name, c, headDecode.value, defaults.head)
+          x <- productCodec.decodeField(key.value.name, c, headDecode.value, defaults.head).right
           (h, remaining) = x
-          t <- remaining.as(tailDecode0)
+          t <- remaining.as(tailDecode0).right
         } yield field[K](h) :: t
       }
     }
@@ -127,7 +129,7 @@ object CoproductSumDecoder {
       Decoder.instance { c =>
         sumCodec
           .decodeEmpty(c)
-          .map(t => t: CNil)
+          .right.map(t => t: CNil)
       }
     }
 
@@ -141,9 +143,9 @@ object CoproductSumDecoder {
       lazy val tailDecode0 = tailDecode(sumCodec)
 
       Decoder.instance { c =>
-        sumCodec.decodeField(key.value.name, c, headDecode.value).flatMap {
-          case Left(tailCursor) => tailCursor.as(tailDecode0).map(Inr(_))
-          case Right(h) => Xor.right(Inl(field[K](h)))
+        sumCodec.decodeField(key.value.name, c, headDecode.value).right.flatMap {
+          case Left(tailCursor) => tailCursor.as(tailDecode0).right.map(Inr(_))
+          case Right(h) => Either.right(Inl(field[K](h)))
         }
       }
     }
