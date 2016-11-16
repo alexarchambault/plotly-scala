@@ -6,7 +6,7 @@ import java.lang.{ Double => JDouble }
 import java.io.{ ByteArrayOutputStream, File, InputStream }
 import java.nio.file.Files
 
-import cats.data.Xor
+import cats.implicits._
 
 import io.circe.{ DecodingFailure, Json, parser => Parse }
 import io.circe.syntax._
@@ -54,7 +54,7 @@ object DocumentationTests {
 
   def resourceTrace(res: String): Trace = {
     val dataStr = load(res)
-    val result = Parse.parse(dataStr).flatMap(_.as[Trace])
+    val result = Parse.parse(dataStr).right.flatMap(_.as[Trace])
     result.getOrElse {
       throw new Exception(s"$res: $result")
     }
@@ -62,7 +62,7 @@ object DocumentationTests {
 
   def resourceLayout(res: String): Layout = {
     val dataStr = load(res)
-    val result = Parse.parse(dataStr).flatMap(_.as[Layout])
+    val result = Parse.parse(dataStr).right.flatMap(_.as[Layout])
     result.getOrElse {
       throw new Exception(s"$res: $result")
     }
@@ -167,7 +167,7 @@ object DocumentationTests {
     val decodeData0 = rawDataElems.map(json => json -> json.as[Trace])
 
     val dataErrors = decodeData0.collect {
-      case (json, Xor.Left(DecodingFailure(err, h))) =>
+      case (json, Left(DecodingFailure(err, h))) =>
         (json, err, h)
     }
 
@@ -179,17 +179,17 @@ object DocumentationTests {
     }
 
     val data = decodeData0.collect {
-      case (_, Xor.Right(data)) => data
+      case (_, Right(data)) => data
     }
 
     val decodeLayoutOpt = rawLayoutOpt.map(json => json -> json.as[Layout])
 
     val layoutOpt = decodeLayoutOpt.map {
-      case (json, Xor.Left(DecodingFailure(err, h))) =>
+      case (json, Left(DecodingFailure(err, h))) =>
         Console.err.println(s"Decoding layout: $err ($h)\n${json.spaces2}\n")
         throw new Exception("Error decoding layout (see above messages)")
 
-      case (_, Xor.Right(layout)) => layout
+      case (_, Right(layout)) => layout
     }
 
     (data, layoutOpt)
@@ -222,9 +222,11 @@ class DocumentationTests extends FlatSpec with Matchers {
 
   val dir = new File("plotly-documentation/_posts/plotly_js")
   val subDirNames = Seq(
+
     "line_and_scatter",
     "line-plots",
     "bar",
+		"candlestick-charts",
     "horizontal-bar",
     // TODO? Pie charts
     "time-series",
