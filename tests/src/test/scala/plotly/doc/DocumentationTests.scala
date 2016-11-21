@@ -6,8 +6,6 @@ import java.lang.{ Double => JDouble }
 import java.io.{ ByteArrayOutputStream, File, InputStream }
 import java.nio.file.Files
 
-import cats.data.Xor
-
 import io.circe.{ DecodingFailure, Json, parser => Parse }
 import io.circe.syntax._
 
@@ -54,16 +52,16 @@ object DocumentationTests {
 
   def resourceTrace(res: String): Trace = {
     val dataStr = load(res)
-    val result = Parse.parse(dataStr).flatMap(_.as[Trace])
-    result.getOrElse {
+    val result = Parse.parse(dataStr).right.flatMap(_.as[Trace])
+    result.right.getOrElse {
       throw new Exception(s"$res: $result")
     }
   }
 
   def resourceLayout(res: String): Layout = {
     val dataStr = load(res)
-    val result = Parse.parse(dataStr).flatMap(_.as[Layout])
-    result.getOrElse {
+    val result = Parse.parse(dataStr).right.flatMap(_.as[Layout])
+    result.right.getOrElse {
       throw new Exception(s"$res: $result")
     }
   }
@@ -88,7 +86,7 @@ object DocumentationTests {
 
       def jsonRepr(obj: Object): Json = {
         val jsonStr = stringify(obj)
-        Parse.parse(jsonStr).leftMap { err =>
+        Parse.parse(jsonStr).left.map { err =>
           throw new Exception(s"Cannot parse JSON: $err\n$jsonStr")
         }.merge
       }
@@ -167,7 +165,7 @@ object DocumentationTests {
     val decodeData0 = rawDataElems.map(json => json -> json.as[Trace])
 
     val dataErrors = decodeData0.collect {
-      case (json, Xor.Left(DecodingFailure(err, h))) =>
+      case (json, Left(DecodingFailure(err, h))) =>
         (json, err, h)
     }
 
@@ -179,17 +177,17 @@ object DocumentationTests {
     }
 
     val data = decodeData0.collect {
-      case (_, Xor.Right(data)) => data
+      case (_, Right(data)) => data
     }
 
     val decodeLayoutOpt = rawLayoutOpt.map(json => json -> json.as[Layout])
 
     val layoutOpt = decodeLayoutOpt.map {
-      case (json, Xor.Left(DecodingFailure(err, h))) =>
+      case (json, Left(DecodingFailure(err, h))) =>
         Console.err.println(s"Decoding layout: $err ($h)\n${json.spaces2}\n")
         throw new Exception("Error decoding layout (see above messages)")
 
-      case (_, Xor.Right(layout)) => layout
+      case (_, Right(layout)) => layout
     }
 
     (data, layoutOpt)

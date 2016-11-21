@@ -1,6 +1,5 @@
 package io.circe.altgeneric
 
-import cats.data.Xor
 import io.circe.{ Decoder, Encoder, Json }
 import utest._
 
@@ -34,11 +33,11 @@ object DefaultTests extends TestSuite {
       assert(json1 == expectedJson1)
 
       val result0 = decoder.decodeJson(expectedJson0)
-      val expectedResult0 = Xor.right(value0)
+      val expectedResult0 = Right(value0)
       assert(result0 == expectedResult0)
 
       val result1 = decoder.decodeJson(expectedJson1)
-      val expectedResult1 = Xor.right(value1)
+      val expectedResult1 = Right(value1)
       assert(result1 == expectedResult1)
     }
   }

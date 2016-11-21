@@ -1,6 +1,6 @@
 
 val jupyterScalaVersion = "0.3.0-M3"
-val circeVersion = "0.4.1"
+val circeVersion = "0.6.1"
 val plotlyVersion = "1.12.0"
 
 lazy val core = crossProject
@@ -27,8 +27,8 @@ lazy val `circe-alt-generic` = crossProject
   .settings(
     name := "circe-alt-generic",
     libraryDependencies ++= Seq(
-      "io.circe" %%% "circe-core" % "0.4.1",
-      "io.circe" %%% "circe-parser" % "0.4.1",
+      "io.circe" %%% "circe-core" % circeVersion,
+      "io.circe" %%% "circe-parser" % circeVersion,
       "com.chuusai" %%% "shapeless" % "2.3.1",
       "com.github.alexarchambault" %%% "scalacheck-shapeless_1.13" % "1.1.0-RC3" % "test",
       "com.lihaoyi" %%% "utest" % "0.3.0" % "test"

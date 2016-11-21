@@ -6,8 +6,6 @@ import java.nio.file.Files
 
 import org.scalatest.{ FlatSpec, Matchers }
 
-import cats.data.Xor
-
 import io.circe.{ Decoder, Json, parser => Parser }
 import io.circe.altgeneric._
 import io.circe.literal._
@@ -41,14 +39,14 @@ object SchemaTests {
 
     implicit val decode: Decoder[Attribute] =
       Decoder.instance { c =>
-        val constantString = c.as[String].map[Attribute](ConstantString(_))
-        def flag = c.as[Flag].map[Attribute](x => x)
-        def enumerated = c.as[Enumerated].map[Attribute](x => x)
-        def other = Xor.right(Other(c.focus))
+        val constantString = c.as[String].right.map[Attribute](ConstantString(_))
+        def flag = c.as[Flag].right.map[Attribute](x => x)
+        def enumerated = c.as[Enumerated].right.map[Attribute](x => x)
+        def other = Right(Other(c.focus))
 
-        constantString.toOption.map(Xor.right)
-          .orElse(flag.toOption.map(Xor.right))
-          .orElse(enumerated.toOption.map(Xor.right))
+        constantString.right.toOption.map(Right(_))
+          .orElse(flag.right.toOption.map(Right(_)))
+          .orElse(enumerated.right.toOption.map(Right(_)))
           .getOrElse(other)
       }
   }
@@ -93,16 +91,16 @@ object SchemaTests {
     val schemaContent = new String(Files.readAllBytes(schemaFile.toPath), "UTF-8")
 
     val schemaJson = Parser.parse(schemaContent) match {
-      case Xor.Left(error) =>
+      case Left(error) =>
         throw new Exception(s"Cannot parse schema: $error")
-      case Xor.Right(json) => json
+      case Right(json) => json
     }
 
     schemaJson.as[SchemaFile] match {
-      case Xor.Left(error) =>
+      case Left(error) =>
         println(schemaJson.asObject.map(_.fields).getOrElse(Nil).mkString("\n"))
         throw new Exception(s"Cannot decode schema: $error")
-      case Xor.Right(schemaFile) =>
+      case Right(schemaFile) =>
         schemaFile.schema
     }
   }
