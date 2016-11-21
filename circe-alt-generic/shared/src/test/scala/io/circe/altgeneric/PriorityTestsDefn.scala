@@ -10,7 +10,7 @@ object PriorityTestsDefn {
   object CC {
     implicit val decode: Decoder[CC] = new Decoder[CC] with Flag {
       def apply(c: HCursor) =
-        Decoder[(String, Int)].apply(c).map { case (s, i) =>
+        Decoder[(String, Int)].apply(c).right.map { case (s, i) =>
           CC(s, i)
         }
     }
