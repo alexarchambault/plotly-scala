@@ -29,9 +29,9 @@ lazy val `circe-alt-generic` = crossProject
     libraryDependencies ++= Seq(
       "io.circe" %%% "circe-core" % circeVersion,
       "io.circe" %%% "circe-parser" % circeVersion,
-      "com.chuusai" %%% "shapeless" % "2.3.1",
-      "com.github.alexarchambault" %%% "scalacheck-shapeless_1.13" % "1.1.0-RC3" % "test",
-      "com.lihaoyi" %%% "utest" % "0.3.0" % "test"
+      "com.chuusai" %%% "shapeless" % "2.3.2",
+      "com.github.alexarchambault" %%% "scalacheck-shapeless_1.13" % "1.1.4" % "test",
+      "com.lihaoyi" %%% "utest" % "0.4.4" % "test"
     ),
     testFrameworks += new TestFramework("utest.runner.Framework")
   )
@@ -58,7 +58,7 @@ lazy val render = crossProject
   .jsSettings(
     libraryDependencies ++= Seq(
       "io.circe" %%% "circe-scalajs" % circeVersion,
-      "org.scala-js" %%% "scalajs-dom" % "0.9.0"
+      "org.scala-js" %%% "scalajs-dom" % "0.9.1"
     )
   )
 
@@ -75,7 +75,7 @@ lazy val demo = project
     test in Test := (),
     testOnly in Test := (),
     libraryDependencies ++= Seq(
-      "com.lihaoyi" %%% "scalatags" % "0.5.5"
+      "com.lihaoyi" %%% "scalatags" % "0.6.2"
     ),
     jsDependencies ++= Seq(
       ("org.webjars.bower" % "plotly.js" % plotlyVersion intransitive()) / "plotly.min.js" commonJSName "Plotly",
@@ -173,7 +173,7 @@ lazy val tests = project
     name := "plotly-tests",
     libraryDependencies ++= Seq(
       "io.circe" %% "circe-literal" % circeVersion % "test",
-      "org.scalatest" %% "scalatest" % "3.0.0-M11" % "test",
+      "org.scalatest" %% "scalatest" % "3.0.1" % "test",
       "org.mozilla" % "rhino" % "1.7.7.1" % "test"
     )
   )
