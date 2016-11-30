@@ -26,23 +26,17 @@ It runs demos of the plotly.js documentation during its tests, to ensure that it
 
 ### From jupyter-scala
 
-Simply add the `"org.plotly-scala" %% "plotly-jupyter-scala" % "0.3.0"` dependency to the notebook, like
+Simply add the `"org.plotly-scala" %% "plotly-jupyter-scala" % "0.3.0"` dependency to the notebook, initialize plotly-scala, and use it, like
 ```scala
-classpath.add("org.plotly-scala" %% "plotly-jupyter-scala" % "0.3.0")
-```
+import $ivy.`org.plotly-scala::plotly-jupyter-scala:0.3.0`
 
-In a subsequent cell, initialize plotly-scala with
-```scala
 import plotly._
 import plotly.element._
 import plotly.layout._
 import plotly.JupyterScala._
 
 plotly.JupyterScala.init()
-```
 
-Then plot charts with, e.g.
-```scala
 val (x, y) = Seq(
   "Banana" -> 10,
   "Apple" -> 8,
@@ -51,8 +45,6 @@ val (x, y) = Seq(
 
 Bar(x, y).plot()
 ```
-
-See this [notebook demo](https://gist.github.com/alexarchambault/b9e0b0441c0a804e0f11e1bcbb687afe) for a full example (rendered via Github gist, so the plots cannot be visualized from the link though).
 
 ### From scala-js
 
