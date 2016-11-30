@@ -26,9 +26,9 @@ It runs demos of the plotly.js documentation during its tests, to ensure that it
 
 ### From jupyter-scala
 
-Simply add the `"org.plotly-scala" %% "plotly-jupyter-scala" % "0.1.0"` dependency to the notebook, like
+Simply add the `"org.plotly-scala" %% "plotly-jupyter-scala" % "0.3.0"` dependency to the notebook, like
 ```scala
-classpath.add("org.plotly-scala" %% "plotly-jupyter-scala" % "0.1.0")
+classpath.add("org.plotly-scala" %% "plotly-jupyter-scala" % "0.3.0")
 ```
 
 In a subsequent cell, initialize plotly-scala with
@@ -58,7 +58,7 @@ See this [notebook demo](https://gist.github.com/alexarchambault/b9e0b0441c0a804
 
 Add the corresponding dependency to your project, like
 ```scala
-libraryDependencies += "org.plotly-scala" %%% "plotly-render" % "0.1.0"
+libraryDependencies += "org.plotly-scala" %%% "plotly-render" % "0.3.0"
 ```
 
 Note that there are no version published for scala 2.10 yet, because of the limitation of case classes to 22 members with it.
@@ -95,7 +95,7 @@ plot.plot(
 
 Load the corresponding dependency, and some imports, like
 ```scala
-import $ivy.`org.plotly-scala::plotly-render:0.1.0`
+import $ivy.`org.plotly-scala::plotly-render:0.3.0`
 import plotly._, element._, layout._, Plotly._
 ```
 
