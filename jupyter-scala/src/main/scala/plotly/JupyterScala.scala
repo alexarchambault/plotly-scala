@@ -1,6 +1,6 @@
 package plotly
 
-import jupyter.api.{ Publish, Evidence }
+import jupyter.api.Publish
 
 import java.lang.{ Integer => JInt, Double => JDouble, Boolean => JBoolean }
 
@@ -11,7 +11,7 @@ import plotly.layout._
 
 object JupyterScala {
 
-  def init(offline: Boolean = false)(implicit publish: Publish[Evidence], ev: Evidence): Unit = {
+  def init(offline: Boolean = false)(implicit publish: Publish): Unit = {
 
     // offline mode like in plotly-python
 
@@ -47,7 +47,7 @@ object JupyterScala {
       </script>
     """
 
-    publish.display("", "text/html" -> html)
+    publish.html(html)
   }
 
   def plotJs(
@@ -55,8 +55,7 @@ object JupyterScala {
     data: Seq[Trace],
     layout: Layout
   )(implicit
-    publish: Publish[Evidence],
-    ev: Evidence
+    publish: Publish
   ): Unit = {
 
     val baseJs = Plotly.jsSnippet(div, data, layout)
@@ -66,7 +65,7 @@ object JupyterScala {
         |  $baseJs
         |});
       """.stripMargin
-    publish.display("", "application/javascript" -> js)
+    publish.js(js)
   }
 
   def randomDiv() = "plot-" + math.abs(Random.nextInt().toLong)
@@ -76,8 +75,7 @@ object JupyterScala {
     layout: Layout = Layout(),
     div: String = ""
   )(implicit
-    publish: Publish[Evidence],
-    ev: Evidence
+    publish: Publish
   ): String = {
 
     val div0 =
@@ -87,7 +85,7 @@ object JupyterScala {
         div
 
     if (div.isEmpty)
-      publish.display("", "text/html" -> s"""<div class="chart" id="$div0"></div>""")
+      publish.html(s"""<div class="chart" id="$div0"></div>""")
 
     plotJs(div0, data, layout)
 
@@ -125,8 +123,7 @@ object JupyterScala {
             boxmode: BoxMode         = null,
                 div: String          = ""
     )(implicit
-      publish: Publish[Evidence],
-      ev: Evidence
+      publish: Publish
     ): String =
       plot(
         Layout(
@@ -164,8 +161,7 @@ object JupyterScala {
       layout: Layout,
       div: String
     )(implicit
-      publish: Publish[Evidence],
-      ev: Evidence
+      publish: Publish
     ): String =
       JupyterScala.plot(Seq(data), layout, div = div)
   }
@@ -200,8 +196,7 @@ object JupyterScala {
             boxmode: BoxMode         = null,
                 div: String          = ""
     )(implicit
-      publish: Publish[Evidence],
-      ev: Evidence
+      publish: Publish
     ): String =
       plot(
         Layout(
@@ -239,8 +234,7 @@ object JupyterScala {
       layout: Layout,
       div: String
     )(implicit
-      publish: Publish[Evidence],
-      ev: Evidence
+      publish: Publish
     ): String =
       JupyterScala.plot(data, layout, div = div)
   }
