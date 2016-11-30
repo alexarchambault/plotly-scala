@@ -1,5 +1,5 @@
 
-val jupyterScalaVersion = "0.3.0-M3"
+val jupyterScalaVersion = "0.4.0-RC1"
 val circeVersion = "0.6.1"
 val plotlyVersion = "1.12.0"
 
@@ -184,7 +184,7 @@ lazy val `jupyter-scala` = project
   .settings(
     name := "plotly-jupyter-scala",
     libraryDependencies ++= Seq(
-      "com.github.alexarchambault.jupyter" % "scala-api" % jupyterScalaVersion % "provided" cross CrossVersion.full
+      "org.jupyter-scala" % "scala-api" % jupyterScalaVersion % "provided" cross CrossVersion.full
     )
   )
 
