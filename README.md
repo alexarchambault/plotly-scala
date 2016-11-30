@@ -26,7 +26,7 @@ It runs demos of the plotly.js documentation during its tests, to ensure that it
 
 ### From jupyter-scala
 
-Simply add the `"org.plotly-scala" %% "plotly-jupyter-scala" % "0.3.0"` dependency to the notebook, initialize plotly-scala, and use it, like
+Simply add the `org.plotly-scala::plotly-jupyter-scala:0.3.0` dependency to the notebook, initialize plotly-scala, and use it, like
 ```scala
 import $ivy.`org.plotly-scala::plotly-jupyter-scala:0.3.0`
 
