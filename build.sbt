@@ -197,7 +197,12 @@ lazy val `plotly-scala` = project
 
 lazy val commonSettings = Seq(
   organization := "org.plotly-scala",
-  scalacOptions += "-target:jvm-1.7",
+  scalacOptions ++= {
+    if (scalaBinaryVersion.value == "2.12")
+      Seq()
+    else
+      Seq("-target:jvm-1.7")
+  },
   resolvers ++= Seq(
     "Webjars Bintray" at "https://dl.bintray.com/webjars/maven/",
     Resolver.sonatypeRepo("releases"),
@@ -234,8 +239,7 @@ lazy val commonSettings = Seq(
       case _ =>
         Seq()
     }
-  },
-  scalacOptions += "-target:jvm-1.7"
+  }
 )
 
 lazy val noPublishSettings = Seq(
