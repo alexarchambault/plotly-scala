@@ -197,7 +197,6 @@ lazy val `plotly-scala` = project
 
 lazy val commonSettings = Seq(
   organization := "org.plotly-scala",
-  scalaVersion := "2.11.8",
   scalacOptions += "-target:jvm-1.7",
   resolvers ++= Seq(
     "Webjars Bintray" at "https://dl.bintray.com/webjars/maven/",
