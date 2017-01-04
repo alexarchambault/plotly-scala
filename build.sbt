@@ -22,10 +22,10 @@ lazy val `joda-time` = project
     )
   )
 
-lazy val `circe-alt-generic` = crossProject
+lazy val `circe-simple-generic` = crossProject
   .settings(commonSettings: _*)
   .settings(
-    name := "circe-alt-generic",
+    name := "circe-simple-generic",
     libraryDependencies ++= Seq(
       "io.circe" %%% "circe-core" % circeVersion,
       "io.circe" %%% "circe-parser" % circeVersion,
@@ -41,11 +41,11 @@ lazy val `circe-alt-generic` = crossProject
     scalaJSUseRhino in Global := false
   )
 
-lazy val circeAltGenericJvm = `circe-alt-generic`.jvm
-lazy val circeAltGenericJs = `circe-alt-generic`.js
+lazy val circeSimpleGenericJvm = `circe-simple-generic`.jvm
+lazy val circeSimpleGenericJs = `circe-simple-generic`.js
 
 lazy val render = crossProject
-  .dependsOn(core, `circe-alt-generic`)
+  .dependsOn(core, `circe-simple-generic`)
   .settings(commonSettings: _*)
   .settings(
     name := "plotly-render"
@@ -191,7 +191,7 @@ lazy val `jupyter-scala` = project
 
 lazy val `plotly-scala` = project
   .in(file("."))
-  .aggregate(coreJvm, coreJs, `joda-time`, circeAltGenericJvm, circeAltGenericJs, renderJvm, renderJs, demo, tests, `jupyter-scala`)
+  .aggregate(coreJvm, coreJs, `joda-time`, circeSimpleGenericJvm, circeSimpleGenericJs, renderJvm, renderJs, demo, tests, `jupyter-scala`)
   .settings(commonSettings)
   .settings(noPublishSettings)
 

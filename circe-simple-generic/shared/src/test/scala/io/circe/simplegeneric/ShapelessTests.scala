@@ -1,4 +1,4 @@
-package io.circe.altgeneric
+package io.circe.simplegeneric
 
 import org.scalacheck.{ Arbitrary, Prop }
 import shapeless.test.illTyped
