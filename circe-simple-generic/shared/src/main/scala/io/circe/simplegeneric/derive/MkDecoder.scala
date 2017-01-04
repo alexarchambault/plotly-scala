@@ -1,4 +1,4 @@
-package io.circe.altgeneric
+package io.circe.simplegeneric
 package derive
 
 import shapeless._

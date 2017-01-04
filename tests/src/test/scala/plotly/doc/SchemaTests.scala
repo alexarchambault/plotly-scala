@@ -7,7 +7,7 @@ import java.nio.file.Files
 import org.scalatest.{ FlatSpec, Matchers }
 
 import io.circe.{ Decoder, Json, parser => Parser }
-import io.circe.altgeneric._
+import io.circe.simplegeneric._
 import io.circe.literal._
 
 import shapeless.Witness

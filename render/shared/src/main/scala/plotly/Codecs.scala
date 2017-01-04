@@ -3,8 +3,8 @@ package plotly
 import java.math.BigInteger
 
 import io.circe.{ Error => _, _ }
-import io.circe.altgeneric._
-import io.circe.altgeneric.derive._
+import io.circe.simplegeneric._
+import io.circe.simplegeneric.derive._
 import io.circe.syntax._
 
 import shapeless._

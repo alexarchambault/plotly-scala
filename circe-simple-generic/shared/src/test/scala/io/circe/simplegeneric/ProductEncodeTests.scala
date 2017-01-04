@@ -1,10 +1,10 @@
-package io.circe.altgeneric
+package io.circe.simplegeneric
 
 import utest._
 import org.scalacheck.{ Arbitrary, Prop }
 import org.scalacheck.Shapeless._
 import shapeless._
-import io.circe.altgeneric.derive.{ HListProductEncoder, JsonProductCodecFor, MkEncoder, ProductEncoder }
+import io.circe.simplegeneric.derive.{ HListProductEncoder, JsonProductCodecFor, MkEncoder, ProductEncoder }
 import io.circe.{ Encoder, Json, KeyEncoder }
 import io.circe.syntax._
 import Util._
