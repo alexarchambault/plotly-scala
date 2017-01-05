@@ -1,9 +1,5 @@
-package io.circe.altgeneric
+package io.circe.simplegeneric
 package derive
-
-import cats.implicits._
-//import cats.syntax.either._
-//import cats.instances.either._
 
 import io.circe.{ ACursor, Decoder, HCursor, Json }
 
@@ -49,7 +45,7 @@ class JsonProductObjCodec extends JsonProductCodec {
       obj.mapObject((toJsonName(name) -> content) +: _)
   }
 
-  def decodeEmpty(cursor: HCursor): Decoder.Result[Unit] = Either.right(())
+  def decodeEmpty(cursor: HCursor): Decoder.Result[Unit] = Right(())
   def decodeField[A](name: String, cursor: HCursor, decode: Decoder[A], default: Option[A]): Decoder.Result[(A, ACursor)] = {
     val c = cursor.downField(toJsonName(name))
     def result = c.as(decode).right.map((_, ACursor.ok(cursor)))
@@ -60,7 +56,7 @@ class JsonProductObjCodec extends JsonProductCodec {
         if (c.succeeded)
           result
         else
-          Either.right((d, ACursor.ok(cursor)))
+          Right((d, ACursor.ok(cursor)))
     }
   }
 }

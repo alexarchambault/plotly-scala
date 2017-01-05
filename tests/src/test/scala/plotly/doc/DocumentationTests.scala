@@ -6,8 +6,6 @@ import java.lang.{ Double => JDouble }
 import java.io.{ ByteArrayOutputStream, File, InputStream }
 import java.nio.file.Files
 
-import cats.implicits._
-
 import io.circe.{ DecodingFailure, Json, parser => Parse }
 import io.circe.syntax._
 
@@ -55,7 +53,7 @@ object DocumentationTests {
   def resourceTrace(res: String): Trace = {
     val dataStr = load(res)
     val result = Parse.parse(dataStr).right.flatMap(_.as[Trace])
-    result.getOrElse {
+    result.right.getOrElse {
       throw new Exception(s"$res: $result")
     }
   }
@@ -63,7 +61,7 @@ object DocumentationTests {
   def resourceLayout(res: String): Layout = {
     val dataStr = load(res)
     val result = Parse.parse(dataStr).right.flatMap(_.as[Layout])
-    result.getOrElse {
+    result.right.getOrElse {
       throw new Exception(s"$res: $result")
     }
   }
@@ -88,7 +86,7 @@ object DocumentationTests {
 
       def jsonRepr(obj: Object): Json = {
         val jsonStr = stringify(obj)
-        Parse.parse(jsonStr).leftMap { err =>
+        Parse.parse(jsonStr).left.map { err =>
           throw new Exception(s"Cannot parse JSON: $err\n$jsonStr")
         }.merge
       }

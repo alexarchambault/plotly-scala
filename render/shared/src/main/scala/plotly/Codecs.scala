@@ -2,13 +2,9 @@ package plotly
 
 import java.math.BigInteger
 
-import cats.implicits._
-//import cats.syntax.either._
-//import cats.instances.either._
-
 import io.circe.{ Error => _, _ }
-import io.circe.altgeneric._
-import io.circe.altgeneric.derive._
+import io.circe.simplegeneric._
+import io.circe.simplegeneric.derive._
 import io.circe.syntax._
 
 import shapeless._
@@ -74,13 +70,13 @@ object Codecs {
         c.as[String].right.flatMap { s =>
           val flags =
             if (s == "none")
-              Either.right(Set.empty[F])
+              Right(Set.empty[F])
             else
-              s.split('+').foldLeft[Decoder.Result[Set[F]]](Either.right(Set.empty[F])) {
+              s.split('+').foldLeft[Decoder.Result[Set[F]]](Right(Set.empty[F])) {
                 case (acc, f) =>
                   for {
                     acc0 <- acc.right
-                    f0 <- map.get(f).fold[Decoder.Result[F]](Either.left(DecodingFailure(s"Unrecognized $type0: $f", c.history)))(Either.right).right
+                    f0 <- map.get(f).fold[Decoder.Result[F]](Left(DecodingFailure(s"Unrecognized $type0: $f", c.history)))(Right(_)).right
                   } yield acc0 + f0
               }
 
@@ -118,8 +114,8 @@ object Codecs {
         c =>
           underlying(c).right.flatMap { s =>
             map.get(s) match {
-              case None => Either.left(DecodingFailure(s"Unrecognized $name: '$s'", c.history))
-              case Some(m) => Either.right(m)
+              case None => Left(DecodingFailure(s"Unrecognized $name: '$s'", c.history))
+              case Some(m) => Right(m)
             }
           }
       }
@@ -158,12 +154,12 @@ object Codecs {
 
       def decodeEmpty(cursor: HCursor): Decoder.Result[Nothing] =
       // FIXME Sometimes reports the wrong error (in case of two nested sum types)
-        Either.left(DecodingFailure(s"unrecognized $name", cursor.history))
+        Left(DecodingFailure(s"unrecognized $name", cursor.history))
 
       def decodeField[A](name: String, cursor: HCursor, decode: Decoder[A]): Decoder.Result[Either[ACursor, A]] =
-        Either.right {
+        Right {
           val o = decode(cursor)
-          o.toOption
+          o.right.toOption
             .toRight(ACursor.ok(cursor))
         }
     }
@@ -181,9 +177,9 @@ object Codecs {
 
       def decodeEmpty(cursor: HCursor): Decoder.Result[Unit] =
         if (cursor.focus == Json.obj())
-          Either.right(())
+          Right(())
         else
-          Either.left(DecodingFailure(
+          Left(DecodingFailure(
             s"Found extra fields: ${cursor.fields.toSeq.flatten.mkString(", ")}",
             cursor.history
           ))
@@ -199,7 +195,7 @@ object Codecs {
             if (c.succeeded)
               result
             else
-              Either.right((d, ACursor.ok(cursor)))
+              Right((d, ACursor.ok(cursor)))
         }
       }
     }
@@ -226,16 +222,16 @@ object Codecs {
                   g <- Try(gStr.toInt).toOption
                   b <- Try(bStr.toInt).toOption
                   alpha <- Try(alphaStr.toDouble).toOption
-                } yield Either.right(Color.RGBA(r, g, b, alpha))
+                } yield Right(Color.RGBA(r, g, b, alpha))
 
                 res.getOrElse {
-                  Either.left(DecodingFailure(s"Unrecognized RGBA color: '$s'", c.history))
+                  Left(DecodingFailure(s"Unrecognized RGBA color: '$s'", c.history))
                 }
               case _ =>
-                Either.left(DecodingFailure(s"Unrecognized RGBA color: '$s'", c.history))
+                Left(DecodingFailure(s"Unrecognized RGBA color: '$s'", c.history))
             }
           else
-            Either.left(DecodingFailure(s"Unrecognized RGBA color: '$s'", c.history))
+            Left(DecodingFailure(s"Unrecognized RGBA color: '$s'", c.history))
         }
       }
 
@@ -253,8 +249,8 @@ object Codecs {
         c =>
           underlying(c).right.flatMap { s =>
             map.get(s) match {
-              case None => Either.left(DecodingFailure(s"Unrecognized color: '$s'", c.history))
-              case Some(m) => Either.right(m)
+              case None => Left(DecodingFailure(s"Unrecognized color: '$s'", c.history))
+              case Some(m) => Right(m)
             }
           }
       }
@@ -271,18 +267,18 @@ object Codecs {
           if (s.startsWith("rgb(") && s.endsWith(")"))
             s.stripPrefix("rgb(").stripSuffix(")").split(',').map(_.trim).map(s => Try(s.toInt).toOption) match {
               case Array(Some(r), Some(g), Some(b)) =>
-                Either.right(Color.RGB(r, g, b))
+                Right(Color.RGB(r, g, b))
               case _ =>
-                Either.left(DecodingFailure(s"Unrecognized RGB color: '$s'", c.history))
+                Left(DecodingFailure(s"Unrecognized RGB color: '$s'", c.history))
             }
           else
-            Either.left(DecodingFailure(s"Unrecognized RGB color: '$s'", c.history))
+            Left(DecodingFailure(s"Unrecognized RGB color: '$s'", c.history))
         }
         def asInt: Decoder.Result[Color.RGB] = c.as[Int].right.flatMap {
           case r if r >= 0 && r < 256 =>
-            Either.right(Color.RGB(r, 0, 0))
+            Right(Color.RGB(r, 0, 0))
           case _ =>
-            Either.left(DecodingFailure(s"Unrecognized RGB color: ${c.focus}", c.history))
+            Left(DecodingFailure(s"Unrecognized RGB color: ${c.focus}", c.history))
         }
 
         def parseHex(s: String, from: Int, until: Int) =
@@ -293,23 +289,24 @@ object Codecs {
             val g = parseHex(hex, 1, 2)
             val b = parseHex(hex, 2, 3)
 
-            Either.right(Color.RGB(r, g, b))
+            Right(Color.RGB(r, g, b))
 
           case HexaColor6(hex) =>
             val r = parseHex(hex, 0, 2)
             val g = parseHex(hex, 2, 4)
             val b = parseHex(hex, 4, 6)
 
-            Either.right(Color.RGB(r, g, b))
+            Right(Color.RGB(r, g, b))
 
           case other =>
-            Either.left(DecodingFailure(s"Unrecognized RGB color: $other", c.history))
+            Left(DecodingFailure(s"Unrecognized RGB color: $other", c.history))
         }
 
         asString
+          .right
           .toOption
-          .orElse(asInt.toOption)
-          .map(Either.right)
+          .orElse(asInt.right.toOption)
+          .map(Right(_))
           .getOrElse(asHexa)
       }
 
@@ -344,12 +341,12 @@ object Codecs {
           if (s.startsWith("hsl(") && s.endsWith(")"))
             s.stripPrefix("hsl(").stripSuffix(")").split(',').map(_.trim).map(decodeNum) match {
               case Array(Some(h), Some(s), Some(l)) =>
-                Either.right(Color.HSL(h, s, l))
+                Right(Color.HSL(h, s, l))
               case _ =>
-                Either.left(DecodingFailure(s"Unrecognized HSL color: '$s'", c.history))
+                Left(DecodingFailure(s"Unrecognized HSL color: '$s'", c.history))
             }
           else
-            Either.left(DecodingFailure(s"Unrecognized HSL color: '$s'", c.history))
+            Left(DecodingFailure(s"Unrecognized HSL color: '$s'", c.history))
         }
       }
 
@@ -384,9 +381,9 @@ object Codecs {
         c.as[String].right.flatMap { s =>
           LocalDateTime.parse(s) match {
             case Some(dt) =>
-              Either.right(dt)
+              Right(dt)
             case None =>
-              Either.left(DecodingFailure(
+              Left(DecodingFailure(
                 s"Malformed date-time: '$s'",
                 c.history
               ))
@@ -409,7 +406,7 @@ object Codecs {
       Decoder.instance { c =>
         c.downField("type").either match {
           case Left(c0) =>
-            Either.left(DecodingFailure("No type found", c0.history))
+            Left(DecodingFailure("No type found", c0.history))
           case Right(c1) =>
             val c0 = c1.delete
             c1.focus.as[String].right.flatMap {
@@ -420,7 +417,7 @@ object Codecs {
               case "constant" =>
                 c0.as[Error.Constant].right.map(e => e: Error)
               case unrecognized =>
-                Either.left(DecodingFailure(s"Unrecognized type: $unrecognized", c.history))
+                Left(DecodingFailure(s"Unrecognized type: $unrecognized", c.history))
             }
         }
       }
@@ -436,7 +433,7 @@ object Codecs {
     implicit lazy val decodeFont: Decoder[Font] =
       Decoder.instance {
         c =>
-          wrappedFontDecoder(c) orElse derivedFontDecoder(c)
+          wrappedFontDecoder(c).right.toOption.fold(derivedFontDecoder(c))(Right(_))
       }
 
     implicit val jsonCodecForTrace = JsonSumCodecFor[Trace](
@@ -452,7 +449,7 @@ object Codecs {
             case Left(_) if name == "Scatter" => // assume scatter if no type found
               cursor.as(decode).right.map(Right(_))
             case _ =>
-              Either.right(Left(ACursor.ok(cursor)))
+              Right(Left(ACursor.ok(cursor)))
           }
         }
       }

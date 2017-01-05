@@ -6,10 +6,8 @@ import java.nio.file.Files
 
 import org.scalatest.{ FlatSpec, Matchers }
 
-import cats.implicits._
-
 import io.circe.{ Decoder, Json, parser => Parser }
-import io.circe.altgeneric._
+import io.circe.simplegeneric._
 import io.circe.literal._
 
 import shapeless.Witness
@@ -44,11 +42,11 @@ object SchemaTests {
         val constantString = c.as[String].right.map[Attribute](ConstantString(_))
         def flag = c.as[Flag].right.map[Attribute](x => x)
         def enumerated = c.as[Enumerated].right.map[Attribute](x => x)
-        def other = Either.right(Other(c.focus))
+        def other = Right(Other(c.focus))
 
-        constantString.toOption.map(Either.right)
-          .orElse(flag.toOption.map(Either.right))
-          .orElse(enumerated.toOption.map(Either.right))
+        constantString.right.toOption.map(Right(_))
+          .orElse(flag.right.toOption.map(Right(_)))
+          .orElse(enumerated.right.toOption.map(Right(_)))
           .getOrElse(other)
       }
   }

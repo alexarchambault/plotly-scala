@@ -1,10 +1,9 @@
-package io.circe.altgeneric
+package io.circe.simplegeneric
 
 import org.scalacheck.{ Arbitrary, Prop }
 import shapeless.test.illTyped
 import utest._
 import Util._
-import cats.implicits._
 import io.circe.{ Decoder, Encoder, Json, parser => Parse }
 import io.circe.syntax._
 
@@ -15,7 +14,7 @@ object ShapelessTests extends TestSuite {
   private def sameAfterBeforeSerialization[T: Arbitrary : Encoder : Decoder]: Unit =
     Prop.forAll {
       t: T =>
-        toFromJson(t) == Either.right(t)
+        toFromJson(t) == Right(t)
     }.validate
 
   import org.scalacheck.Shapeless._
@@ -55,10 +54,10 @@ object ShapelessTests extends TestSuite {
       }
 
       'oiLoose - {
-        val json = Parse.parse("{}").toOption.get
+        val json = Parse.parse("{}").right.toOption.get
         // assert macro crashes if result is substituted by its value below
         val result = json.as[OI]
-        assert(result == Either.right(OI(None)))
+        assert(result == Right(OI(None)))
       }
 
       'base - {

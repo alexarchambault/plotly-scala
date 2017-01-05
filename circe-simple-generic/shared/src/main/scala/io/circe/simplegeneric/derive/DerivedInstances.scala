@@ -1,4 +1,4 @@
-package io.circe.altgeneric.derive
+package io.circe.simplegeneric.derive
 
 import shapeless.{ LowPriority, Strict }
 import io.circe.{ Decoder, Encoder }

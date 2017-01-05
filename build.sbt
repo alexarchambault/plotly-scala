@@ -1,6 +1,6 @@
 
-val jupyterScalaVersion = "0.3.0-M3"
-val circeVersion = "0.6.0"
+val jupyterScalaVersion = "0.4.0-RC1"
+val circeVersion = "0.6.1"
 val plotlyVersion = "1.12.0"
 
 lazy val core = crossProject
@@ -22,17 +22,16 @@ lazy val `joda-time` = project
     )
   )
 
-lazy val `circe-alt-generic` = crossProject
+lazy val `circe-simple-generic` = crossProject
   .settings(commonSettings: _*)
   .settings(
-    name := "circe-alt-generic",
+    name := "circe-simple-generic",
     libraryDependencies ++= Seq(
-      "io.circe" %%% "circe-core" % "0.6.0",
-      "io.circe" %%% "circe-parser" % "0.6.0",
-      "org.typelevel" %% "cats" % "0.8.0",
-      "com.chuusai" %%% "shapeless" % "2.3.1",
-      "com.github.alexarchambault" %%% "scalacheck-shapeless_1.13" % "1.1.0-RC3" % "test",
-      "com.lihaoyi" %%% "utest" % "0.3.0" % "test"
+      "io.circe" %%% "circe-core" % circeVersion,
+      "io.circe" %%% "circe-parser" % circeVersion,
+      "com.chuusai" %%% "shapeless" % "2.3.2",
+      "com.github.alexarchambault" %%% "scalacheck-shapeless_1.13" % "1.1.4" % "test",
+      "com.lihaoyi" %%% "utest" % "0.4.4" % "test"
     ),
     testFrameworks += new TestFramework("utest.runner.Framework")
   )
@@ -42,11 +41,11 @@ lazy val `circe-alt-generic` = crossProject
     scalaJSUseRhino in Global := false
   )
 
-lazy val circeAltGenericJvm = `circe-alt-generic`.jvm
-lazy val circeAltGenericJs = `circe-alt-generic`.js
+lazy val circeSimpleGenericJvm = `circe-simple-generic`.jvm
+lazy val circeSimpleGenericJs = `circe-simple-generic`.js
 
 lazy val render = crossProject
-  .dependsOn(core, `circe-alt-generic`)
+  .dependsOn(core, `circe-simple-generic`)
   .settings(commonSettings: _*)
   .settings(
     name := "plotly-render"
@@ -59,8 +58,7 @@ lazy val render = crossProject
   .jsSettings(
     libraryDependencies ++= Seq(
       "io.circe" %%% "circe-scalajs" % circeVersion,
-      "org.typelevel" %% "cats" % "0.8.0",
-      "org.scala-js" %%% "scalajs-dom" % "0.9.0"
+      "org.scala-js" %%% "scalajs-dom" % "0.9.1"
     )
   )
 
@@ -77,7 +75,7 @@ lazy val demo = project
     test in Test := (),
     testOnly in Test := (),
     libraryDependencies ++= Seq(
-      "com.lihaoyi" %%% "scalatags" % "0.5.5"
+      "com.lihaoyi" %%% "scalatags" % "0.6.2"
     ),
     jsDependencies ++= Seq(
       ("org.webjars.bower" % "plotly.js" % plotlyVersion intransitive()) / "plotly.min.js" commonJSName "Plotly",
@@ -175,7 +173,7 @@ lazy val tests = project
     name := "plotly-tests",
     libraryDependencies ++= Seq(
       "io.circe" %% "circe-literal" % circeVersion % "test",
-      "org.scalatest" %% "scalatest" % "3.0.0-M11" % "test",
+      "org.scalatest" %% "scalatest" % "3.0.1" % "test",
       "org.mozilla" % "rhino" % "1.7.7.1" % "test"
     )
   )
@@ -186,14 +184,14 @@ lazy val `jupyter-scala` = project
   .settings(
     name := "plotly-jupyter-scala",
     libraryDependencies ++= Seq(
-      "com.github.alexarchambault.jupyter" % "scala-api" % jupyterScalaVersion % "provided" cross CrossVersion.full
+      "org.jupyter-scala" % "scala-api" % jupyterScalaVersion % "provided" cross CrossVersion.full
     )
   )
 
 
 lazy val `plotly-scala` = project
   .in(file("."))
-  .aggregate(coreJvm, coreJs, `joda-time`, circeAltGenericJvm, circeAltGenericJs, renderJvm, renderJs, demo, tests, `jupyter-scala`)
+  .aggregate(coreJvm, coreJs, `joda-time`, circeSimpleGenericJvm, circeSimpleGenericJs, renderJvm, renderJs, demo, tests, `jupyter-scala`)
   .settings(commonSettings)
   .settings(noPublishSettings)
 
