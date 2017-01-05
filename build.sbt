@@ -1,5 +1,5 @@
 
-val jupyterScalaVersion = "0.4.0-RC1"
+val jupyterScalaVersion = "0.4.0-RC4"
 val circeVersion = "0.6.1"
 val plotlyVersion = "1.12.0"
 
@@ -36,9 +36,7 @@ lazy val `circe-simple-generic` = crossProject
     testFrameworks += new TestFramework("utest.runner.Framework")
   )
   .jsSettings(
-    jsEnv := NodeJSEnv().value,
-    scalaJSStage in Global := FastOptStage,
-    scalaJSUseRhino in Global := false
+    scalaJSStage in Global := FastOptStage
   )
 
 lazy val circeSimpleGenericJvm = `circe-simple-generic`.jvm
@@ -65,6 +63,8 @@ lazy val render = crossProject
 lazy val renderJvm = render.jvm
 lazy val renderJs = render.js
 
+lazy val customSourceGenerators = TaskKey[Seq[sbt.File]]("custom-source-generators")
+
 lazy val demo = project
   .enablePlugins(ScalaJSPlugin)
   .dependsOn(renderJs)
@@ -86,83 +86,82 @@ lazy val demo = project
       ("org.webjars.bower" % "prism" % "1.5.0" intransitive()) / "prism-java.js" commonJSName "PrismJava" dependsOn "prism-clike.js",
       ("org.webjars.bower" % "prism" % "1.5.0" intransitive()) / "prism-scala.js" commonJSName "PrismScala" dependsOn "prism-java.js"
     ),
-    sourceGenerators.in(Compile) += {
-      (target, version, scalaSource in Compile).map { (dir, ver, sourceDir) =>
+    customSourceGenerators := {
+      var dir = target.value
+      val f = dir / "Properties.scala"
+      dir.mkdirs()
 
-        val f = dir / "Properties.scala"
-        dir.mkdirs()
+      def gitCommit =
+        sys.process.Process(Seq("git", "rev-parse", "HEAD")).!!.trim
 
-        def gitCommit =
-          sys.process.Process(Seq("git", "rev-parse", "HEAD")).!!.trim
+      val w = new java.io.FileOutputStream(f)
+      w.write(
+       s"""package plotly.demo
+          |
+          |object Properties {
+          |
+          |  val version = "${version.value}"
+          |  val commitHash = "$gitCommit"
+          |
+          |}
+        """
+          .stripMargin
+          .getBytes("UTF-8")
+      )
+      w.close()
 
-        val w = new java.io.FileOutputStream(f)
-        w.write(
-         s"""package plotly.demo
-            |
-            |object Properties {
-            |
-            |  val version = "$ver"
-            |  val commitHash = "$gitCommit"
-            |
-            |}
-          """
-            .stripMargin
-            .getBytes("UTF-8")
-        )
-        w.close()
+      println(s"Wrote $f")
 
-        println(s"Wrote $f")
+      val files = new collection.mutable.ArrayBuffer[File]
+      files += f
 
-        val files = new collection.mutable.ArrayBuffer[File]
-        files += f
+      val tq = "\"\"\""
 
-        val tq = "\"\"\""
+      def process(destDir: File, pathComponents: Seq[String], file: File): Unit = {
+        if (file.isDirectory) {
+          val destDir0 = destDir / file.getName
+          val pathComponents0 = pathComponents :+ file.getName
+          for (f <- file.listFiles())
+            process(destDir0, pathComponents0, f)
+        } else {
+          val lines = new String(java.nio.file.Files.readAllBytes(file.toPath), "UTF-8")
+            .linesIterator
+            .toVector
 
-        def process(destDir: File, pathComponents: Seq[String], file: File): Unit = {
-          if (file.isDirectory) {
-            val destDir0 = destDir / file.getName
-            val pathComponents0 = pathComponents :+ file.getName
-            for (f <- file.listFiles())
-              process(destDir0, pathComponents0, f)
-          } else {
-            val lines = new String(java.nio.file.Files.readAllBytes(file.toPath), "UTF-8")
-              .linesIterator
-              .toVector
+          val demoLines = lines
+            .dropWhile(!_.contains("demo source start"))
+            .drop(1)
+            .takeWhile(!_.contains("demo source end"))
+            .map(l => l.replace(tq, tq + " + \"\\\"\\\"\\\"\" + " + tq))
 
-            val demoLines = lines
-              .dropWhile(!_.contains("demo source start"))
-              .drop(1)
-              .takeWhile(!_.contains("demo source end"))
-              .map(l => l.replace(tq, tq + " + \"\\\"\\\"\\\"\" + " + tq))
+          if (demoLines.nonEmpty) {
+            val dest = destDir / (file.getName.stripSuffix(".scala") + "Source.scala")
+            destDir.mkdirs()
+            val w = new java.io.FileOutputStream(dest)
+            w.write(
+             s"""package plotly${pathComponents.map("." + _).mkString}
+                |
+                |object ${file.getName.stripSuffix(".scala")}Source {
+                |
+                |  val source = $tq${demoLines.mkString("\n")}$tq
+                |
+                |}
+              """
+                .stripMargin
+                .getBytes("UTF-8")
+            )
+            w.close()
 
-            if (demoLines.nonEmpty) {
-              val dest = destDir / (file.getName.stripSuffix(".scala") + "Source.scala")
-              destDir.mkdirs()
-              val w = new java.io.FileOutputStream(dest)
-              w.write(
-               s"""package plotly${pathComponents.map("." + _).mkString}
-                  |
-                  |object ${file.getName.stripSuffix(".scala")}Source {
-                  |
-                  |  val source = $tq${demoLines.mkString("\n")}$tq
-                  |
-                  |}
-                """
-                  .stripMargin
-                  .getBytes("UTF-8")
-              )
-              w.close()
-
-              files += dest
-            }
+            files += dest
           }
         }
+      }
 
-        process(dir / "plotly", Vector(), sourceDir / "plotly" / "demo")
+      process(dir / "plotly", Vector(), scalaSource.in(Compile).value / "plotly" / "demo")
 
-        files
-      }.taskValue
-    }
+      files
+    },
+    sourceGenerators.in(Compile) += customSourceGenerators.taskValue
   )
 
 lazy val tests = project
@@ -198,8 +197,12 @@ lazy val `plotly-scala` = project
 
 lazy val commonSettings = Seq(
   organization := "org.plotly-scala",
-  scalaVersion := "2.11.8",
-  scalacOptions += "-target:jvm-1.7",
+  scalacOptions ++= {
+    if (scalaBinaryVersion.value == "2.12")
+      Seq()
+    else
+      Seq("-target:jvm-1.7")
+  },
   resolvers ++= Seq(
     "Webjars Bintray" at "https://dl.bintray.com/webjars/maven/",
     Resolver.sonatypeRepo("releases"),
@@ -236,8 +239,7 @@ lazy val commonSettings = Seq(
       case _ =>
         Seq()
     }
-  },
-  scalacOptions += "-target:jvm-1.7"
+  }
 )
 
 lazy val noPublishSettings = Seq(
