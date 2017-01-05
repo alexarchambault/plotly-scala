@@ -11,6 +11,8 @@ object Sequence {
 
   implicit def fromDoubleSeq(s: Seq[Double]): Sequence =
     Doubles(s)
+  implicit def fromBigDecimalSeq(s: Seq[BigDecimal]): Sequence =
+    Doubles(s.map(_.toDouble))
   implicit def fromFloatSeq(s: Seq[Float]): Sequence =
     Doubles(s.map(_.toDouble))
   implicit def fromIntSeq(s: Seq[Int]): Sequence =
