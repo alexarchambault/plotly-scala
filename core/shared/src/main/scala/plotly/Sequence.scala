@@ -1,6 +1,6 @@
 package plotly
 
-import plotly.element.LocalDateTime
+import java.time.LocalDateTime
 
 sealed abstract class Sequence extends Product with Serializable
 

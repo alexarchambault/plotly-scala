@@ -12,16 +12,6 @@ lazy val core = crossProject
 lazy val coreJvm = core.jvm
 lazy val coreJs = core.js
 
-lazy val `joda-time` = project
-  .dependsOn(coreJvm)
-  .settings(commonSettings)
-  .settings(
-    name := "plotly-joda-time",
-    libraryDependencies ++= Seq(
-      "joda-time" % "joda-time" % "2.9.1"
-    )
-  )
-
 lazy val `circe-simple-generic` = crossProject
   .settings(commonSettings: _*)
   .settings(
@@ -190,7 +180,7 @@ lazy val `jupyter-scala` = project
 
 lazy val `plotly-scala` = project
   .in(file("."))
-  .aggregate(coreJvm, coreJs, `joda-time`, circeSimpleGenericJvm, circeSimpleGenericJs, renderJvm, renderJs, demo, tests, `jupyter-scala`)
+  .aggregate(coreJvm, coreJs, circeSimpleGenericJvm, circeSimpleGenericJs, renderJvm, renderJs, demo, tests, `jupyter-scala`)
   .settings(commonSettings)
   .settings(noPublishSettings)
 

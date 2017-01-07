@@ -1,18 +1,19 @@
 package plotly
 
 import java.math.BigInteger
+import java.time.LocalDateTime
 
-import io.circe.{ Error => _, _ }
+import io.circe.{Error => _, _}
 import io.circe.simplegeneric._
 import io.circe.simplegeneric.derive._
 import io.circe.syntax._
-
 import shapeless._
 
 import scala.util.Try
-
 import plotly.element._
 import plotly.layout._
+import DateTimeFormats.`yyyy-MM-dd HH:mm:ss`
+import java.time.format.DateTimeParseException
 
 object Codecs {
 
@@ -373,20 +374,19 @@ object Codecs {
 
     implicit val encodeLocalDateTime: Encoder[LocalDateTime] =
       Encoder.instance { dt =>
-        dt.toString.asJson
+        dt.format(`yyyy-MM-dd HH:mm:ss`).asJson
       }
 
     implicit val decodeLocalDateTime: Decoder[LocalDateTime] =
       Decoder.instance { c =>
         c.as[String].right.flatMap { s =>
-          LocalDateTime.parse(s) match {
-            case Some(dt) =>
-              Right(dt)
-            case None =>
-              Left(DecodingFailure(
-                s"Malformed date-time: '$s'",
-                c.history
-              ))
+          try {
+            Right(LocalDateTime.parse(s, `yyyy-MM-dd HH:mm:ss`))
+          } catch {
+            case e: DateTimeParseException => Left(DecodingFailure(
+              s"$e: $s",
+              c.history
+            ))
           }
         }
       }
