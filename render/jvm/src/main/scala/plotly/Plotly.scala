@@ -18,8 +18,49 @@ object Plotly {
 
   private val printer = Printer.noSpaces.copy(dropNullKeys = true)
 
-  def jsSnippet(div: String, data: Seq[Trace], layout: Layout): String = {
+  def jsSnippet[T](div: String, data: Candlestick[T], layout: plotly.layout.Candlestick): String = {
+    val c =
+      s"""var fig = PlotlyFinance.createCandlestick({
+         |open: [${data.open.mkString(",")}],
+         |high: [${data.high.mkString(",")}],
+         |low: [${data.low.mkString(",")}],
+         |close: [${data.close.mkString(",")}],
+         |dates: [${data.dates.map(date => s"new Date(${date.getYear}, ${date.getMonthValue - 1}, ${date.getDayOfMonth}, ${date.getHour}, ${date.getMinute}, ${date.getSecond})").mkString(",")}]
+         |});""".stripMargin
 
+    /*
+    c ++=
+      """
+        |fig.layout.annotations = [{
+        |  text: "Figure Annotation",
+        |  x: '2013-10-11',
+        |  y: 1.02,
+        |  xref: 'x',
+        |  yref: 'paper',
+        |  showarrow: false,
+        |  xanchor: 'left'}];
+        |
+        |fig.layout.shapes = [{
+        |  x0: '2013-10-12',
+        |  x1: '2013-10-12',
+        |  type: 'line',
+        |  y0: 0,
+        |  y1: 1,
+        |  xref: 'x',
+        |  yref: 'paper',
+        |  line: {
+        |    color: 'rgb(40,40,40)',
+        |    width: 0.5
+        |  }
+        |}];
+      """.stripMargin
+    */
+
+    val all = c + "\n" + s"""Plotly.newPlot('$div', fig.data, fig.layout);""".stripMargin
+    all
+  }
+
+  def jsSnippet(div: String, data: Seq[Trace], layout: Layout): String = {
     val b = new StringBuilder
 
     b ++= "(function () {\n"
@@ -119,9 +160,11 @@ object Plotly {
 
     val plotlyHeader =
       if (useCdn)
-        s"""<script src="https://cdn.plot.ly/plotly-$plotlyVersion.min.js"></script>"""
+        s"""<script src="https://cdn.plot.ly/plotly-$plotlyVersion.min.js"></script>
+           |<script src="https://cdn.rawgit.com/etpinard/plotlyjs-finance/master/plotlyjs-finance.js"></script>""".stripMargin
       else
-        s"<script>$plotlyMinJs</script>"
+        s"""<script>$plotlyMinJs</script>
+           |<script src="https://cdn.rawgit.com/etpinard/plotlyjs-finance/master/plotlyjs-finance.js"></script>""".stripMargin
 
     val divId = "chart"
 

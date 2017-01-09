@@ -4,6 +4,8 @@ import scala.language.implicitConversions
 
 import java.lang.{ Boolean => JBoolean, Double => JDouble }
 
+import java.time.LocalDateTime
+
 import plotly.element._
 
 sealed abstract class Trace extends Product with Serializable
@@ -186,3 +188,13 @@ object Histogram {
       Option(histnorm)
     )
 }
+
+
+case class Candlestick[T](
+                    dates: Seq[LocalDateTime],
+                    open: Seq[T],
+                    high: Seq[T],
+                    low: Seq[T],
+                    close: Seq[T],
+                    name: String
+                  )
