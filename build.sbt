@@ -1,6 +1,6 @@
 
 val jupyterScalaVersion = "0.4.0-RC4"
-val circeVersion = "0.6.1"
+val circeVersion = "0.7.0"
 val plotlyVersion = "1.12.0"
 
 lazy val core = crossProject

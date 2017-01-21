@@ -161,7 +161,7 @@ object Codecs {
         Right {
           val o = decode(cursor)
           o.right.toOption
-            .toRight(ACursor.ok(cursor))
+            .toRight(cursor)
         }
     }
 
@@ -188,7 +188,7 @@ object Codecs {
       def decodeField[A](name: String, cursor: HCursor, decode: Decoder[A], default: Option[A]): Decoder.Result[(A, ACursor)] = {
         val c = cursor.downField(toJsonName(name))
 
-        def result = c.as(decode).right.map((_, if (c.succeeded) c.delete else cursor.acursor))
+        def result = c.as(decode).right.map((_, if (c.succeeded) c.delete else cursor))
 
         default match {
           case None => result
@@ -196,7 +196,7 @@ object Codecs {
             if (c.succeeded)
               result
             else
-              Right((d, ACursor.ok(cursor)))
+              Right((d, cursor))
         }
       }
     }
@@ -402,7 +402,9 @@ object Codecs {
         json.mapObject(("type" -> error.`type`.asJson) +: _)
       }
 
-    implicit val decodeError: Decoder[Error] =
+    //TODO FIXME
+    implicit val decodeError: Decoder[Error] = ???
+    /*
       Decoder.instance { c =>
         c.downField("type").either match {
           case Left(c0) =>
@@ -421,6 +423,7 @@ object Codecs {
             }
         }
       }
+    */
 
     implicit val jsonSumCodecForColor: JsonSumCodecFor[Color] =
       JsonSumCodecFor(jsonSumDirectCodecFor("color"))
@@ -449,7 +452,7 @@ object Codecs {
             case Left(_) if name == "Scatter" => // assume scatter if no type found
               cursor.as(decode).right.map(Right(_))
             case _ =>
-              Right(Left(ACursor.ok(cursor)))
+              Right(Left(cursor))
           }
         }
       }
