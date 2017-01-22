@@ -401,29 +401,25 @@ object Codecs {
 
         json.mapObject(("type" -> error.`type`.asJson) +: _)
       }
-
-    //TODO FIXME
-    implicit val decodeError: Decoder[Error] = ???
-    /*
+    
+    implicit val decodeError: Decoder[Error] =
       Decoder.instance { c =>
-        c.downField("type").either match {
-          case Left(c0) =>
-            Left(DecodingFailure("No type found", c0.history))
-          case Right(c1) =>
-            val c0 = c1.delete
-            c1.focus.as[String].right.flatMap {
+        c.downField("type").focus match {
+          case None =>
+            Left(DecodingFailure("No type found", c.history))
+          case Some(c1) =>
+            c1.as[String].right.flatMap {
               case "data" =>
-                c0.as[Error.Data].right.map(e => e: Error)
+                c1.as[Error.Data].right.map(e => e: Error)
               case "percent" =>
-                c0.as[Error.Percent].right.map(e => e: Error)
+                c1.as[Error.Percent].right.map(e => e: Error)
               case "constant" =>
-                c0.as[Error.Constant].right.map(e => e: Error)
+                c1.as[Error.Constant].right.map(e => e: Error)
               case unrecognized =>
                 Left(DecodingFailure(s"Unrecognized type: $unrecognized", c.history))
             }
         }
       }
-    */
 
     implicit val jsonSumCodecForColor: JsonSumCodecFor[Color] =
       JsonSumCodecFor(jsonSumDirectCodecFor("color"))
