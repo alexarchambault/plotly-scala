@@ -4,7 +4,7 @@ val circeVersion = "0.6.1"
 val plotlyVersion = "1.12.0"
 
 lazy val core = crossProject
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .settings(
     name := "plotly-core"
   )
@@ -23,9 +23,8 @@ lazy val `joda-time` = project
   )
 
 lazy val `circe-simple-generic` = crossProject
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .settings(
-    name := "circe-simple-generic",
     libraryDependencies ++= Seq(
       "io.circe" %%% "circe-core" % circeVersion,
       "io.circe" %%% "circe-parser" % circeVersion,
@@ -44,7 +43,7 @@ lazy val circeSimpleGenericJs = `circe-simple-generic`.js
 
 lazy val render = crossProject
   .dependsOn(core, `circe-simple-generic`)
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .settings(
     name := "plotly-render"
   )
