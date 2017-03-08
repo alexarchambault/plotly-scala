@@ -1,10 +1,10 @@
 
-val jupyterScalaVersion = "0.4.0-RC4"
+val jupyterScalaVersion = "0.4.0"
 val circeVersion = "0.6.1"
-val plotlyVersion = "1.12.0"
+val plotlyVersion = "1.24.1"
 
 lazy val core = crossProject
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .settings(
     name := "plotly-core"
   )
@@ -23,9 +23,8 @@ lazy val `joda-time` = project
   )
 
 lazy val `circe-simple-generic` = crossProject
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .settings(
-    name := "circe-simple-generic",
     libraryDependencies ++= Seq(
       "io.circe" %%% "circe-core" % circeVersion,
       "io.circe" %%% "circe-parser" % circeVersion,
@@ -44,7 +43,7 @@ lazy val circeSimpleGenericJs = `circe-simple-generic`.js
 
 lazy val render = crossProject
   .dependsOn(core, `circe-simple-generic`)
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .settings(
     name := "plotly-render"
   )
@@ -205,8 +204,7 @@ lazy val commonSettings = Seq(
   },
   resolvers ++= Seq(
     "Webjars Bintray" at "https://dl.bintray.com/webjars/maven/",
-    Resolver.sonatypeRepo("releases"),
-    Resolver.sonatypeRepo("snapshots")
+    Resolver.sonatypeRepo("releases")
   ),
   publishMavenStyle := true,
   licenses := Seq("LGPL 3.0" -> url("http://opensource.org/licenses/LGPL-3.0")),
