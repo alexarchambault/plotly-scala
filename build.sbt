@@ -1,5 +1,5 @@
 
-val jupyterScalaVersion = "0.4.0-RC4"
+val jupyterScalaVersion = "0.4.0"
 val circeVersion = "0.6.1"
 val plotlyVersion = "1.12.0"
 
