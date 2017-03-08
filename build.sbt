@@ -205,8 +205,7 @@ lazy val commonSettings = Seq(
   },
   resolvers ++= Seq(
     "Webjars Bintray" at "https://dl.bintray.com/webjars/maven/",
-    Resolver.sonatypeRepo("releases"),
-    Resolver.sonatypeRepo("snapshots")
+    Resolver.sonatypeRepo("releases")
   ),
   publishMavenStyle := true,
   licenses := Seq("LGPL 3.0" -> url("http://opensource.org/licenses/LGPL-3.0")),
