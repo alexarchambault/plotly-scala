@@ -23,7 +23,8 @@ final case class Scatter(
          yaxis: Option[AxisReference],
           fill: Option[Fill],
        error_x: Option[Error],
-       error_y: Option[Error]
+       error_y: Option[Error],
+    showlegend: Option[Boolean]
 ) extends Trace
 
 object Scatter {
@@ -42,7 +43,8 @@ object Scatter {
            yaxis: AxisReference = null,
             fill: Fill          = null,
          error_x: Error         = null,
-         error_y: Error         = null
+         error_y: Error         = null,
+      showlegend: JBoolean      = null
   ): Scatter = {
 
     val (xOpt, yOpt) = Option(secondValues) match {
@@ -60,12 +62,13 @@ object Scatter {
       Option(textposition),
       Option(textfont),
       Option(name),
-      Option(connectgaps).map(x => x: Boolean),
+      Option(connectgaps) .map(x => x: Boolean),
       Option(xaxis),
       Option(yaxis),
       Option(fill),
       Option(error_x),
-      Option(error_y)
+      Option(error_y),
+      Option(showlegend)  .map(b => b: Boolean)
     )
   }
 }
@@ -82,7 +85,8 @@ case class Box(
   whiskerwidth: Option[Double],
        boxmean: Option[BoxMean],
      fillcolor: Option[OneOrSeq[Color]],
-          line: Option[Line]
+          line: Option[Line],
+    showlegend: Option[Boolean]
 ) extends Trace
 
 object Box {
@@ -98,7 +102,8 @@ object Box {
     whiskerwidth: JDouble         = null,
          boxmean: BoxMean         = null,
        fillcolor: OneOrSeq[Color] = null,
-            line: Line            = null
+            line: Line            = null,
+      showlegend: JBoolean        = null
   ): Box =
     Box(
       Option(y),
@@ -112,7 +117,8 @@ object Box {
       Option(whiskerwidth) .map(d => d: Double),
       Option(boxmean),
       Option(fillcolor),
-      Option(line)
+      Option(line),
+      Option(showlegend)   .map(b => b: Boolean)
     )
 }
 
@@ -125,7 +131,8 @@ final case class Bar(
   orientation: Option[Orientation],
         xaxis: Option[AxisReference],
         yaxis: Option[AxisReference],
-      error_y: Option[Error]
+      error_y: Option[Error],
+   showlegend: Option[Boolean]
 ) extends Trace
 
 object Bar {
@@ -138,7 +145,8 @@ object Bar {
     orientation: Orientation   = null,
           xaxis: AxisReference = null,
           yaxis: AxisReference = null,
-        error_y: Error         = null
+        error_y: Error         = null,
+     showlegend: JBoolean      = null
   ): Bar =
     Bar(
       x,
@@ -149,19 +157,21 @@ object Bar {
       Option(orientation),
       Option(xaxis),
       Option(yaxis),
-      Option(error_y)
+      Option(error_y),
+      Option(showlegend).map(b => b: Boolean)
     )
 }
 
 case class Histogram(
-         x: Option[Sequence],
-         y: Option[Sequence],
-   opacity: Option[Double],
-      name: Option[String],
-  autobinx: Option[Boolean],
-    marker: Option[Marker],
-     xbins: Option[Bins],
-  histnorm: Option[HistNorm]
+          x: Option[Sequence],
+          y: Option[Sequence],
+    opacity: Option[Double],
+       name: Option[String],
+   autobinx: Option[Boolean],
+     marker: Option[Marker],
+      xbins: Option[Bins],
+   histnorm: Option[HistNorm],
+ showlegend: Option[Boolean]
 ) extends Trace
 
 object Histogram {
@@ -173,16 +183,18 @@ object Histogram {
     autobinx: JBoolean = null,
       marker: Marker   = null,
        xbins: Bins     = null,
-    histnorm: HistNorm = null
+    histnorm: HistNorm = null,
+  showlegend: JBoolean = null
   ): Histogram =
     Histogram(
       Option(x),
       Option(y),
-      Option(opacity)  .map(d => d: Double),
+      Option(opacity)    .map(d => d: Double),
       Option(name),
-      Option(autobinx) .map(b => b: Boolean),
+      Option(autobinx)   .map(b => b: Boolean),
       Option(marker),
       Option(xbins),
-      Option(histnorm)
+      Option(histnorm),
+      Option(showlegend) .map(b => b: Boolean)
     )
 }
