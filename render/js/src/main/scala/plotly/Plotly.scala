@@ -1,55 +1,56 @@
 package plotly
 
-import io.circe.Json
+import io.circe.{Json, Printer}
 import io.circe.syntax._
-import io.circe.scalajs.convertJsonToJs
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
 import scala.scalajs.js.JSON
-
 import plotly.Codecs._
 import plotly.element.Color
 import plotly.layout._
-
-import java.lang.{ Integer => JInt, Double => JDouble, Boolean => JBoolean }
+import java.lang.{Boolean => JBoolean, Double => JDouble, Integer => JInt}
 
 object Plotly {
 
-  private def convertJsonToJs0(json: Json): js.Any =
-    // getting weird errors if not doing the conversion-to-string then parsing
-    JSON.parse(JSON.stringify(convertJsonToJs(json)))
+  private val printer = Printer.noSpaces.copy(dropNullKeys = true)
+  private def stripNulls(json: Json): js.Any = {
+    // Remove empty objects
+    JSON.parse(printer.pretty(json))
+  }
 
-  def plot(div: String, data: Seq[Trace], layout: Layout): Unit =
+  def plot(div: String, data: Seq[Trace], layout: Layout): Unit = {
     g.Plotly.plot(
       div,
-      convertJsonToJs0(data.asJson),
-      convertJsonToJs0(layout.asJson)
+      stripNulls(data.asJson),
+      stripNulls(layout.asJson)
     )
+  }
 
-  def plot(div: String, data: Seq[Trace]): Unit =
+  def plot(div: String, data: Seq[Trace]): Unit = {
     g.Plotly.plot(
       div,
-      convertJsonToJs0(data.asJson)
+      stripNulls(data.asJson)
     )
+  }
 
   def plot(div: String, data: Trace, layout: Layout): Unit =
     g.Plotly.plot(
       div,
-      convertJsonToJs0(data.asJson),
-      convertJsonToJs0(layout.asJson)
+      stripNulls(data.asJson),
+      stripNulls(layout.asJson)
     )
 
   def plot(div: String, data: Trace): Unit =
     g.Plotly.plot(
       div,
-      convertJsonToJs0(data.asJson)
+      stripNulls(data.asJson)
     )
 
   implicit class TraceOps(val trace: Trace) extends AnyVal {
     def plot(div: String, layout: Layout): Unit =
       Plotly.plot(div, trace, layout)
-    
+
     def plot(
                 div: String,
               title: String          = null,
@@ -115,7 +116,7 @@ object Plotly {
   implicit class TraceSeqOps(val traces: Seq[Trace]) extends AnyVal {
     def plot(div: String, layout: Layout): Unit =
       Plotly.plot(div, traces, layout)
-    
+
     def plot(
                 div: String,
               title: String          = null,
