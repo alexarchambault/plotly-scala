@@ -127,6 +127,20 @@ lazy val `jupyter-scala` = project
     )
   )
 
+lazy val `apache-toree` = project
+  .dependsOn(coreJvm, renderJvm)
+  .settings(
+    shared,
+    plotlyPrefix,
+    assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false),
+    assemblyExcludedJars in assembly := {
+      val cp = (fullClasspath in assembly).value
+      cp filter {_.data.getName == "toree-assembly-0.2.0.dev1-incubating-SNAPSHOT.jar"}
+    },
+    libs ++= Seq(
+      "org.apache.spark" % "spark-core_2.11" % "2.1.0" % "provided"
+    )
+  )
 
 lazy val `plotly-scala` = project
   .in(file("."))
@@ -140,7 +154,8 @@ lazy val `plotly-scala` = project
     renderJs,
     demo,
     tests,
-    `jupyter-scala`
+    `jupyter-scala`,
+    `apache-toree`
   )
   .settings(
     shared,
