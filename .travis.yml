@@ -1,7 +1,7 @@
 language: scala
 scala:
 - 2.11.8
-- 2.12.1
+- 2.12.2
 jdk:
 - oraclejdk8
 script: sbt -batch ++${TRAVIS_SCALA_VERSION} test $(if [[ "$TRAVIS_PULL_REQUEST" ==
@@ -12,6 +12,13 @@ cache:
   - $HOME/.coursier
   - $HOME/.ivy2/cache
   - $HOME/.sbt
+
+before_cache:
+  # Tricks to avoid unnecessary cache updates
+  # http://www.scala-sbt.org/0.13/docs/Travis-CI-with-sbt.html
+  - find $HOME/.ivy2 -name "ivydata-*.properties" -delete
+  - find $HOME/.sbt -name "*.lock" -delete
+
 branches:
   only:
   - master
