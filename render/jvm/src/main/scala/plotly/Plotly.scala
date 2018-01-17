@@ -16,7 +16,7 @@ import scala.annotation.tailrec
 
 object Plotly {
 
-  private val printer = Printer.noSpaces.copy(dropNullKeys = true)
+  private val printer = Printer.noSpaces.copy(dropNullValues = true)
 
   def jsSnippet(div: String, data: Seq[Trace], layout: Layout): String = {
 

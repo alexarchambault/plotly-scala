@@ -160,7 +160,7 @@ object Codecs {
         Right {
           val o = decode(cursor)
           o.right.toOption
-            .toRight(ACursor.ok(cursor))
+            .toRight(cursor)
         }
     }
 
@@ -187,7 +187,7 @@ object Codecs {
       def decodeField[A](name: String, cursor: HCursor, decode: Decoder[A], default: Option[A]): Decoder.Result[(A, ACursor)] = {
         val c = cursor.downField(toJsonName(name))
 
-        def result = c.as(decode).right.map((_, if (c.succeeded) c.delete else cursor.acursor))
+        def result = c.as(decode).right.map((_, if (c.succeeded) c.delete else cursor))
 
         default match {
           case None => result
@@ -195,7 +195,7 @@ object Codecs {
             if (c.succeeded)
               result
             else
-              Right((d, ACursor.ok(cursor)))
+              Right((d, cursor))
         }
       }
     }
@@ -404,18 +404,14 @@ object Codecs {
 
     implicit val decodeError: Decoder[Error] =
       Decoder.instance { c =>
-        c.downField("type").either match {
-          case Left(c0) =>
-            Left(DecodingFailure("No type found", c0.history))
-          case Right(c1) =>
-            val c0 = c1.delete
-            c1.focus.as[String].right.flatMap {
+        c.downField("type").as[Error].flatMap { c1 =>
+            c1.`type` match {
               case "data" =>
-                c0.as[Error.Data].right.map(e => e: Error)
+                Right(c1)
               case "percent" =>
-                c0.as[Error.Percent].right.map(e => e: Error)
+                Right(c1)
               case "constant" =>
-                c0.as[Error.Constant].right.map(e => e: Error)
+                Right(c1)
               case unrecognized =>
                 Left(DecodingFailure(s"Unrecognized type: $unrecognized", c.history))
             }
@@ -449,7 +445,7 @@ object Codecs {
             case Left(_) if name == "Scatter" => // assume scatter if no type found
               cursor.as(decode).right.map(Right(_))
             case _ =>
-              Right(Left(ACursor.ok(cursor)))
+              Right(Left(cursor))
           }
         }
       }

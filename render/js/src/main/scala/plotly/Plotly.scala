@@ -13,7 +13,7 @@ import java.lang.{Boolean => JBoolean, Double => JDouble, Integer => JInt}
 
 object Plotly {
 
-  private val printer = Printer.noSpaces.copy(dropNullKeys = true)
+  private val printer = Printer.noSpaces.copy(dropNullValues = true)
   private def stripNulls(json: Json): js.Any = {
     // Remove empty objects
     JSON.parse(printer.pretty(json))
