@@ -80,7 +80,8 @@ object Plotly {
     layout: Layout,
     useCdn: Boolean = true,
     openInBrowser: Boolean = true,
-    addSuffixIfExists: Boolean = true
+    addSuffixIfExists: Boolean = true,
+    htmlTemplate:String =""
   ): File = {
 
     val f0 = new File(path)
@@ -125,8 +126,8 @@ object Plotly {
 
     val divId = "chart"
 
-    val html =
-      s"""<!DOCTYPE html>
+    val html = if("".equals(htmlTemplate)){
+            s"""<!DOCTYPE html>
          |<html>
          |<head>
          |<title>${layout.title.getOrElse("plotly chart")}</title>
@@ -140,6 +141,11 @@ object Plotly {
          |</body>
          |</html>
        """.stripMargin
+    }
+    else{
+      htmlTemplate
+    }
+
 
     Files.write(f.toPath, html.getBytes("UTF-8"))
 
