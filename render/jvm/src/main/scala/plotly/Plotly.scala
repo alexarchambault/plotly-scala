@@ -58,7 +58,7 @@ object Plotly {
     buffer.toByteArray
   }
 
-  val plotlyVersion = "1.12.0" // FIXME Get from build.sbt
+  val plotlyVersion = "1.24.1" // FIXME Get from build.sbt
 
   def plotlyMinJs: String = {
     var is: InputStream = null

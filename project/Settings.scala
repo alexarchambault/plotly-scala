@@ -89,8 +89,9 @@ object Settings {
 
   lazy val shared = Seq(
     organization := "org.plotly-scala",
+    scalaVersion := "2.11.8",
     scalacOptions ++= {
-      if (scalaBinaryVersion.value == "2.12")
+      if (scalaBinaryVersion.value == "2.11")
         Seq()
       else
         Seq("-target:jvm-1.7")
