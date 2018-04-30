@@ -16,7 +16,7 @@ import scala.annotation.tailrec
 
 object Plotly {
 
-  private val printer = Printer.noSpaces.copy(dropNullKeys = true)
+  private val printer = Printer.noSpaces.copy(dropNullValues = true)
 
   def jsSnippet[T](div: String, data: Candlestick[T], layout: plotly.layout.Candlestick): String = {
     val c =
