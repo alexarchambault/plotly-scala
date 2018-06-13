@@ -8,7 +8,7 @@ object Deps {
   import Def.setting
 
   private val jupyterScalaVersion = "0.4.0"
-  private val circeVersion = "0.6.1"
+  private val circeVersion = "0.9.1"
 
 
   def circeCore = setting("io.circe" %%% "circe-core" % circeVersion)
