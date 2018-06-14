@@ -49,10 +49,10 @@ class JsonSumObjCodec extends JsonSumCodec {
       cursor.history
     ))
   def decodeField[A](name: String, cursor: HCursor, decode: Decoder[A]): Decoder.Result[Either[ACursor, A]] =
-    cursor.downField(toJsonName(name)).either match {
-      case Left(_) =>
-        Right(Left(ACursor.ok(cursor)))
-      case Right(content) =>
+    cursor.downField(toJsonName(name)).success match {
+      case None =>
+        Right(Left(cursor))
+      case Some(content) =>
         decode(content).right.map(Right(_))
     }
 }
@@ -87,7 +87,7 @@ class JsonSumTypeFieldCodec extends JsonSumCodec {
       case Right(name0) if toTypeValue(name) == name0 =>
         c.delete.as(decode).right.map(Right(_))
       case _ =>
-        Right(Left(ACursor.ok(cursor)))
+        Right(Left(cursor))
     }
   }
 }

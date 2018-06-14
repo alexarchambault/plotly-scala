@@ -160,7 +160,7 @@ object Codecs {
         Right {
           val o = decode(cursor)
           o.right.toOption
-            .toRight(ACursor.ok(cursor))
+            .toRight(cursor)
         }
     }
 
@@ -176,7 +176,7 @@ object Codecs {
         underlying.encodeField(field, obj, default)
 
       def decodeEmpty(cursor: HCursor): Decoder.Result[Unit] =
-        if (cursor.focus == Json.obj())
+        if (cursor.focus.contains(Json.obj()))
           Right(())
         else
           Left(DecodingFailure(
@@ -187,7 +187,7 @@ object Codecs {
       def decodeField[A](name: String, cursor: HCursor, decode: Decoder[A], default: Option[A]): Decoder.Result[(A, ACursor)] = {
         val c = cursor.downField(toJsonName(name))
 
-        def result = c.as(decode).right.map((_, if (c.succeeded) c.delete else cursor.acursor))
+        def result = c.as(decode).right.map((_, if (c.succeeded) c.delete else cursor))
 
         default match {
           case None => result
@@ -195,7 +195,7 @@ object Codecs {
             if (c.succeeded)
               result
             else
-              Right((d, ACursor.ok(cursor)))
+              Right((d, cursor))
         }
       }
     }
@@ -404,12 +404,12 @@ object Codecs {
 
     implicit val decodeError: Decoder[Error] =
       Decoder.instance { c =>
-        c.downField("type").either match {
-          case Left(c0) =>
-            Left(DecodingFailure("No type found", c0.history))
-          case Right(c1) =>
+        c.downField("type").success match {
+          case None =>
+            Left(DecodingFailure("No type found", c.history))
+          case Some(c1) =>
             val c0 = c1.delete
-            c1.focus.as[String].right.flatMap {
+            c1.focus.get.as[String].right.flatMap {
               case "data" =>
                 c0.as[Error.Data].right.map(e => e: Error)
               case "percent" =>
@@ -449,7 +449,7 @@ object Codecs {
             case Left(_) if name == "Scatter" => // assume scatter if no type found
               cursor.as(decode).right.map(Right(_))
             case _ =>
-              Right(Left(ACursor.ok(cursor)))
+              Right(Left(cursor))
           }
         }
       }

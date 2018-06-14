@@ -42,7 +42,7 @@ object SchemaTests {
         val constantString = c.as[String].right.map[Attribute](ConstantString(_))
         def flag = c.as[Flag].right.map[Attribute](x => x)
         def enumerated = c.as[Enumerated].right.map[Attribute](x => x)
-        def other = Right(Other(c.focus))
+        def other = Right(Other(c.focus.get))
 
         constantString.right.toOption.map(Right(_))
           .orElse(flag.right.toOption.map(Right(_)))

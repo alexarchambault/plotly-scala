@@ -6,7 +6,7 @@ import io.circe.{ ACursor, Decoder, HCursor, Json }
 abstract class JsonProductCodec {
   def encodeEmpty: Json
   def encodeField(field: (String, Json), obj: Json, default: => Option[Json]): Json
-  
+
   def decodeEmpty(cursor: HCursor): Decoder.Result[Unit]
   def decodeField[A](name: String, cursor: HCursor, decode: Decoder[A], default: Option[A]): Decoder.Result[(A, ACursor)]
 }
@@ -48,7 +48,7 @@ class JsonProductObjCodec extends JsonProductCodec {
   def decodeEmpty(cursor: HCursor): Decoder.Result[Unit] = Right(())
   def decodeField[A](name: String, cursor: HCursor, decode: Decoder[A], default: Option[A]): Decoder.Result[(A, ACursor)] = {
     val c = cursor.downField(toJsonName(name))
-    def result = c.as(decode).right.map((_, ACursor.ok(cursor)))
+    def result = c.as(decode).right.map((_, cursor))
 
     default match {
       case None => result
@@ -56,7 +56,7 @@ class JsonProductObjCodec extends JsonProductCodec {
         if (c.succeeded)
           result
         else
-          Right((d, ACursor.ok(cursor)))
+          Right((d, cursor))
     }
   }
 }

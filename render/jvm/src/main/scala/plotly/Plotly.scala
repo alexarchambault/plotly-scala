@@ -16,7 +16,7 @@ import scala.annotation.tailrec
 
 object Plotly {
 
-  private val printer = Printer.noSpaces.copy(dropNullKeys = true)
+  private val printer = Printer.noSpaces.copy(dropNullValues = true)
 
   def jsSnippet(div: String, data: Seq[Trace], layout: Layout): String = {
 
@@ -182,7 +182,7 @@ object Plotly {
         openInBrowser = openInBrowser,
         addSuffixIfExists = addSuffixIfExists
       )
-    
+
     def plot(
                    path: String          = "./plot.html",
                   title: String          = null,
@@ -267,7 +267,7 @@ object Plotly {
         openInBrowser = openInBrowser,
         addSuffixIfExists = addSuffixIfExists
       )
-    
+
     def plot(
                    path: String          = "./plot.html",
                   title: String          = null,
