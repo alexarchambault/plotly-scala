@@ -3,6 +3,21 @@ import Aliases._
 import Settings._
 
 
+inThisBuild(List(
+  organization := "org.plotly-scala",
+  homepage := Some(url("https://github.com/alexarchambault/plotly-scala")),
+  licenses := Seq("LGPL 3.0" -> url("http://opensource.org/licenses/LGPL-3.0")),
+  developers := List(
+    Developer(
+      "alexarchambault",
+      "Alexandre Archambault",
+      "",
+      url("https://github.com/alexarchambault")
+    )
+  )
+))
+
+
 lazy val core = crossProject
   .settings(
     shared,
