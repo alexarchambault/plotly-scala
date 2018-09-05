@@ -87,7 +87,12 @@ object Settings {
     sourceGenerators.in(Compile) += customSourceGenerators.taskValue
   )
 
+  private val scala212 = "2.12.1"
+  private val scala211 = "2.11.8"
+
   lazy val shared = Seq(
+    crossScalaVersions := Seq(scala212, scala211),
+    scalaVersion := scala212,
     scalacOptions ++= {
       if (scalaBinaryVersion.value == "2.12")
         Seq()
