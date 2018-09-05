@@ -10,7 +10,7 @@ object Settings {
 
   lazy val generateCustomSources = Seq(
     customSourceGenerators := {
-      var dir = target.value
+      val dir = target.value
       val f = dir / "Properties.scala"
       dir.mkdirs()
 
