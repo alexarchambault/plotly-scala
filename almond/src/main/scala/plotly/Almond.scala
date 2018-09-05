@@ -1,17 +1,16 @@
 package plotly
 
-import jupyter.api.Publish
+import java.lang.{Boolean => JBoolean, Double => JDouble, Integer => JInt}
 
-import java.lang.{ Integer => JInt, Double => JDouble, Boolean => JBoolean }
+import almond.interpreter.api.OutputHandler
 
 import scala.util.Random
-
 import plotly.element._
 import plotly.layout._
 
-object JupyterScala {
+object Almond {
 
-  def init(offline: Boolean = false)(implicit publish: Publish): Unit = {
+  def init(offline: Boolean = false)(implicit publish: OutputHandler): Unit = {
 
     // offline mode like in plotly-python
 
@@ -55,7 +54,7 @@ object JupyterScala {
     data: Seq[Trace],
     layout: Layout
   )(implicit
-    publish: Publish
+    publish: OutputHandler
   ): Unit = {
 
     val baseJs = Plotly.jsSnippet(div, data, layout)
@@ -75,7 +74,7 @@ object JupyterScala {
     layout: Layout = Layout(),
     div: String = ""
   )(implicit
-    publish: Publish
+    publish: OutputHandler
   ): String = {
 
     val div0 =
@@ -123,7 +122,7 @@ object JupyterScala {
             boxmode: BoxMode         = null,
                 div: String          = ""
     )(implicit
-      publish: Publish
+      publish: OutputHandler
     ): String =
       plot(
         Layout(
@@ -161,9 +160,9 @@ object JupyterScala {
       layout: Layout,
       div: String
     )(implicit
-      publish: Publish
+      publish: OutputHandler
     ): String =
-      JupyterScala.plot(Seq(data), layout, div = div)
+      Almond.plot(Seq(data), layout, div = div)
   }
 
   implicit class DataSeqOps(val data: Seq[Trace]) extends AnyVal {
@@ -196,7 +195,7 @@ object JupyterScala {
             boxmode: BoxMode         = null,
                 div: String          = ""
     )(implicit
-      publish: Publish
+      publish: OutputHandler
     ): String =
       plot(
         Layout(
@@ -234,9 +233,9 @@ object JupyterScala {
       layout: Layout,
       div: String
     )(implicit
-      publish: Publish
+      publish: OutputHandler
     ): String =
-      JupyterScala.plot(data, layout, div = div)
+      Almond.plot(data, layout, div = div)
   }
 
 }

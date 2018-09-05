@@ -132,13 +132,13 @@ lazy val tests = project
     )
   )
 
-lazy val `jupyter-scala` = project
+lazy val almond = project
   .dependsOn(coreJvm, renderJvm)
   .settings(
     shared,
     plotlyPrefix,
     libs ++= Seq(
-      Deps.jupyterScalaApi % "provided"
+      Deps.almondScalaApi % "provided"
     )
   )
 
@@ -155,7 +155,7 @@ lazy val `plotly-scala` = project
     renderJs,
     demo,
     tests,
-    `jupyter-scala`
+    almond
   )
   .settings(
     shared,

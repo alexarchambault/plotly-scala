@@ -10,7 +10,7 @@ object Settings {
 
   lazy val generateCustomSources = Seq(
     customSourceGenerators := {
-      var dir = target.value
+      val dir = target.value
       val f = dir / "Properties.scala"
       dir.mkdirs()
 
@@ -87,8 +87,8 @@ object Settings {
     sourceGenerators.in(Compile) += customSourceGenerators.taskValue
   )
 
-  private val scala212 = "2.12.1"
-  private val scala211 = "2.11.8"
+  private val scala212 = "2.12.6"
+  private val scala211 = "2.11.12"
 
   lazy val shared = Seq(
     crossScalaVersions := Seq(scala212, scala211),
