@@ -10,6 +10,10 @@ import plotly.layout._
 
 object Almond {
 
+  object Internal {
+    @volatile var initialized = false
+  }
+
   def init(offline: Boolean = false)(implicit publish: OutputHandler): Unit = {
 
     // offline mode like in plotly-python
@@ -76,6 +80,14 @@ object Almond {
   )(implicit
     publish: OutputHandler
   ): String = {
+
+    if (!Internal.initialized)
+      Internal.synchronized {
+        if (!Internal.initialized) {
+          init()
+          Internal.initialized = true
+        }
+      }
 
     val div0 =
       if (div.isEmpty)
