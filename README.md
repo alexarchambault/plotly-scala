@@ -11,7 +11,7 @@ Scala bindings for [plotly.js](https://plot.ly/javascript/)
 
 *plotly-scala* is a Scala library able to output JSON that can be passed to [plotly.js](https://plot.ly/javascript/). Its classes closely follow the API of plotly.js, so that one can use plotly-scala by following the [documentation](https://plot.ly/javascript/) of plotly.js. These classes can be converted to JSON, that can be fed directly to plotly.js.
 
-It can be used from [jupyter-scala](https://github.com/alexarchambault/jupyter-scala), from scala-js, or from a Scala REPL like [Ammonite](https://github.com/lihaoyi/Ammonite), to plot things straightaway in the browser.
+It can be used from [almond](https://github.com/jupyter-scala/jupyter-scala/tree/develop), from scala-js, or from a Scala REPL like [Ammonite](https://github.com/lihaoyi/Ammonite), to plot things straightaway in the browser.
 
 It runs demos of the plotly.js documentation during its tests, to ensure that it is fine with all their features. That allows it to reliably cover a wide range of the plotly.js features - namely, all the examples of the supported sections of the plotly.js documentation are guaranteed to be fine.
 
@@ -24,18 +24,16 @@ It runs demos of the plotly.js documentation during its tests, to ensure that it
 
 ## Quick start
 
-### From jupyter-scala
+### From almond
 
-Simply add the `org.plotly-scala::plotly-jupyter-scala:0.4.0` dependency to the notebook, initialize plotly-scala, and use it, like
+Simply add the `org.plotly-scala::plotly-almond:0.4.2` dependency to the notebook, initialize plotly-scala, and use it, like
 ```scala
-import $ivy.`org.plotly-scala::plotly-jupyter-scala:0.4.0`
+import $ivy.`org.plotly-scala::plotly-almond:0.4.2`
 
 import plotly._
 import plotly.element._
 import plotly.layout._
-import plotly.JupyterScala._
-
-plotly.JupyterScala.init()
+import plotly.Almond._
 
 val (x, y) = Seq(
   "Banana" -> 10,
@@ -50,7 +48,7 @@ Bar(x, y).plot()
 
 Add the corresponding dependency to your project, like
 ```scala
-libraryDependencies += "org.plotly-scala" %%% "plotly-render" % "0.4.0"
+libraryDependencies += "org.plotly-scala" %%% "plotly-render" % "0.4.2"
 ```
 
 Note that there are no version published for scala 2.10 yet, because of the limitation of case classes to 22 members with it.
@@ -87,7 +85,7 @@ plot.plot(
 
 Load the corresponding dependency, and some imports, like
 ```scala
-import $ivy.`org.plotly-scala::plotly-render:0.4.0`
+import $ivy.`org.plotly-scala::plotly-render:0.4.2`
 import plotly._, element._, layout._, Plotly._
 ```
 
