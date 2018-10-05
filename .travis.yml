@@ -1,21 +1,21 @@
 language: scala
-scala:
-- 2.11.8
-- 2.12.2
-jdk:
-- oraclejdk8
-script: sbt -batch ++${TRAVIS_SCALA_VERSION} test $(if [[ "$TRAVIS_PULL_REQUEST" ==
-  "false" && ${JAVA_HOME} == $(jdk_switcher home oraclejdk8) && "${TRAVIS_BRANCH}"
-  == "master" ]]; then echo "publish"; fi)
+jdk: oraclejdk8
+before_install:
+  - git fetch --tags
+script: sbt -batch ++${TRAVIS_SCALA_VERSION} test
 cache:
   directories:
+  - $HOME/.cache
   - $HOME/.coursier
   - $HOME/.ivy2/cache
   - $HOME/.sbt
-branches:
-  only:
-  - master
-env:
-  global:
-  - secure: kuxKHPyXy1Bem0JkzkPtWgGmEOIknL5gHDD9kHTn1M7bwgGhqu8KT0AIeHo+h6iJZeALXnXfFZaF1YpOSEq/tIS33PLd5iHrcfmM86vXB7ZFLWBtGh3xytQ7TkvMlP8Xu7vJTcXdJw/1zKW7GJW+9AMK8zrpcBPWhnX/S+Bq1YLya1yxbOJ+qXx0ToL7Bn4AKp4Mucu8HiZ1eVPXXn1aGiCGBDBQDA0EzZvjpZeuJCIUjtr+B5KB4pRF+JHXzQJZeT4jh5zivBr79kPt2gbLK9YfQMLv5a5W2cl8GNv81lQCHsKPXHaQSLXoVz1JSgnfXqJYSXQqZx5DKlsXOgKwg5jzJdJehhEFnPL5gpIM9zLgRhamUea+c4CeP/WzuaR7mKTqovkpXpRfBnHcSXIyTqAhRx7DapWLeIsijSty5arHf0sY9fMeTvUgwoQpPq6VMl0Z5iGo/dQewnruqKIbmXW2NeJE4RMF70DDapLUPgtl8xRsGiEdes9pGKqjn7qj5+9I/fiA3M5SBJqckQfFrnVPbqC+lGnziPa9tG1c7cKXT5tbQDqc8G4K0wazH0c6lDHiwtiMmIGNCTn+PlFf7gEdJ6G5Bsk4TlE/8yqWcCtOUragK6E9pxGaEwCiJTHzXq3NnPByLIFBV/Cz9PpAJze1CeJ4qLPsoHniICKN8j4=
-  - secure: GXYsqWjiG4t85rt+O4oSWHIg20NGvqQ27QjuhfiU+0sIqsbopMqZhwwKdRDebz7DwpJ3yFkxqchAps2qJjuOMPByLpTIFiNXwBvN/HX+qh/+lTq/qurFcepfKtsgJwrVly5IPaf5Er5jPALiongBt8iJ7LcrOGLYF40GTqYza4VdUMYywEhsd2LJ+mfUjTvLbfrKMwfvfk7nxBK8PLOYqPaX75Q85P5Y8CjArzIpTVh7agQzM9UAKd8HlRKRo2tPYrs7GPFczVqR+SZJONXUf/HcaEhTxOaeC6jfKrDldetFxY+gwD6+T5q4g5bnzEsdzTgmIDYpO/FWB+mNPsnNs1lZiBPi0JpPM0ZoJ93CBun2+CDLTLXlvnHHEpen4LK8ZwUg+Qkel5rJ+ncIHwYQxChv5KdjGgTgaLaFgPbZp6V3wsjlexOKhI+TKG+dJ3hYoZTVwzPi7giPkvNScwExX1L94zmJcEUaTqfF+c4tSX/3xYj4wgIuNqA6c+nUOfPNhkLiEmb9obfFiOCrwkY+LwS/dgOpQNXS7CJGnbut6YBQj+ixUxYiaoUiVhg/OInCUgaHJCtBhh8QBV33tGlq705j023VFMPgTjkW5PzW4BlfYsS0rre4uZzSwtgmxmL2Mq2Hr4d+SywqVFIP81+z16tFHwSh/vO7mw5jSE4wxb8=
+stages:
+  - name: test
+  - name: release
+    if: (branch = master AND type = push) OR (tag IS present)
+jobs:
+  include:
+    - scala: 2.11.12
+    - scala: 2.12.6
+    - stage: release
+      script: sbt ci-release

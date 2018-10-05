@@ -6,7 +6,7 @@ import io.circe.{ ACursor, Decoder, HCursor, Json }
 abstract class JsonProductCodec {
   def encodeEmpty: Json
   def encodeField(field: (String, Json), obj: Json, default: => Option[Json]): Json
-  
+
   def decodeEmpty(cursor: HCursor): Decoder.Result[Unit]
   def decodeField[A](name: String, cursor: HCursor, decode: Decoder[A], default: Option[A]): Decoder.Result[(A, ACursor)]
 }

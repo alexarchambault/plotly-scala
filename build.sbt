@@ -2,6 +2,20 @@
 import Aliases._
 import Settings._
 
+inThisBuild(List(
+  organization := "org.plotly-scala",
+  homepage := Some(url("https://github.com/alexarchambault/plotly-scala")),
+  licenses := Seq("LGPL 3.0" -> url("http://opensource.org/licenses/LGPL-3.0")),
+  developers := List(
+    Developer(
+      "alexarchambault",
+      "Alexandre Archambault",
+      "",
+      url("https://github.com/alexarchambault")
+    )
+  )
+))
+
 lazy val core = crossProject
   .settings(
     shared,
@@ -116,13 +130,13 @@ lazy val tests = project
     )
   )
 
-lazy val `jupyter-scala` = project
+lazy val almond = project
   .dependsOn(coreJvm, renderJvm)
   .settings(
     shared,
     plotlyPrefix,
     libs ++= Seq(
-      Deps.jupyterScalaApi % "provided"
+      Deps.almondScalaApi % "provided"
     )
   )
 
@@ -139,7 +153,7 @@ lazy val `plotly-scala` = project
     renderJs,
     demo,
     tests,
-    `jupyter-scala`
+    almond
   )
   .settings(
     shared,

@@ -4,14 +4,14 @@ Scala bindings for [plotly.js](https://plot.ly/javascript/)
 
 [![Build Status](https://travis-ci.org/alexarchambault/plotly-scala.svg?branch=master)](https://travis-ci.org/alexarchambault/plotly-scala)
 [![Join the chat at https://gitter.im/alexarchambault/plotly-scala](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/alexarchambault/plotly-scala?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Maven Central](https://img.shields.io/maven-central/v/org.plotly-scala/core_2.11.svg)](https://maven-badges.herokuapp.com/maven-central/org.plotly-scala/core_2.11)
-[![ScalaDoc](http://javadoc-badge.appspot.com/org.plotly-scala/core_2.11.svg?label=scaladoc)](http://javadoc-badge.appspot.com/org.plotly-scala/core_2.11)
+[![Maven Central](https://img.shields.io/maven-central/v/org.plotly-scala/plotly-render_2.11.svg)](https://maven-badges.herokuapp.com/maven-central/org.plotly-scala/plotly-render_2.11)
+[![ScalaDoc](http://javadoc-badge.appspot.com/org.plotly-scala/plotly-render_2.11.svg?label=scaladoc)](http://javadoc-badge.appspot.com/org.plotly-scala/plotly-render_2.11)
 
 [Demo](https://alexarchambault.github.io/plotly-scala/)
 
 *plotly-scala* is a Scala library able to output JSON that can be passed to [plotly.js](https://plot.ly/javascript/). Its classes closely follow the API of plotly.js, so that one can use plotly-scala by following the [documentation](https://plot.ly/javascript/) of plotly.js. These classes can be converted to JSON, that can be fed directly to plotly.js.
 
-It can be used from [jupyter-scala](https://github.com/alexarchambault/jupyter-scala), from scala-js, or from a Scala REPL like [Ammonite](https://github.com/lihaoyi/Ammonite), to plot things straightaway in the browser.
+It can be used from [almond](https://github.com/jupyter-scala/jupyter-scala/tree/develop), from scala-js, or from a Scala REPL like [Ammonite](https://github.com/lihaoyi/Ammonite), to plot things straightaway in the browser.
 
 It runs demos of the plotly.js documentation during its tests, to ensure that it is fine with all their features. That allows it to reliably cover a wide range of the plotly.js features - namely, all the examples of the supported sections of the plotly.js documentation are guaranteed to be fine.
 
@@ -24,18 +24,16 @@ It runs demos of the plotly.js documentation during its tests, to ensure that it
 
 ## Quick start
 
-### From jupyter-scala
+### From almond
 
-Simply add the `org.plotly-scala::plotly-jupyter-scala:0.3.1` dependency to the notebook, initialize plotly-scala, and use it, like
+Simply add the `org.plotly-scala::plotly-almond:0.4.2` dependency to the notebook, initialize plotly-scala, and use it, like
 ```scala
-import $ivy.`org.plotly-scala::plotly-jupyter-scala:0.3.1`
+import $ivy.`org.plotly-scala::plotly-almond:0.4.2`
 
 import plotly._
 import plotly.element._
 import plotly.layout._
-import plotly.JupyterScala._
-
-plotly.JupyterScala.init()
+import plotly.Almond._
 
 val (x, y) = Seq(
   "Banana" -> 10,
@@ -50,7 +48,7 @@ Bar(x, y).plot()
 
 Add the corresponding dependency to your project, like
 ```scala
-libraryDependencies += "org.plotly-scala" %%% "plotly-render" % "0.3.1"
+libraryDependencies += "org.plotly-scala" %%% "plotly-render" % "0.4.2"
 ```
 
 Note that there are no version published for scala 2.10 yet, because of the limitation of case classes to 22 members with it.
@@ -87,7 +85,7 @@ plot.plot(
 
 Load the corresponding dependency, and some imports, like
 ```scala
-import $ivy.`org.plotly-scala::plotly-render:0.3.1`
+import $ivy.`org.plotly-scala::plotly-render:0.4.2`
 import plotly._, element._, layout._, Plotly._
 ```
 

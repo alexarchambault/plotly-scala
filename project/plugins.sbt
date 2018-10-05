@@ -1,5 +1,6 @@
-addSbtPlugin("io.get-coursier" % "sbt-coursier" % "1.0.0-RC1")
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.22")
-addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.0.0")
-addSbtPlugin("com.typesafe" % "sbt-mima-plugin" % "0.1.13")
-addSbtPlugin("com.dwijnand" % "sbt-travisci" % "1.1.0")
+addSbtPlugin("com.geirsson" % "sbt-ci-release" % "1.2.1")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.23")
+addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.1")
+addSbtPlugin("com.typesafe" % "sbt-mima-plugin" % "0.3.0")
+
+addSbtCoursier

@@ -10,7 +10,7 @@ object Settings {
 
   lazy val generateCustomSources = Seq(
     customSourceGenerators := {
-      var dir = target.value
+      val dir = target.value
       val f = dir / "Properties.scala"
       dir.mkdirs()
 
@@ -87,8 +87,12 @@ object Settings {
     sourceGenerators.in(Compile) += customSourceGenerators.taskValue
   )
 
+  private val scala212 = "2.12.6"
+  private val scala211 = "2.11.12"
+
   lazy val shared = Seq(
-    organization := "org.plotly-scala",
+    crossScalaVersions := Seq(scala212, scala211),
+    scalaVersion := scala212,
     scalacOptions ++= {
       if (scalaBinaryVersion.value == "2.12")
         Seq()
@@ -98,39 +102,7 @@ object Settings {
     resolvers ++= Seq(
       "Webjars Bintray" at "https://dl.bintray.com/webjars/maven/",
       Resolver.sonatypeRepo("releases")
-    ),
-    publishMavenStyle := true,
-    licenses := Seq("LGPL 3.0" -> url("http://opensource.org/licenses/LGPL-3.0")),
-    homepage := Some(url("https://github.com/alexarchambault/plotly-scala")),
-    pomExtra := {
-      <scm>
-        <connection>scm:git:github.com/alexarchambault/plotly-scala.git</connection>
-        <developerConnection>scm:git:git@github.com:alexarchambault/plotly-scala.git</developerConnection>
-        <url>github.com/alexarchambault/plotly-scala.git</url>
-      </scm>
-        <developers>
-          <developer>
-            <id>alexarchambault</id>
-            <name>Alexandre Archambault</name>
-            <url>https://github.com/alexarchambault</url>
-          </developer>
-        </developers>
-    },
-    publishTo := {
-      val nexus = "https://oss.sonatype.org/"
-      if (isSnapshot.value)
-        Some("snapshots" at nexus + "content/repositories/snapshots")
-      else
-        Some("releases"  at nexus + "service/local/staging/deploy/maven2")
-    },
-    credentials ++= {
-      Seq("SONATYPE_USER", "SONATYPE_PASS").map(sys.env.get) match {
-        case Seq(Some(user), Some(pass)) =>
-          Seq(Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", user, pass))
-        case _ =>
-          Seq()
-      }
-    }
+    )
   )
 
   lazy val dontPublish = Seq(

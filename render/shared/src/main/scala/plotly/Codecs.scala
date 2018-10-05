@@ -177,7 +177,7 @@ object Codecs {
         underlying.encodeField(field, obj, default)
 
       def decodeEmpty(cursor: HCursor): Decoder.Result[Unit] =
-        if (cursor.focus == Json.obj())
+        if (cursor.focus.contains(Json.obj()))
           Right(())
         else
           Left(DecodingFailure(
@@ -404,11 +404,12 @@ object Codecs {
     
     implicit val decodeError: Decoder[Error] =
       Decoder.instance { c =>
-        c.downField("type").focus match {
+        c.downField("type").success match {
           case None =>
             Left(DecodingFailure("No type found", c.history))
           case Some(c1) =>
-            c1.as[String].right.flatMap {
+            val c0 = c1.delete
+            c1.focus.get.as[String].right.flatMap {
               case "data" =>
                 c1.as[Error.Data].right.map(e => e: Error)
               case "percent" =>

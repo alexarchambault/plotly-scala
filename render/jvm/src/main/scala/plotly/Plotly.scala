@@ -17,7 +17,6 @@ import scala.annotation.tailrec
 object Plotly {
 
   private val printer = Printer.noSpaces.copy(dropNullValues = true)
-
   def jsSnippet[T](div: String, data: Candlestick[T], layout: plotly.layout.Candlestick): String = {
     val c =
       s"""var fig = PlotlyFinance.createCandlestick({
@@ -225,7 +224,7 @@ object Plotly {
         openInBrowser = openInBrowser,
         addSuffixIfExists = addSuffixIfExists
       )
-    
+
     def plot(
                    path: String          = "./plot.html",
                   title: String          = null,
@@ -310,7 +309,7 @@ object Plotly {
         openInBrowser = openInBrowser,
         addSuffixIfExists = addSuffixIfExists
       )
-    
+
     def plot(
                    path: String          = "./plot.html",
                   title: String          = null,
