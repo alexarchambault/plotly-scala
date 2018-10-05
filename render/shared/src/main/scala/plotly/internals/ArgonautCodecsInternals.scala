@@ -133,11 +133,15 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
   implicit val boxMeanOtherIsEnum = IsEnum.instance[BoxMean.Labeled](_.label)
   implicit val boxPointsOtherIsEnum = IsEnum.instance[BoxPoints.Labeled](_.label)
   implicit val textPositionIsEnum = IsEnum.instance[TextPosition](_.label)
+  implicit val barTextPositionIsEnum = IsEnum.instance[BarTextPosition](_.label)
   implicit val sideIsEnum = IsEnum.instance[Side](_.label)
   implicit val symbolIsEnum = IsEnum.instance[Symbol](_.label)
   implicit val ticksIsEnum = IsEnum.instance[Ticks](_.label)
   implicit val histNormIsEnum = IsEnum.instance[HistNorm](_.label)
   implicit val sizeModeIsEnum = IsEnum.instance[SizeMode](_.label)
+  implicit val hoverOnIsEnum = IsEnum.instance[HoverOn](_.label)
+  implicit val groupNormIsEnum = IsEnum.instance[GroupNorm](_.label)
+  implicit val histFuncIsEnum = IsEnum.instance[HistFunc](_.label)
 
   def jsonSumDirectCodecFor(name: String): JsonSumCodec = new JsonSumCodec {
     def encodeEmpty: Nothing =
@@ -200,6 +204,33 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
   object JsonProductObjCodecNoEmpty {
     val default = JsonProductObjCodecNoEmpty()
   }
+
+  implicit val encodeHoverInfo: EncodeJson[HoverInfo] =
+    EncodeJson.of[String].contramap(_.label)
+  implicit val decodeHoverInfo: DecodeJson[HoverInfo] =
+    DecodeJson { c =>
+      DecodeJson.of[String].apply(c).flatMap {
+        case "all" => DecodeResult.ok(HoverInfo.All)
+        case "skip" => DecodeResult.ok(HoverInfo.Skip)
+        case "none" => DecodeResult.ok(HoverInfo.None)
+        case combination =>
+          val results = combination.split('+').map {
+            case "x" => Right(HoverInfo.X)
+            case "y" => Right(HoverInfo.Y)
+            case "z" => Right(HoverInfo.Z)
+            case "text" => Right(HoverInfo.Text)
+            case "name" => Right(HoverInfo.Name)
+            case other => Left(s"Unrecognized hover info element: $other")
+          }
+          if (results.exists(_.isLeft))
+            DecodeResult.fail(
+              s"Unrecognized hover info elements: ${results.flatMap(_.left.toSeq).mkString(", ")}",
+              c.history
+            )
+          else
+            DecodeResult.ok(HoverInfo(results.flatMap(_.right.toSeq): _*))
+      }
+    }
 
 
   implicit def defaultJsonProductCodecFor[T]: JsonProductCodecFor[T] =

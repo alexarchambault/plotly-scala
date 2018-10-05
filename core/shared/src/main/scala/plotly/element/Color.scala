@@ -15,7 +15,11 @@ object Color {
       "grey",
       "white",
       "fuchsia",
-      "red"
+      "red",
+      "blue",
+      "cls", // ???
+      "pink",
+      "green"
     )
   }
 

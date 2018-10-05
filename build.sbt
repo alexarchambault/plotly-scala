@@ -1,5 +1,4 @@
 
-import Aliases._
 import Settings._
 
 import sbtcrossproject.CrossPlugin.autoImport.crossProject
@@ -34,7 +33,7 @@ lazy val `joda-time` = project
   .settings(
     shared,
     plotlyPrefix,
-    libs += Deps.jodaTime
+    libraryDependencies += Deps.jodaTime
   )
 
 lazy val render = crossProject(JVMPlatform, JSPlatform)
@@ -42,13 +41,13 @@ lazy val render = crossProject(JVMPlatform, JSPlatform)
   .settings(
     shared,
     plotlyPrefix,
-    libs += Deps.argonautShapeless.value
+    libraryDependencies += Deps.argonautShapeless.value
   )
   .jvmSettings(
-    libs += WebDeps.plotlyJs
+    libraryDependencies += WebDeps.plotlyJs
   )
   .jsSettings(
-    libs += Deps.scalajsDom.value
+    libraryDependencies += Deps.scalajsDom.value
   )
 
 lazy val renderJvm = render.jvm
@@ -63,7 +62,7 @@ lazy val demo = project
     plotlyPrefix,
     test in Test := (),
     testOnly in Test := (),
-    libs += Deps.scalatags.value,
+    libraryDependencies += Deps.scalatags.value,
     jsDependencies ++= Seq(
       WebDeps.plotlyJs
         .intransitive()
@@ -107,7 +106,8 @@ lazy val tests = project
     shared,
     dontPublish,
     plotlyPrefix,
-    libs ++= Seq(
+    fetchTestData,
+    libraryDependencies ++= Seq(
       Deps.scalaTest % "test",
       Deps.rhino % "test"
     )
@@ -118,7 +118,7 @@ lazy val almond = project
   .settings(
     shared,
     plotlyPrefix,
-    libs += Deps.almondScalaApi % "provided"
+    libraryDependencies += Deps.almondScalaApi % "provided"
   )
 
 
