@@ -76,6 +76,11 @@ object DocumentationTests {
       dataOpt = Option(data)
     }
 
+    def plot(div: String, data: Object, layout: Object): Unit =
+      newPlot(div, data, layout)
+    def plot(div: String, data: Object): Unit =
+      newPlot(div, data)
+
     def result(cx: Context, scope: ScriptableObject): (Seq[Json], Option[Json]) = {
       def stringify(obj: Object) =
         NativeJSON.stringify(cx, scope, obj, null, null).toString
@@ -154,6 +159,10 @@ object DocumentationTests {
       ScriptableObject.putProperty(scope, "require", require(scope))
       cx.evaluateString(scope, demo, "<cmd>", 1, null)
       plotly.result(cx, scope)
+    } catch {
+      case e: org.mozilla.javascript.EvaluatorException =>
+        println(s"Was running\n$demo\n\n")
+        throw new Exception(s"Evaluation error at line ${e.lineNumber()} column ${e.columnNumber()}", e)
     } finally {
       Context.exit()
     }
@@ -216,33 +225,33 @@ class DocumentationTests extends FlatSpec with Matchers {
 
   val dir = new File("plotly-documentation/_posts/plotly_js")
   val subDirNames = Seq(
-    "line_and_scatter",
-    "line-plots",
-    "bar",
-    "horizontal-bar",
+    "basic/line_and_scatter",
+    "basic/line-plots",
+    "basic/bar",
+    "basic/horizontal-bar",
     // TODO? Pie charts
-    "time-series",
-    "bubble",
-    "area",
+    "financial/time-series",
+    "basic/bubble",
+    "basic/area",
     // TODO? Gauge charts
     // TODO Multiple chart types (needs contour)
     // TODO Shapes (need mock of d3)
-    "subplots",
-    "multiple-axes",
-    "insets",
+    "subplot/subplots",
+    "subplot/multiple-axes",
+    "subplot/insets",
     // TODO Responsive demo (only a demo, no new chart type / attributes)
-    "error-bar",
+    "statistical/error-bar",
     // TODO Continuous error bars
-    "box",
+    "statistical/box",
     // TODO 2D Density plots
-    "histogram",
+    "statistical/histogram",
     // TODO 2D Histograms
     // TODO Wind rose charts
     // TODO Contour plots
     // TODO Heatmaps
     // TODO Heatmap and contour colorscales
     // TODO Polar charts
-    "log"
+    "scientific/log"
     // TODO Financial charts
     // TODO Maps
     // TODO 3D charts
@@ -253,18 +262,29 @@ class DocumentationTests extends FlatSpec with Matchers {
   for {
     subDir <- subDirs
     post <- subDir.listFiles().sorted
+    if !post.getName.startsWith(".")
   } {
     s"$subDir" should s"$post" in {
       val rawContent = new String(Files.readAllBytes(post.toPath), "UTF-8")
       val content = stripFrontMatter(rawContent)
-      val lines = content
-        .linesIterator
-        .toVector
-        .map(_.trim)
-        .filter(_.nonEmpty)
+        .replace("<br>", "\\n")
+        .replace("</br>", "\\n")
+        .replace("(...size)", "(size[0])") // rhino doesn't seem to support the spead (...) operator
+        .replace("desired_maximum_marker_size**2", "desired_maximum_marker_size*desired_maximum_marker_size")
 
-      if (lines.nonEmpty)
-        plotlyDemoElements(stripFrontMatter(rawContent))
+      if (content.contains("Plotly.d3.csv"))
+        println(s"Ignoring $post (Plotly.d3.csv not implemented)")
+      else {
+
+        val lines = content
+          .linesIterator
+          .toVector
+          .map(_.trim)
+          .filter(_.nonEmpty)
+
+        if (lines.nonEmpty)
+          plotlyDemoElements(content)
+      }
     }
   }
 

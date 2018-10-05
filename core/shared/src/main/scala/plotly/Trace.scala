@@ -11,7 +11,7 @@ sealed abstract class Trace extends Product with Serializable
 final case class Scatter(
              x: Option[Sequence],
              y: Option[Sequence],
-          text: Option[Seq[String]],
+          text: Option[OneOrSeq[String]],
           mode: Option[ScatterMode],
         marker: Option[Marker],
           line: Option[Line],
@@ -24,27 +24,37 @@ final case class Scatter(
           fill: Option[Fill],
        error_x: Option[Error],
        error_y: Option[Error],
-    showlegend: Option[Boolean]
+    showlegend: Option[Boolean],
+     fillcolor: Option[OneOrSeq[Color]],
+     hoverinfo: Option[HoverInfo],
+       hoveron: Option[HoverOn],
+    stackgroup: Option[String],
+     groupnorm: Option[GroupNorm]
 ) extends Trace
 
 object Scatter {
   def apply(
-          values: Sequence      = null,
-    secondValues: Sequence      = null,
-            text: Seq[String]   = null,
-            mode: ScatterMode   = null,
-          marker: Marker        = null,
-            line: Line          = null,
-    textposition: TextPosition  = null,
-        textfont: TextFont      = null,
-            name: String        = null,
-     connectgaps: JBoolean      = null,
-           xaxis: AxisReference = null,
-           yaxis: AxisReference = null,
-            fill: Fill          = null,
-         error_x: Error         = null,
-         error_y: Error         = null,
-      showlegend: JBoolean      = null
+          values: Sequence         = null,
+    secondValues: Sequence         = null,
+            text: OneOrSeq[String] = null,
+            mode: ScatterMode      = null,
+          marker: Marker           = null,
+            line: Line             = null,
+    textposition: TextPosition     = null,
+        textfont: TextFont         = null,
+            name: String           = null,
+     connectgaps: JBoolean         = null,
+           xaxis: AxisReference    = null,
+           yaxis: AxisReference    = null,
+            fill: Fill             = null,
+         error_x: Error            = null,
+         error_y: Error            = null,
+      showlegend: JBoolean         = null,
+       fillcolor: OneOrSeq[Color]  = null,
+       hoverinfo: HoverInfo        = null,
+         hoveron: HoverOn          = null,
+      stackgroup: String           = null,
+       groupnorm: GroupNorm        = null
   ): Scatter = {
 
     val (xOpt, yOpt) = Option(secondValues) match {
@@ -68,7 +78,12 @@ object Scatter {
       Option(fill),
       Option(error_x),
       Option(error_y),
-      Option(showlegend)  .map(b => b: Boolean)
+      Option(showlegend)  .map(b => b: Boolean),
+      Option(fillcolor),
+      Option(hoverinfo),
+      Option(hoveron),
+      Option(stackgroup),
+      Option(groupnorm)
     )
   }
 }
@@ -123,30 +138,40 @@ object Box {
 }
 
 final case class Bar(
-            x: Sequence,
-            y: Sequence,
-         name: Option[String],
-         text: Option[Seq[String]],
-       marker: Option[Marker],
-  orientation: Option[Orientation],
-        xaxis: Option[AxisReference],
-        yaxis: Option[AxisReference],
-      error_y: Option[Error],
-   showlegend: Option[Boolean]
+             x: Sequence,
+             y: Sequence,
+          name: Option[String],
+          text: Option[Seq[String]],
+        marker: Option[Marker],
+   orientation: Option[Orientation],
+         xaxis: Option[AxisReference],
+         yaxis: Option[AxisReference],
+       error_y: Option[Error],
+    showlegend: Option[Boolean],
+     hoverinfo: Option[HoverInfo],
+  textposition: Option[BarTextPosition],
+       opacity: Option[Double],
+         width: Option[OneOrSeq[Double]],
+          base: Option[OneOrSeq[Double]]
 ) extends Trace
 
 object Bar {
   def apply(
-              x: Sequence,
-              y: Sequence,
-           name: String        = null,
-           text: Seq[String]   = null,
-         marker: Marker        = null,
-    orientation: Orientation   = null,
-          xaxis: AxisReference = null,
-          yaxis: AxisReference = null,
-        error_y: Error         = null,
-     showlegend: JBoolean      = null
+               x: Sequence,
+               y: Sequence,
+            name: String           = null,
+            text: Seq[String]      = null,
+          marker: Marker           = null,
+     orientation: Orientation      = null,
+           xaxis: AxisReference    = null,
+           yaxis: AxisReference    = null,
+         error_y: Error            = null,
+      showlegend: JBoolean         = null,
+       hoverinfo: HoverInfo        = null,
+    textposition: BarTextPosition  = null,
+         opacity: JDouble          = null,
+           width: OneOrSeq[Double] = null,
+            base: OneOrSeq[Double] = null
   ): Bar =
     Bar(
       x,
@@ -158,7 +183,12 @@ object Bar {
       Option(xaxis),
       Option(yaxis),
       Option(error_y),
-      Option(showlegend).map(b => b: Boolean)
+      Option(showlegend).map(b => b: Boolean),
+      Option(hoverinfo),
+      Option(textposition),
+      Option(opacity).map(d => d: Double),
+      Option(width),
+      Option(base)
     )
 }
 
@@ -171,20 +201,24 @@ case class Histogram(
      marker: Option[Marker],
       xbins: Option[Bins],
    histnorm: Option[HistNorm],
- showlegend: Option[Boolean]
+ showlegend: Option[Boolean],
+ cumulative: Option[Cumulative],
+   histfunc: Option[HistFunc]
 ) extends Trace
 
 object Histogram {
   def apply(
-           x: Sequence = null,
-           y: Sequence = null,
-     opacity: JDouble  = null,
-        name: String   = null,
-    autobinx: JBoolean = null,
-      marker: Marker   = null,
-       xbins: Bins     = null,
-    histnorm: HistNorm = null,
-  showlegend: JBoolean = null
+           x: Sequence   = null,
+           y: Sequence   = null,
+     opacity: JDouble    = null,
+        name: String     = null,
+    autobinx: JBoolean   = null,
+      marker: Marker     = null,
+       xbins: Bins       = null,
+    histnorm: HistNorm   = null,
+  showlegend: JBoolean   = null,
+  cumulative: Cumulative = null,
+    histfunc: HistFunc   = null
   ): Histogram =
     Histogram(
       Option(x),
@@ -195,6 +229,8 @@ object Histogram {
       Option(marker),
       Option(xbins),
       Option(histnorm),
-      Option(showlegend) .map(b => b: Boolean)
+      Option(showlegend) .map(b => b: Boolean),
+      Option(cumulative),
+      Option(histfunc)
     )
 }
