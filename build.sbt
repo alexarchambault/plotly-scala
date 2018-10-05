@@ -2,6 +2,8 @@
 import Aliases._
 import Settings._
 
+import sbtcrossproject.CrossPlugin.autoImport.crossProject
+
 
 inThisBuild(List(
   organization := "org.plotly-scala",
@@ -18,7 +20,7 @@ inThisBuild(List(
 ))
 
 
-lazy val core = crossProject
+lazy val core = crossProject(JVMPlatform, JSPlatform)
   .settings(
     shared,
     plotlyPrefix
@@ -35,7 +37,7 @@ lazy val `joda-time` = project
     libs += Deps.jodaTime
   )
 
-lazy val render = crossProject
+lazy val render = crossProject(JVMPlatform, JSPlatform)
   .dependsOn(core)
   .settings(
     shared,
