@@ -2,8 +2,6 @@
 import sbt._
 import sbt.Keys._
 
-import Aliases._
-
 object Settings {
 
   lazy val customSourceGenerators = TaskKey[Seq[sbt.File]]("custom-source-generators")
@@ -116,7 +114,7 @@ object Settings {
   }
 
   lazy val utest = Seq(
-    libs += Deps.utest.value % "test",
+    libraryDependencies += Deps.utest.value % "test",
     testFrameworks += new TestFramework("utest.runner.Framework")
   )
 
