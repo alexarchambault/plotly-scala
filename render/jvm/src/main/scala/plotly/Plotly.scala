@@ -1,22 +1,21 @@
 package plotly
 
-import java.io.{ ByteArrayOutputStream, File, InputStream }
-
-import io.circe.Printer
-import io.circe.syntax._
+import java.io.{ByteArrayOutputStream, File, InputStream}
 
 import plotly.Codecs._
 import plotly.element.Color
 import plotly.layout._
-
-import java.lang.{ Boolean => JBoolean, Double => JDouble, Integer => JInt }
+import java.lang.{Boolean => JBoolean, Double => JDouble, Integer => JInt}
 import java.nio.file.Files
+
+import argonaut.Argonaut._
+import argonaut.PrettyParams
 
 import scala.annotation.tailrec
 
 object Plotly {
 
-  private val printer = Printer.noSpaces.copy(dropNullValues = true)
+  private val printer = PrettyParams.nospace.copy(dropNullKeys = true)
 
   def jsSnippet(div: String, data: Seq[Trace], layout: Layout): String = {
 

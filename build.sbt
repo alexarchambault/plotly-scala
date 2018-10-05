@@ -35,38 +35,18 @@ lazy val `joda-time` = project
     libs += Deps.jodaTime
   )
 
-lazy val `circe-simple-generic` = crossProject
-  .settings(
-    shared,
-    libs ++= Seq(
-      Deps.circeCore.value,
-      Deps.circeParser.value,
-      Deps.shapeless.value,
-      Deps.scalacheckShapeless.value % "test"
-    ),
-    utest
-  )
-  .jsSettings(
-    scalaJSStage in Global := FastOptStage
-  )
-
-lazy val circeSimpleGenericJvm = `circe-simple-generic`.jvm
-lazy val circeSimpleGenericJs = `circe-simple-generic`.js
-
 lazy val render = crossProject
-  .dependsOn(core, `circe-simple-generic`)
+  .dependsOn(core)
   .settings(
     shared,
-    plotlyPrefix
+    plotlyPrefix,
+    libs += Deps.argonautShapeless.value
   )
   .jvmSettings(
     libs += WebDeps.plotlyJs
   )
   .jsSettings(
-    libs ++= Seq(
-      Deps.circeScalaJs.value,
-      Deps.scalajsDom.value
-    )
+    libs += Deps.scalajsDom.value
   )
 
 lazy val renderJvm = render.jvm
@@ -126,7 +106,6 @@ lazy val tests = project
     dontPublish,
     plotlyPrefix,
     libs ++= Seq(
-      Deps.circeLiteral.value % "test",
       Deps.scalaTest % "test",
       Deps.rhino % "test"
     )
@@ -137,9 +116,7 @@ lazy val almond = project
   .settings(
     shared,
     plotlyPrefix,
-    libs ++= Seq(
-      Deps.almondScalaApi % "provided"
-    )
+    libs += Deps.almondScalaApi % "provided"
   )
 
 
@@ -149,8 +126,6 @@ lazy val `plotly-scala` = project
     coreJvm,
     coreJs,
     `joda-time`,
-    circeSimpleGenericJvm,
-    circeSimpleGenericJs,
     renderJvm,
     renderJs,
     demo,

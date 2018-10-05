@@ -7,14 +7,8 @@ object Deps {
 
   import Def.setting
 
-  private val circeVersion = "0.9.1"
-
-
   def almondScalaApi = "sh.almond" % "scala-kernel-api" % "0.1.5" cross CrossVersion.full
-  def circeCore = setting("io.circe" %%% "circe-core" % circeVersion)
-  def circeLiteral = setting("io.circe" %% "circe-literal" % circeVersion)
-  def circeScalaJs = setting("io.circe" %%% "circe-scalajs" % circeVersion)
-  def circeParser = setting("io.circe" %%% "circe-parser" % circeVersion)
+  def argonautShapeless = setting("com.github.alexarchambault" %%% "argonaut-shapeless_6.2" % "1.2.0-M8")
   def jodaTime = "joda-time" % "joda-time" % "2.9.1"
   def rhino = "org.mozilla" % "rhino" % "1.7.7.1"
   def shapeless = setting("com.chuusai" %%% "shapeless" % "2.3.2")
