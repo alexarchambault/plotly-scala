@@ -106,6 +106,7 @@ lazy val tests = project
     shared,
     dontPublish,
     plotlyPrefix,
+    fetchTestData,
     libraryDependencies ++= Seq(
       Deps.scalaTest % "test",
       Deps.rhino % "test"

@@ -118,4 +118,35 @@ object Settings {
     testFrameworks += new TestFramework("utest.runner.Framework")
   )
 
+  val gitLock = new Object
+
+  def runCommand(cmd: Seq[String], dir: File): Unit = {
+    val b = new ProcessBuilder(cmd: _*)
+    b.directory(dir)
+    b.inheritIO()
+    val p = b.start()
+    val retCode = p.waitFor()
+    if (retCode != 0)
+      sys.error(s"Command ${cmd.mkString(" ")} failed (return code $retCode)")
+  }
+
+
+  lazy val fetchTestData = {
+    unmanagedResources.in(Test) ++= {
+      val log = streams.value.log
+      val baseDir = baseDirectory.in(LocalRootProject).value
+      val testsPostsDir = baseDir / "plotly-documentation" / "_posts"
+      if (!testsPostsDir.exists())
+        gitLock.synchronized {
+          if (!testsPostsDir.exists()) {
+            val cmd = Seq("git", "submodule", "update", "--init", "--recursive", "--", "plotly-documentation")
+            log.info("Fetching submodule plotly-documentation (this may take some time)")
+            runCommand(cmd, baseDir)
+            log.info("Successfully fetched submodule plotly-documentation")
+          }
+        }
+      Nil
+    }
+  }
+
 }
