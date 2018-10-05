@@ -1,19 +1,20 @@
 package plotly
 
-import io.circe.{Json, Printer}
-import io.circe.syntax._
+import java.lang.{Boolean => JBoolean, Double => JDouble, Integer => JInt}
+
+import argonaut.Argonaut._
+import argonaut.{Json, PrettyParams}
+import plotly.Codecs._
+import plotly.element.Color
+import plotly.layout._
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
 import scala.scalajs.js.JSON
-import plotly.Codecs._
-import plotly.element.Color
-import plotly.layout._
-import java.lang.{Boolean => JBoolean, Double => JDouble, Integer => JInt}
 
 object Plotly {
 
-  private val printer = Printer.noSpaces.copy(dropNullValues = true)
+  private val printer = PrettyParams.nospace.copy(dropNullKeys = true)
   private def stripNulls(json: Json): js.Any = {
     // Remove empty objects
     JSON.parse(printer.pretty(json))

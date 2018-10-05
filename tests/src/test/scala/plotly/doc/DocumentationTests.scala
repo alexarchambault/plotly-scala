@@ -1,21 +1,17 @@
 package plotly
 package doc
 
-import java.lang.{ Double => JDouble }
-
-import java.io.{ ByteArrayOutputStream, File, InputStream }
+import java.io.{ByteArrayOutputStream, File, InputStream}
+import java.lang.{Double => JDouble}
 import java.nio.file.Files
 
-import io.circe.{ DecodingFailure, Json, parser => Parse }
-import io.circe.syntax._
-
+import argonaut.Argonaut._
+import argonaut.{Json, Parse}
+import plotly.layout.Layout
 import org.mozilla.javascript._
+import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.matching.Regex
-
-import org.scalatest.{ FlatSpec, Matchers }
-
-import plotly.layout.Layout
 
 object DocumentationTests {
 
@@ -52,7 +48,7 @@ object DocumentationTests {
 
   def resourceTrace(res: String): Trace = {
     val dataStr = load(res)
-    val result = Parse.parse(dataStr).right.flatMap(_.as[Trace])
+    val result = dataStr.decodeEither[Trace]
     result.right.getOrElse {
       throw new Exception(s"$res: $result")
     }
@@ -60,7 +56,7 @@ object DocumentationTests {
 
   def resourceLayout(res: String): Layout = {
     val dataStr = load(res)
-    val result = Parse.parse(dataStr).right.flatMap(_.as[Layout])
+    val result = dataStr.decodeEither[Layout]
     result.right.getOrElse {
       throw new Exception(s"$res: $result")
     }
@@ -95,7 +91,7 @@ object DocumentationTests {
         case None =>
           throw new NoSuchElementException("data not set")
         case Some(json) =>
-          json.asArray.getOrElse {
+          json.array.getOrElse {
             throw new Exception(s"data is not a JSON array\n${json.spaces2}")
           }
       }
@@ -162,10 +158,10 @@ object DocumentationTests {
       Context.exit()
     }
 
-    val decodeData0 = rawDataElems.map(json => json -> json.as[Trace])
+    val decodeData0 = rawDataElems.map(json => json -> json.as[Trace].toEither)
 
     val dataErrors = decodeData0.collect {
-      case (json, Left(DecodingFailure(err, h))) =>
+      case (json, Left((err, h))) =>
         (json, err, h)
     }
 
@@ -180,10 +176,10 @@ object DocumentationTests {
       case (_, Right(data)) => data
     }
 
-    val decodeLayoutOpt = rawLayoutOpt.map(json => json -> json.as[Layout])
+    val decodeLayoutOpt = rawLayoutOpt.map(json => json -> json.as[Layout].toEither)
 
     val layoutOpt = decodeLayoutOpt.map {
-      case (json, Left(DecodingFailure(err, h))) =>
+      case (json, Left((err, h))) =>
         Console.err.println(s"Decoding layout: $err ($h)\n${json.spaces2}\n")
         throw new Exception("Error decoding layout (see above messages)")
 

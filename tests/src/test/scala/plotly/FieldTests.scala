@@ -1,16 +1,18 @@
 package plotly
 
-import io.circe.Json
+import argonaut.Json
 import org.scalatest.{FlatSpec, Matchers}
 
 class FieldTests extends FlatSpec with Matchers {
 
   def traceHasShowlegendField(trace: Trace): Unit = {
 
-    val expectedField = Json.fromBoolean(true)
+    val expectedField = Json.jBool(true)
 
-    val json = Codecs.encodeTrace(trace)
-    val field = json.findAllByKey("showlegend")
+    val field = Codecs.argonautEncodeTrace(trace)
+      .obj
+      .toList
+      .flatMap(_.toList.filter(_._1 == "showlegend").map(_._2))
 
     assert(field === List(expectedField))
   }
