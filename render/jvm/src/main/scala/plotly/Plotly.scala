@@ -10,12 +10,13 @@ import java.nio.file.Files
 
 import argonaut.Argonaut._
 import argonaut.PrettyParams
+import plotly.internals.BetterPrinter
 
 import scala.annotation.tailrec
 
 object Plotly {
 
-  private val printer = PrettyParams.nospace.copy(dropNullKeys = true)
+  private val printer = BetterPrinter(PrettyParams.nospace.copy(dropNullKeys = true))
 
   def jsSnippet(div: String, data: Seq[Trace], layout: Layout): String = {
 
@@ -25,7 +26,7 @@ object Plotly {
 
     for ((d, idx) <- data.zipWithIndex) {
       b ++= s"  var data$idx = "
-      b ++= printer.pretty(d.asJson)
+      b ++= printer.render(d.asJson)
       b ++= ";\n"
     }
 
@@ -33,7 +34,7 @@ object Plotly {
     b ++= data.indices.map(idx => s"data$idx").mkString("var data = [", ", ", "];")
     b ++= "\n"
     b ++= "  var layout = "
-    b ++= printer.pretty(layout.asJson)
+    b ++= printer.render(layout.asJson)
     b ++= ";\n\n  Plotly.plot('"
     b ++= div.replaceAll("'", "\\'")
     b ++= "', data, layout);\n"
