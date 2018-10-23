@@ -10,7 +10,7 @@ import java.nio.file.Files
 
 import argonaut.Argonaut._
 import argonaut.PrettyParams
-import plotly.internals.BetterPrinter
+import plotly.internals.{BetterPrinter, Properties}
 
 import scala.annotation.tailrec
 
@@ -58,7 +58,8 @@ object Plotly {
     buffer.toByteArray
   }
 
-  val plotlyVersion = "1.12.0" // FIXME Get from build.sbt
+  def plotlyVersion: String =
+    Properties.plotlyJsVersion
 
   def plotlyMinJs: String = {
     var is: InputStream = null
