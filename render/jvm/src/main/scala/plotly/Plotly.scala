@@ -9,7 +9,7 @@ import java.lang.{Boolean => JBoolean, Double => JDouble, Integer => JInt}
 import java.nio.file.Files
 
 import argonaut.Argonaut._
-import argonaut.PrettyParams
+import argonaut.{Json, PrettyParams}
 import plotly.internals.{BetterPrinter, Properties}
 
 import scala.annotation.tailrec
@@ -17,6 +17,16 @@ import scala.annotation.tailrec
 object Plotly {
 
   private val printer = BetterPrinter(PrettyParams.nospace.copy(dropNullKeys = true))
+
+  def jsonSnippet(data: Seq[Trace], layout: Layout): String = {
+
+    val json = Json.obj(
+      "data" -> data.toList.asJson,
+      "layout" -> layout.asJson
+    )
+
+    printer.render(json)
+  }
 
   def jsSnippet(div: String, data: Seq[Trace], layout: Layout): String = {
 
