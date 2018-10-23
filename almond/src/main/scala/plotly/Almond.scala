@@ -23,7 +23,7 @@ object Almond {
        s"""define('plotly', function(require, exports, module) {
           |  ${Plotly.plotlyMinJs}
           |});
-        """
+        """.stripMargin
       else
         """require.config({
           |  paths: {
