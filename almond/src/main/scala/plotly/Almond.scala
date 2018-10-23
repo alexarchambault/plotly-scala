@@ -2,7 +2,7 @@ package plotly
 
 import java.lang.{Boolean => JBoolean, Double => JDouble, Integer => JInt}
 
-import almond.interpreter.api.OutputHandler
+import almond.interpreter.api.{DisplayData, OutputHandler}
 
 import scala.util.Random
 import plotly.element._
@@ -23,7 +23,7 @@ object Almond {
        s"""define('plotly', function(require, exports, module) {
           |  ${Plotly.plotlyMinJs}
           |});
-        """
+        """.stripMargin
       else
         """require.config({
           |  paths: {
@@ -50,25 +50,48 @@ object Almond {
       </script>
     """
 
+    Internal.initialized = true
+
     publish.html(html)
   }
 
   def plotJs(
-    div: String,
     data: Seq[Trace],
-    layout: Layout
+    layout: Layout,
+    div: String = ""
   )(implicit
     publish: OutputHandler
-  ): Unit = {
+  ): String = {
 
-    val baseJs = Plotly.jsSnippet(div, data, layout)
+    val (div0, divPart) =
+      if (div.isEmpty) {
+        val d = randomDiv()
+        (d, s"""<div class="chart" id="$d"></div>""")
+      } else
+        (div, "")
+
+    val baseJs = Plotly.jsSnippet(div0, data, layout)
+    val json = Plotly.jsonSnippet(data, layout)
 
     val js =
-     s"""requirejs(["plotly"], function(Plotly) {
+     s"""require('plotly', function(Plotly) {
         |  $baseJs
         |});
       """.stripMargin
-    publish.js(js)
+
+    val data0 = DisplayData(
+      data = Map(
+        "text/html" ->
+          s"""$divPart
+             |<script>$js</script>
+           """.stripMargin,
+        "application/vnd.plotly.v1+json" -> json
+      )
+    )
+
+    publish.display(data0)
+
+    div0
   }
 
   def randomDiv() = "plot-" + math.abs(Random.nextInt().toLong)
@@ -89,18 +112,7 @@ object Almond {
         }
       }
 
-    val div0 =
-      if (div.isEmpty)
-        randomDiv()
-      else
-        div
-
-    if (div.isEmpty)
-      publish.html(s"""<div class="chart" id="$div0"></div>""")
-
-    plotJs(div0, data, layout)
-
-    div0
+    plotJs(data, layout)
   }
 
   implicit class DataOps(val data: Trace) extends AnyVal {

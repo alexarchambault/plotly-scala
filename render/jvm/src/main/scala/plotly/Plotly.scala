@@ -9,13 +9,24 @@ import java.lang.{Boolean => JBoolean, Double => JDouble, Integer => JInt}
 import java.nio.file.Files
 
 import argonaut.Argonaut._
-import argonaut.PrettyParams
+import argonaut.{Json, PrettyParams}
+import plotly.internals.{BetterPrinter, Properties}
 
 import scala.annotation.tailrec
 
 object Plotly {
 
-  private val printer = PrettyParams.nospace.copy(dropNullKeys = true)
+  private val printer = BetterPrinter(PrettyParams.nospace.copy(dropNullKeys = true))
+
+  def jsonSnippet(data: Seq[Trace], layout: Layout): String = {
+
+    val json = Json.obj(
+      "data" -> data.toList.asJson,
+      "layout" -> layout.asJson
+    )
+
+    printer.render(json)
+  }
 
   def jsSnippet(div: String, data: Seq[Trace], layout: Layout): String = {
 
@@ -25,7 +36,7 @@ object Plotly {
 
     for ((d, idx) <- data.zipWithIndex) {
       b ++= s"  var data$idx = "
-      b ++= printer.pretty(d.asJson)
+      b ++= printer.render(d.asJson)
       b ++= ";\n"
     }
 
@@ -33,7 +44,7 @@ object Plotly {
     b ++= data.indices.map(idx => s"data$idx").mkString("var data = [", ", ", "];")
     b ++= "\n"
     b ++= "  var layout = "
-    b ++= printer.pretty(layout.asJson)
+    b ++= printer.render(layout.asJson)
     b ++= ";\n\n  Plotly.plot('"
     b ++= div.replaceAll("'", "\\'")
     b ++= "', data, layout);\n"
@@ -57,7 +68,8 @@ object Plotly {
     buffer.toByteArray
   }
 
-  val plotlyVersion = "1.12.0" // FIXME Get from build.sbt
+  def plotlyVersion: String =
+    Properties.plotlyJsVersion
 
   def plotlyMinJs: String = {
     var is: InputStream = null

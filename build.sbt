@@ -44,7 +44,33 @@ lazy val render = crossProject(JVMPlatform, JSPlatform)
     libraryDependencies += Deps.argonautShapeless.value
   )
   .jvmSettings(
-    libraryDependencies += WebDeps.plotlyJs
+    libraryDependencies ++= Seq(
+      WebDeps.plotlyJs,
+      Deps.scalaTest % "test"
+    ),
+    resourceGenerators.in(Compile) += Def.task {
+      import sys.process._
+
+      val dir = classDirectory.in(Compile).value / "plotly"
+      val ver = version.value
+
+      val f = dir / "plotly-scala.properties"
+      dir.mkdirs()
+
+      val p = new java.util.Properties
+
+      p.setProperty("plotly-js-version", WebDeps.Versions.plotlyJs)
+      p.setProperty("version", ver)
+      p.setProperty("commit-hash", Seq("git", "rev-parse", "HEAD").!!.trim)
+
+      val w = new java.io.FileOutputStream(f)
+      p.store(w, "plotly-scala properties")
+      w.close()
+
+      state.value.log.info(s"Wrote $f")
+
+      Seq(f)
+    }
   )
   .jsSettings(
     libraryDependencies += Deps.scalajsDom.value

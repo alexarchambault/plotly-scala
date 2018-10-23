@@ -6,6 +6,7 @@ import argonaut.Argonaut._
 import argonaut.{Json, PrettyParams}
 import plotly.Codecs._
 import plotly.element.Color
+import plotly.internals.BetterPrinter
 import plotly.layout._
 
 import scala.scalajs.js
@@ -14,10 +15,10 @@ import scala.scalajs.js.JSON
 
 object Plotly {
 
-  private val printer = PrettyParams.nospace.copy(dropNullKeys = true)
+  private val printer = BetterPrinter(PrettyParams.nospace.copy(dropNullKeys = true))
   private def stripNulls(json: Json): js.Any = {
     // Remove empty objects
-    JSON.parse(printer.pretty(json))
+    JSON.parse(printer.render(json))
   }
 
   def plot(div: String, data: Seq[Trace], layout: Layout): Unit = {
