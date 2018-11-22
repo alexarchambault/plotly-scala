@@ -74,7 +74,7 @@ object Almond {
     val json = Plotly.jsonSnippet(data, layout)
 
     val js =
-     s"""require('plotly', function(Plotly) {
+     s"""require(['plotly'], function(Plotly) {
         |  $baseJs
         |});
       """.stripMargin
