@@ -26,9 +26,9 @@ It runs demos of the plotly.js documentation during its tests, to ensure that it
 
 ### From almond
 
-Simply add the `org.plotly-scala::plotly-almond:0.4.2` dependency to the notebook, initialize plotly-scala, and use it, like
+Simply add the `org.plotly-scala::plotly-almond:0.5.2` dependency to the notebook, initialize plotly-scala, and use it, like
 ```scala
-import $ivy.`org.plotly-scala::plotly-almond:0.4.2`
+import $ivy.`org.plotly-scala::plotly-almond:0.5.2`
 
 import plotly._
 import plotly.element._
@@ -44,11 +44,17 @@ val (x, y) = Seq(
 Bar(x, y).plot()
 ```
 
+#### JupyterLab
+If you're using [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/), you have to install the [plotly-extension](https://github.com/jupyterlab/jupyter-renderers/tree/master/packages/plotly-extension) to enable support for rendering Plotly charts:
+```bash
+jupyter labextension install @jupyterlab/plotly-extension
+```
+
 ### From scala-js
 
 Add the corresponding dependency to your project, like
 ```scala
-libraryDependencies += "org.plotly-scala" %%% "plotly-render" % "0.4.2"
+libraryDependencies += "org.plotly-scala" %%% "plotly-render" % "0.5.2"
 ```
 
 Note that there are no version published for scala 2.10 yet, because of the limitation of case classes to 22 members with it.
@@ -85,7 +91,7 @@ plot.plot(
 
 Load the corresponding dependency, and some imports, like
 ```scala
-import $ivy.`org.plotly-scala::plotly-render:0.4.2`
+import $ivy.`org.plotly-scala::plotly-render:0.5.2`
 import plotly._, element._, layout._, Plotly._
 ```
 
