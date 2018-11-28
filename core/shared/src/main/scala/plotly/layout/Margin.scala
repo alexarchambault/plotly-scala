@@ -9,7 +9,7 @@ final case class Margin(
            r: Option[Int],
            t: Option[Int],
            b: Option[Int],
-         pad: Option[Int],
+         pad: Option[Int]
 )
 
 object Margin {

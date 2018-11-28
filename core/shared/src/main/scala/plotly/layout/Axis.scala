@@ -75,8 +75,7 @@ object Axis {
           tickvals: Sequence         = null,
           ticktext: Sequence         = null,
             nticks: JInt             = null,
-        automargin: JBoolean         = null,
-
+        automargin: JBoolean         = null
   ): Axis =
     Axis(
       Option(title),
