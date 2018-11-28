@@ -25,10 +25,10 @@ object Almond {
           |});
         """.stripMargin
       else
-        """require.config({
+        s"""require.config({
           |  paths: {
           |    d3: 'https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min',
-          |    plotly: 'https://cdn.plot.ly/plotly-1.12.0.min',
+          |    plotly: 'https://cdn.plot.ly/plotly-${Plotly.plotlyVersion}.min',
           |    jquery: 'https://code.jquery.com/jquery-3.3.1.min'
           |  },
           |

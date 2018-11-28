@@ -33,7 +33,12 @@ final case class Axis(
           anchor: Option[AxisAnchor],
           `type`: Option[AxisType],
       overlaying: Option[AxisAnchor],
-        position: Option[Double]
+        position: Option[Double],
+        tickmode: Option[TickMode],
+        tickvals: Option[Sequence],
+        ticktext: Option[Sequence],
+          nticks: Option[Int],
+      automargin: Option[Boolean]
 )
 
 object Axis {
@@ -65,7 +70,12 @@ object Axis {
             anchor: AxisAnchor       = null,
             `type`: AxisType         = null,
         overlaying: AxisAnchor       = null,
-          position: JDouble          = null
+          position: JDouble          = null,
+          tickmode: TickMode         = null,
+          tickvals: Sequence         = null,
+          ticktext: Sequence         = null,
+            nticks: JInt             = null,
+        automargin: JBoolean         = null
   ): Axis =
     Axis(
       Option(title),
@@ -95,6 +105,11 @@ object Axis {
       Option(anchor),
       Option(`type`),
       Option(overlaying),
-      Option(position)       .map(x => x: Double)
+      Option(position)       .map(x => x: Double),
+      Option(tickmode),
+      Option(tickvals),
+      Option(ticktext),
+      Option(nticks)         .map(x => x: Int),
+      Option(automargin)     .map(x => x: Boolean)
     )
 }
