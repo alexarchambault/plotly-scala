@@ -233,6 +233,7 @@ class DocumentationTests extends FlatSpec with Matchers {
     "financial/time-series",
     "basic/bubble",
     "basic/area",
+    "layout/sizing",
     // TODO? Gauge charts
     // TODO Multiple chart types (needs contour)
     // TODO Shapes (need mock of d3)
