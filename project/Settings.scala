@@ -85,7 +85,7 @@ object Settings {
     sourceGenerators.in(Compile) += customSourceGenerators.taskValue
   )
 
-  private val scala212 = "2.12.7"
+  private val scala212 = "2.12.8"
   private val scala211 = "2.11.12"
 
   lazy val shared = Seq(
@@ -99,7 +99,8 @@ object Settings {
     },
     resolvers ++= Seq(
       "Webjars Bintray" at "https://dl.bintray.com/webjars/maven/",
-      Resolver.sonatypeRepo("releases")
+      Resolver.sonatypeRepo("releases"),
+      "jitpack" at "https://jitpack.io"
     )
   )
 
