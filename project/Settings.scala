@@ -99,7 +99,8 @@ object Settings {
     },
     resolvers ++= Seq(
       "Webjars Bintray" at "https://dl.bintray.com/webjars/maven/",
-      Resolver.sonatypeRepo("releases")
+      Resolver.sonatypeRepo("releases"),
+      "jitpack" at "https://jitpack.io"
     )
   )
 
