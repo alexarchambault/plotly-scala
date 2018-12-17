@@ -95,7 +95,8 @@ object Almond {
     div0
   }
 
-  def randomDiv() = "plot-" + math.abs(Random.nextInt().toLong)
+  def randomDiv(): String =
+    almond.api.helpers.Display.newDiv("plot-")
 
   def plot(
     data: Seq[Trace],
