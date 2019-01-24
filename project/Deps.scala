@@ -7,7 +7,7 @@ object Deps {
 
   import Def.setting
 
-  def almondScalaApi = "sh.almond" % "scala-kernel-api" % "0.2.1" cross CrossVersion.full
+  def almondScalaApi = "sh.almond" % "scala-kernel-api" % "0.2.2" cross CrossVersion.full
   def argonautShapeless = setting("com.github.alexarchambault" %%% "argonaut-shapeless_6.2" % "1.2.0-M9")
   def jodaTime = "joda-time" % "joda-time" % "2.10.1"
   def rhino = "org.mozilla" % "rhino" % "1.7.10"
