@@ -37,16 +37,27 @@ lazy val `joda-time` = project
   )
 
 lazy val render = crossProject(JVMPlatform, JSPlatform)
+  .jvmConfigure(_.enablePlugins(ShadingPlugin))
   .dependsOn(core)
+  .jvmSettings(
+    shading("plotly.internals.shaded")
+  )
   .settings(
     shared,
-    plotlyPrefix,
-    libraryDependencies += Deps.argonautShapeless.value
+    plotlyPrefix
   )
   .jvmSettings(
     libraryDependencies ++= Seq(
+      Deps.argonautShapeless.value % "shaded",
+      // depending on that one so that it doesn't get shaded
+      "org.scala-lang" % "scala-reflect" % scalaVersion.value,
       WebDeps.plotlyJs,
       Deps.scalaTest % "test"
+    ),
+    shadeNamespaces ++= Set(
+      "argonaut",
+      "macrocompat",
+      "shapeless"
     ),
     resourceGenerators.in(Compile) += Def.task {
       import sys.process._
@@ -73,7 +84,10 @@ lazy val render = crossProject(JVMPlatform, JSPlatform)
     }
   )
   .jsSettings(
-    libraryDependencies += Deps.scalajsDom.value
+    libraryDependencies ++= Seq(
+      Deps.argonautShapeless.value,
+      Deps.scalajsDom.value
+    )
   )
 
 lazy val renderJvm = render.jvm

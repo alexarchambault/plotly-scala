@@ -1,4 +1,6 @@
 
+import com.typesafe.sbt.pgp._
+import coursier.ShadingPlugin.autoImport._
 import sbt._
 import sbt.Keys._
 
@@ -149,5 +151,18 @@ object Settings {
       Nil
     }
   }
+
+  def shading(namespace: String) =
+    inConfig(_root_.coursier.ShadingPlugin.Shading)(PgpSettings.projectSettings) ++
+       // Why does this have to be repeated here?
+       // Can't figure out why configuration gets lost without this in particular...
+      _root_.coursier.ShadingPlugin.projectSettings ++
+      Seq(
+        shadingNamespace := namespace,
+        publish := publish.in(Shading).value,
+        publishLocal := publishLocal.in(Shading).value,
+        PgpKeys.publishSigned := PgpKeys.publishSigned.in(Shading).value,
+        PgpKeys.publishLocalSigned := PgpKeys.publishLocalSigned.in(Shading).value
+      )
 
 }
