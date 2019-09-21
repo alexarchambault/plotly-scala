@@ -2,11 +2,14 @@ language: scala
 jdk: openjdk8
 before_install:
   - git fetch --tags
-script: sbt -batch ++${TRAVIS_SCALA_VERSION} test
+script: ./sbt -batch ++${TRAVIS_SCALA_VERSION} test
+branches:
+  only:
+  - master
+  - /^v\d+\.\d+.*$/ # tagged versions
 cache:
   directories:
   - $HOME/.cache
-  - $HOME/.coursier
   - $HOME/.ivy2/cache
   - $HOME/.sbt
 stages:
@@ -15,7 +18,6 @@ stages:
     if: (branch = master AND type = push) OR (tag IS present)
 jobs:
   include:
-    - scala: 2.11.12
-    - scala: 2.12.8
+    - scala: 2.12.10
     - stage: release
-      script: sbt ci-release
+      script: ./sbt ci-release
