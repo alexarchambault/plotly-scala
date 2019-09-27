@@ -1,5 +1,5 @@
 
-import com.typesafe.sbt.pgp._
+import com.jsuereth.sbtpgp._
 import coursier.ShadingPlugin.autoImport._
 import sbt._
 import sbt.Keys._
