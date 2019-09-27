@@ -88,16 +88,11 @@ object Settings {
   )
 
   private val scala212 = "2.12.10"
+  private val scala213 = "2.13.1"
 
   lazy val shared = Seq(
-    crossScalaVersions := Seq(scala212),
-    scalaVersion := scala212,
-    scalacOptions ++= {
-      if (scalaBinaryVersion.value == "2.12")
-        Seq()
-      else
-        Seq("-target:jvm-1.7")
-    },
+    crossScalaVersions := Seq(scala213, scala212),
+    scalaVersion := scala213,
     resolvers ++= Seq(
       "Webjars Bintray" at "https://dl.bintray.com/webjars/maven/",
       Resolver.sonatypeRepo("releases"),
