@@ -113,10 +113,7 @@ object DocumentationTests {
   private object Numeric {
     def linspace(from: Int, to: Int, count: Int) = {
       val step = (to - from).toDouble / (count - 1)
-      new NativeArray((0 until count).map(n => from + n * step: JDouble).toArray[AnyRef]) {
-        override def getDefaultValue(hint: Class[_]) =
-          0.0: JDouble
-      }
+      new NativeArrayWithDefault((0 until count).map(n => from + n * step: JDouble).toArray[AnyRef], 0.0: JDouble)
     }
   }
 
