@@ -9,7 +9,7 @@ object Deps {
 
   def almondScalaApi = "sh.almond" %% "jupyter-api" % "0.8.2"
   def argonautShapeless = setting("com.github.alexarchambault" %%% "argonaut-shapeless_6.2" % "1.2.0-M11")
-  def jodaTime = "joda-time" % "joda-time" % "2.10.4"
+  def jodaTime = "joda-time" % "joda-time" % "2.10.5"
   def rhino = "org.mozilla" % "rhino" % "1.7.11"
   def shapeless = setting("com.chuusai" %%% "shapeless" % "2.3.3")
   def scalacheckShapeless = setting("com.github.alexarchambault" %%% "scalacheck-shapeless_1.14" % "1.2.0-1")
