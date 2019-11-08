@@ -4,8 +4,9 @@ package layout
 import java.lang.{ Integer => JInt, Double => JDouble, Boolean => JBoolean }
 
 import plotly.element._
+import dataclass.data
 
-final case class Layout(
+@data class Layout(
           title: Option[String],
          legend: Option[Legend],
           width: Option[Int],

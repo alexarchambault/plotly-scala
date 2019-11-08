@@ -1,3 +1,5 @@
 package plotly.element
 
-final case class Cumulative(enabled: Boolean)
+import dataclass.data
+
+@data class Cumulative(enabled: Boolean)

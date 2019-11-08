@@ -4,11 +4,12 @@ import scala.language.implicitConversions
 
 import java.lang.{ Boolean => JBoolean, Double => JDouble }
 
+import dataclass.data
 import plotly.element._
 
 sealed abstract class Trace extends Product with Serializable
 
-final case class Scatter(
+@data class Scatter(
              x: Option[Sequence],
              y: Option[Sequence],
           text: Option[OneOrSeq[String]],
@@ -88,7 +89,7 @@ object Scatter {
   }
 }
 
-case class Box(
+@data class Box(
              y: Option[Sequence],
              x: Option[Sequence],
      boxpoints: Option[BoxPoints],
@@ -137,7 +138,7 @@ object Box {
     )
 }
 
-final case class Bar(
+@data class Bar(
              x: Sequence,
              y: Sequence,
           name: Option[String],
@@ -192,7 +193,7 @@ object Bar {
     )
 }
 
-case class Histogram(
+@data class Histogram(
           x: Option[Sequence],
           y: Option[Sequence],
     opacity: Option[Double],

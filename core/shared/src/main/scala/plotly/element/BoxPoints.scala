@@ -1,10 +1,12 @@
 package plotly
 package element
 
+import dataclass.data
+
 sealed abstract class BoxPoints extends Product with Serializable
 
 object BoxPoints {
-  case class Bool(value: Boolean) extends BoxPoints
+  @data class Bool(value: Boolean) extends BoxPoints
   sealed abstract class Labeled(val label: String) extends BoxPoints
 
   val False = Bool(false)

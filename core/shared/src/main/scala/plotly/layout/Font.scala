@@ -4,8 +4,9 @@ package layout
 import plotly.element._
 
 import java.lang.{ Integer => JInt }
+import dataclass.data
 
-final case class Font(
+@data class Font(
     size: Option[Int],
   family: Option[String],
    color: Option[Color]

@@ -1,4 +1,6 @@
 package plotly
 package element
 
-final case class TextFont(family: String)
+import dataclass.data
+
+@data class TextFont(family: String)

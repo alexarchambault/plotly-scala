@@ -3,7 +3,9 @@ package element
 
 import java.lang.{ Double => JDouble }
 
-final case class Marker(
+import dataclass.data
+
+@data class Marker(
           size: Option[OneOrSeq[Int]],
          color: Option[OneOrSeq[Color]],
        opacity: Option[OneOrSeq[Double]],

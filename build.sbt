@@ -22,7 +22,8 @@ inThisBuild(List(
 lazy val core = crossProject(JVMPlatform, JSPlatform)
   .settings(
     shared,
-    plotlyPrefix
+    plotlyPrefix,
+    libraryDependencies += Deps.dataClass
   )
 
 lazy val coreJvm = core.jvm

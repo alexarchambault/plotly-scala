@@ -6,7 +6,7 @@ import plotly.Plotly
 
 import org.scalajs.dom
 
-import scalatags.JsDom.all._
+import scalatags.JsDom.all.{area => _, _}
 
 @JSExport object Demo {
 

@@ -1,12 +1,14 @@
 package plotly
 package element
 
+import dataclass.data
+
 import java.lang.{ Boolean => JBoolean, Double => JDouble }
 
 sealed abstract class Error(val `type`: String) extends Product with Serializable
 
 object Error {
-  case class Data(
+  @data class Data(
          array: Seq[Double],
        visible: Option[Boolean],
      symmetric: Option[Boolean],
@@ -28,7 +30,7 @@ object Error {
       )
   }
 
-  case class Percent(
+  @data class Percent(
     value: Double,
     visible: Option[Boolean],
     symmetric: Option[Boolean],
@@ -50,7 +52,7 @@ object Error {
       )
   }
 
-  case class Constant(
+  @data class Constant(
         value: Double,
         color: Option[String],
     thickness: Option[Double],

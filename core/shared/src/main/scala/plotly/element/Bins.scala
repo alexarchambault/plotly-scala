@@ -1,3 +1,9 @@
 package plotly.element
 
-case class Bins(start: Double, end: Double, size: Double)
+import dataclass.data
+
+@data class Bins(
+  start: Double,
+  end: Double,
+  size: Double
+)
