@@ -1,8 +1,10 @@
 package plotly.element
 
+import dataclass.data
+
 import scala.util.Try
 
-case class LocalDateTime(
+@data class LocalDateTime(
   year: Int,
   month: Int,
   dayOfMonth: Int,

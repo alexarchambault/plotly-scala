@@ -3,9 +3,10 @@ package layout
 
 import java.lang.{ Integer => JInt, Double => JDouble, Boolean => JBoolean }
 
+import dataclass.data
 import plotly.element._
 
-final case class Axis(
+@data class Axis(
            title: Option[String],
        titlefont: Option[Font],
         showgrid: Option[Boolean],

@@ -90,6 +90,11 @@ object Settings {
   private val scala212 = "2.12.10"
   private val scala213 = "2.13.1"
 
+  private lazy val isAtLeastScala213 = Def.setting {
+    import Ordering.Implicits._
+    CrossVersion.partialVersion(scalaVersion.value).exists(_ >= (2, 13))
+  }
+
   lazy val shared = Seq(
     crossScalaVersions := Seq(scala213, scala212),
     scalaVersion := scala213,
@@ -97,7 +102,15 @@ object Settings {
       "Webjars Bintray" at "https://dl.bintray.com/webjars/maven/",
       Resolver.sonatypeRepo("releases"),
       "jitpack" at "https://jitpack.io"
-    )
+    ),
+    libraryDependencies ++= {
+      if (isAtLeastScala213.value) Nil
+      else Seq(compilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full))
+    },
+    scalacOptions ++= {
+      if (isAtLeastScala213.value) Seq("-Ymacro-annotations")
+      else Nil
+    }
   )
 
   lazy val dontPublish = Seq(

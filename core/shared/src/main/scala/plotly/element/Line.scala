@@ -1,9 +1,11 @@
 package plotly
 package element
 
+import dataclass.data
+
 import java.lang.{ Double => JDouble }
 
-final case class Line(
+@data class Line(
          shape: Option[LineShape],
          color: Option[OneOrSeq[Color]],
          width: Option[OneOrSeq[Double]],

@@ -1,5 +1,6 @@
 package plotly
 package element
+import dataclass.data
 
 sealed abstract class Symbol(label0: String, idx0: Int) extends Product with Serializable {
   def idx: Int = idx0 + (if (open) 100 else 0)
@@ -14,10 +15,10 @@ object Symbol {
     def dot: Boolean
   }
 
-  case class  Circle(open: Boolean = false, dot: Boolean = false) extends DotSymbol("circle",  0)
-  case class  Square(open: Boolean = false, dot: Boolean = false) extends DotSymbol("square",  1)
-  case class Diamond(open: Boolean = false, dot: Boolean = false) extends DotSymbol("diamond", 2)
-  case class   Cross(open: Boolean = false, dot: Boolean = false) extends DotSymbol("cross",   3)
+  @data class  Circle(open: Boolean = false, dot: Boolean = false) extends DotSymbol("circle",  0)
+  @data class  Square(open: Boolean = false, dot: Boolean = false) extends DotSymbol("square",  1)
+  @data class Diamond(open: Boolean = false, dot: Boolean = false) extends DotSymbol("diamond", 2)
+  @data class   Cross(open: Boolean = false, dot: Boolean = false) extends DotSymbol("cross",   3)
 
   /*
   "4" | "x" | "104" | "x-open" | "204" | "x-dot" | "304" | "x-open-dot"

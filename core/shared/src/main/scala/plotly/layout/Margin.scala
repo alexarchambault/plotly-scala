@@ -2,8 +2,9 @@ package plotly
 package layout
 
 import java.lang.{ Integer => JInt, Boolean => JBoolean }
+import dataclass.data
 
-final case class Margin(
+@data class Margin(
   autoexpand: Option[Boolean],
            l: Option[Int],
            r: Option[Int],
