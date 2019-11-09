@@ -1,7 +1,9 @@
 package plotly
 package element
 
-case class ScatterMode(flags: Set[ScatterMode.Flag])
+import dataclass.data
+
+@data class ScatterMode(flags: Set[ScatterMode.Flag])
 
 object ScatterMode {
   def apply(flags: Flag*): ScatterMode =

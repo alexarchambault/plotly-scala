@@ -4,8 +4,9 @@ package layout
 import java.lang.{ Double => JDouble }
 
 import plotly.element._
+import dataclass.data
 
-final case class Legend(
+@data class Legend(
             x: Option[Double],
             y: Option[Double],
    traceorder: Option[TraceOrder],

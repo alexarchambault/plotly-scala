@@ -3,9 +3,10 @@ package layout
 
 import java.lang.{ Boolean => JBoolean }
 
+import dataclass.data
 import plotly.element._
 
-final case class Annotation(
+@data class Annotation(
        xref: Option[Ref],
        yref: Option[Ref],
           x: Option[Element],
