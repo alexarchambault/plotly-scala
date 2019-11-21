@@ -32,7 +32,9 @@ import dataclass.data
          bargap: Option[Double],
     bargroupgap: Option[Double],
       hovermode: Option[HoverMode],
-        boxmode: Option[BoxMode]
+        boxmode: Option[BoxMode],
+          scene: Option[Scene]
+
 )
 
 object Layout {
@@ -62,7 +64,8 @@ object Layout {
            bargap: JDouble         = null,
       bargroupgap: JDouble         = null,
         hovermode: HoverMode       = null,
-          boxmode: BoxMode         = null
+          boxmode: BoxMode         = null,
+            scene: Scene           = null
   ): Layout =
     new Layout(
       Option(title),
@@ -90,6 +93,7 @@ object Layout {
       Option(bargap).map(x => x),
       Option(bargroupgap).map(x => x),
       Option(hovermode),
-      Option(boxmode)
+      Option(boxmode),
+      Option(scene)
     )
 }
