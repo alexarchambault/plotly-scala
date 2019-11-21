@@ -235,3 +235,22 @@ object Histogram {
       Option(histfunc)
     )
 }
+
+@data class Surface(
+          z: Option[Sequence],
+  showscale: Option[Boolean],
+    opacity: Option[Double]
+) extends Trace
+
+object Surface {
+  def apply(
+            z: Sequence  = null,
+    showscale: JBoolean  = null,
+      opacity: JDouble   = null
+  ): Surface =
+    Surface(
+      Option(z),
+      Option(showscale) .map(b => b: Boolean),
+      Option(opacity)   .map(d => d: Double)
+    )
+}

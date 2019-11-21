@@ -45,6 +45,7 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
   implicit val boxMeanBoolIsWrapper: IsWrapper[BoxMean.Bool] = null
   implicit val boxPointsBoolIsWrapper: IsWrapper[BoxPoints.Bool] = null
   implicit val sequenceDoublesIsWrapper: IsWrapper[Sequence.Doubles] = null
+  implicit val sequenceNestedDoublesIsWrapper: IsWrapper[Sequence.NestedDoubles] = null
   implicit val sequenceStringsIsWrapper: IsWrapper[Sequence.Strings] = null
   implicit val sequenceDatetimesIsWrapper: IsWrapper[Sequence.DateTimes] = null
   implicit val doubleElementIsWrapper: IsWrapper[Element.DoubleElement] = null
