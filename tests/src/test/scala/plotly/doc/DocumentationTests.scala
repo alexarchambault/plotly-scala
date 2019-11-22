@@ -249,10 +249,10 @@ class DocumentationTests extends FlatSpec with Matchers {
     // TODO Heatmaps
     // TODO Heatmap and contour colorscales
     // TODO Polar charts
-    "scientific/log"
+    "scientific/log",
     // TODO Financial charts
     // TODO Maps
-    // TODO 3D charts
+    "3d/3d-surface"
   )
 
   val subDirs = subDirNames.map(new File(dir, _))
