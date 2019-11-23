@@ -4,8 +4,8 @@ Scala bindings for [plotly.js](https://plot.ly/javascript/)
 
 [![Build Status](https://travis-ci.org/alexarchambault/plotly-scala.svg?branch=master)](https://travis-ci.org/alexarchambault/plotly-scala)
 [![Join the chat at https://gitter.im/alexarchambault/plotly-scala](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/alexarchambault/plotly-scala?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Maven Central](https://img.shields.io/maven-central/v/org.plotly-scala/plotly-render_2.11.svg)](https://maven-badges.herokuapp.com/maven-central/org.plotly-scala/plotly-render_2.11)
-[![ScalaDoc](http://javadoc-badge.appspot.com/org.plotly-scala/plotly-render_2.11.svg?label=scaladoc)](http://javadoc-badge.appspot.com/org.plotly-scala/plotly-render_2.11)
+[![Maven Central](https://img.shields.io/maven-central/v/org.plotly-scala/plotly-render_2.13.svg)](https://maven-badges.herokuapp.com/maven-central/org.plotly-scala/plotly-render_2.13)
+[![ScalaDoc](http://javadoc-badge.appspot.com/org.plotly-scala/plotly-render_2.13.svg?label=scaladoc)](http://javadoc-badge.appspot.com/org.plotly-scala/plotly-render_2.13)
 
 [Demo](https://alexarchambault.github.io/plotly-scala/)
 
@@ -26,9 +26,10 @@ It runs demos of the plotly.js documentation during its tests, to ensure that it
 
 ### From almond
 
-Simply add the `org.plotly-scala::plotly-almond:0.5.2` dependency to the notebook, initialize plotly-scala, and use it, like
+Add the `org.plotly-scala::plotly-almond:0.7.2` dependency to the notebook. (Latest version: [![Maven Central](https://img.shields.io/maven-central/v/org.plotly-scala/plotly-render_2.13.svg)](https://maven-badges.herokuapp.com/maven-central/org.plotly-scala/plotly-render_2.13))
+Then initialize plotly-scala, and use it, like
 ```scala
-import $ivy.`org.plotly-scala::plotly-almond:0.5.2`
+import $ivy.`org.plotly-scala::plotly-almond:0.7.2`
 
 import plotly._
 import plotly.element._
@@ -54,10 +55,11 @@ jupyter labextension install @jupyterlab/plotly-extension
 
 Add the corresponding dependency to your project, like
 ```scala
-libraryDependencies += "org.plotly-scala" %%% "plotly-render" % "0.5.2"
+libraryDependencies += "org.plotly-scala" %%% "plotly-render" % "0.7.2"
 ```
+(Latest version: [![Maven Central](https://img.shields.io/maven-central/v/org.plotly-scala/plotly-render_2.13.svg)](https://maven-badges.herokuapp.com/maven-central/org.plotly-scala/plotly-render_2.13))
 
-Note that there are no version published for scala 2.10 yet, because of the limitation of case classes to 22 members with it.
+Note that there are no version published for scala 2.10, because of the limitation of case classes to 22 members with it.
 
 From your code, add some imports for plotly,
 ```scala
@@ -152,6 +154,6 @@ The following workflow can be followed to add support for extra sections of the 
 
 Battlefield tested since early 2016 at [Teads.tv](http://teads.tv)
 
-Released under the LGPL v3 license, copyright 2016 Alexandre Archambault.
+Released under the LGPL v3 license, copyright 2016-2019 Alexandre Archambault and contributors.
 
 Parts based on the original plotly.js API, which is copyright 2016 Plotly, Inc.
