@@ -15,6 +15,8 @@ It can be used from [almond](https://github.com/jupyter-scala/jupyter-scala/tree
 
 It runs demos of the plotly.js documentation during its tests, to ensure that it is fine with all their features. That allows it to reliably cover a wide range of the plotly.js features - namely, all the examples of the supported sections of the plotly.js documentation are guaranteed to be fine.
 
+It is published for both scala 2.12 and 2.13.
+
 ## Table of content
 
 1. [Quick start](#quick-start)
@@ -58,8 +60,6 @@ Add the corresponding dependency to your project, like
 libraryDependencies += "org.plotly-scala" %%% "plotly-render" % "0.7.2"
 ```
 (Latest version: [![Maven Central](https://img.shields.io/maven-central/v/org.plotly-scala/plotly-render_2.13.svg)](https://maven-badges.herokuapp.com/maven-central/org.plotly-scala/plotly-render_2.13))
-
-Note that there are no version published for scala 2.10, because of the limitation of case classes to 22 members with it.
 
 From your code, add some imports for plotly,
 ```scala
