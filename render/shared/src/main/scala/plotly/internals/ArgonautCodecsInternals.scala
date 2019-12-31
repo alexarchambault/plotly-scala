@@ -46,6 +46,7 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
   implicit val boxPointsBoolIsWrapper: IsWrapper[BoxPoints.Bool] = null
   implicit val sequenceDoublesIsWrapper: IsWrapper[Sequence.Doubles] = null
   implicit val sequenceNestedDoublesIsWrapper: IsWrapper[Sequence.NestedDoubles] = null
+  implicit val sequenceNestedIntsIsWrapper: IsWrapper[Sequence.NestedInts] = null
   implicit val sequenceStringsIsWrapper: IsWrapper[Sequence.Strings] = null
   implicit val sequenceDatetimesIsWrapper: IsWrapper[Sequence.DateTimes] = null
   implicit val doubleElementIsWrapper: IsWrapper[Element.DoubleElement] = null
@@ -376,6 +377,30 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
           DecodeResult.fail(s"Unrecognized HSL color: '$s'", c.history)
       }
     }
+
+  implicit val encodeNamedColorScale: EncodeJson[ColorScale.NamedScale] =
+    EncodeJson.of[String].contramap(_.name)
+
+  implicit val decodeNamedColorScale: DecodeJson[ColorScale.NamedScale] =
+    DecodeJson { c =>
+      c.as[String].flatMap { s =>
+        // TODO: Add colorscale name enum?
+        DecodeResult.ok(ColorScale.NamedScale(s))
+      }
+    }
+
+  implicit val encodeCustomColorScale: EncodeJson[ColorScale.CustomScale] =
+    EncodeJson.of[Json].contramap(_.values.toList.asJson)
+
+  implicit val decodeCustomColorScale: DecodeJson[ColorScale.CustomScale] =
+    DecodeJson { c =>
+      c.as[Seq[(Double, Color)]].flatMap { s =>
+        DecodeResult.ok(ColorScale.CustomScale(s))
+      }
+    }
+
+  implicit val colorscaleJsonCodec: JsonSumCodecFor[ColorScale] =
+    JsonSumCodecFor(jsonSumDirectCodecFor("colorscale"))
 
   implicit val elementJsonCodec: JsonSumCodecFor[Element] =
     JsonSumCodecFor(jsonSumDirectCodecFor("element"))
