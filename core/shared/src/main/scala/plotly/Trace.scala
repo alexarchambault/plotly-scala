@@ -260,3 +260,25 @@ object Surface {
       Option(opacity)   .map(d => d: Double)
     )
 }
+
+@data class Heatmap(
+             y: Option[Sequence],
+             x: Option[Sequence],
+             z: Option[Sequence],
+          name: Option[String]
+) extends Trace
+
+object Heatmap {
+  def apply(
+               y: Sequence        = null,
+               x: Sequence        = null,
+               z: Sequence        = null,
+            name: String          = null
+  ): Heatmap =
+    Heatmap(
+      Option(y),
+      Option(x),
+      Option(z),
+      Option(name)
+    )
+}
