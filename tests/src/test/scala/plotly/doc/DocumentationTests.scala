@@ -109,7 +109,7 @@ object DocumentationTests {
     // stub...
     def getElementById(id: String): String = id
   }
-  
+
   private object Numeric {
     def linspace(from: Int, to: Int, count: Int) = {
       val step = (to - from).toDouble / (count - 1)
@@ -243,6 +243,7 @@ class DocumentationTests extends FlatSpec with Matchers {
     "statistical/box",
     // TODO 2D Density plots
     "statistical/histogram",
+    "scientific/heatmap",
     // TODO 2D Histograms
     // TODO Wind rose charts
     // TODO Contour plots
