@@ -37,6 +37,12 @@ import scalatags.JsDom.all.{area => _, _}
     ),
     "Filled Area Plots" -> Seq(
       area.BasicOverlaidAreaChart
+    ),
+    "Heatmaps" -> Seq(
+      heatmaps.BasicHeatmap,
+      heatmaps.CategoricalAxisHeatmap,
+      heatmaps.CustomColorScaleHeatmap,
+      heatmaps.AnnotatedHeatmap
     )
   )
 
