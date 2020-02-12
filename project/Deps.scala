@@ -14,7 +14,7 @@ object Deps {
   def rhino = "org.mozilla" % "rhino" % "1.7.12"
   def shapeless = setting("com.chuusai" %%% "shapeless" % "2.3.3")
   def scalacheckShapeless = setting("com.github.alexarchambault" %%% "scalacheck-shapeless_1.14" % "1.2.0-1")
-  def scalajsDom = setting("org.scala-js" %%% "scalajs-dom" % "0.9.8")
+  def scalajsDom = setting("org.scala-js" %%% "scalajs-dom" % "1.0.0")
   def scalatags = setting("com.lihaoyi" %%% "scalatags" % "0.8.5")
   def scalaTest = "org.scalatest" %% "scalatest" % "3.1.0"
   def utest = setting("com.lihaoyi" %%% "utest" % "0.6.6")
