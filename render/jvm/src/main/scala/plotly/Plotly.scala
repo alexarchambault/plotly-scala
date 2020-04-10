@@ -13,6 +13,7 @@ import argonaut.{Json, PrettyParams}
 import plotly.internals.{BetterPrinter, Properties}
 
 import scala.annotation.tailrec
+import scala.collection.Seq
 
 object Plotly {
 

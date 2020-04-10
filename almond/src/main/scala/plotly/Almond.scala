@@ -4,6 +4,7 @@ import java.lang.{Boolean => JBoolean, Double => JDouble, Integer => JInt}
 
 import almond.interpreter.api.{DisplayData, OutputHandler}
 
+import scala.collection.Seq
 import scala.util.Random
 import plotly.element._
 import plotly.layout._

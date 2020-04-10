@@ -1,5 +1,6 @@
 package plotly
 
+import scala.collection.Seq
 import scala.language.implicitConversions
 
 import java.lang.{ Boolean => JBoolean, Double => JDouble }

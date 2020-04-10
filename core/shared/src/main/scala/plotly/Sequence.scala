@@ -2,6 +2,8 @@ package plotly
 
 import plotly.element.LocalDateTime
 
+import scala.collection.Seq
+
 sealed abstract class Sequence extends Product with Serializable
 
 object Sequence {

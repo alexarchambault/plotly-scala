@@ -3,6 +3,8 @@ package plotly.demo
 import plotly.Trace
 import plotly.layout.Layout
 
+import scala.collection.Seq
+
 trait DemoChart {
   def plotlyDocUrl: String
   def id: String

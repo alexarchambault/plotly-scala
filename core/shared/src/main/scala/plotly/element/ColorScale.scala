@@ -1,5 +1,7 @@
 package plotly.element
+
 import dataclass.data
+import scala.collection.Seq
 
 sealed abstract class ColorScale extends Product with Serializable
 

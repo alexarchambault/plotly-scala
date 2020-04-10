@@ -1,5 +1,7 @@
 package plotly.element
 
+import scala.collection.Seq
+
 sealed abstract class HoverInfo extends Product with Serializable {
   def label: String
 }

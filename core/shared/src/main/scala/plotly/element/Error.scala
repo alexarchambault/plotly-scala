@@ -1,6 +1,8 @@
 package plotly
 package element
 
+import scala.collection.Seq
+
 import dataclass.data
 
 import java.lang.{ Boolean => JBoolean, Double => JDouble }

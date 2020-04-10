@@ -5,6 +5,7 @@ import java.lang.{ Integer => JInt, Double => JDouble, Boolean => JBoolean }
 
 import plotly.element._
 import dataclass.data
+import scala.collection.Seq
 
 @data class Layout(
           title: Option[String],

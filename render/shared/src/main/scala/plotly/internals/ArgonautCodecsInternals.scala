@@ -9,6 +9,7 @@ import argonaut.ArgonautShapeless._
 import argonaut.derive._
 import shapeless._
 
+import scala.collection.Seq
 import scala.util.Try
 import plotly.element._
 import plotly.layout._
