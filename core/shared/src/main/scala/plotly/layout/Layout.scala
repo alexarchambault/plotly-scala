@@ -33,8 +33,9 @@ import plotly.element._
     bargroupgap: Option[Double] = None,
       hovermode: Option[HoverMode] = None,
         boxmode: Option[BoxMode] = None,
-          scene: Option[Scene] = None
-
+          scene: Option[Scene] = None,
+       dragmode: Option[String],
+         shapes: Option[Seq[Shape]]
 )
 
 object Layout {
@@ -66,7 +67,9 @@ object Layout {
       bargroupgap: JDouble         = null,
         hovermode: HoverMode       = null,
           boxmode: BoxMode         = null,
-            scene: Scene           = null
+            scene: Scene           = null,
+         dragmode: String          = null,
+           shapes: Seq[Shape]      = null
   ): Layout =
     new Layout(
       Option(title),
@@ -95,6 +98,8 @@ object Layout {
       Option(bargroupgap).map(x => x),
       Option(hovermode),
       Option(boxmode),
-      Option(scene)
+      Option(scene),
+      Option(dragmode),
+      Option(shapes)
     )
 }

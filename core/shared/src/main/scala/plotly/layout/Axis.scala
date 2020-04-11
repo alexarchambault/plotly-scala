@@ -28,7 +28,7 @@ import plotly.element._
         zeroline: Option[Boolean] = None,
    zerolinewidth: Option[Double] = None,
    zerolinecolor: Option[Color] = None,
-           range: Option[(Double, Double)] = None,
+           range: Option[Sequence] = None,
        autorange: Option[Boolean] = None,
            ticks: Option[Ticks] = None,
           domain: Option[(Double, Double)] = None,
@@ -41,7 +41,8 @@ import plotly.element._
         tickvals: Option[Sequence] = None,
         ticktext: Option[Sequence] = None,
           nticks: Option[Int] = None,
-      automargin: Option[Boolean] = None
+      automargin: Option[Boolean] = None,
+      rangeslider: Option[RangeSlider],
 )
 
 object Axis {
@@ -68,7 +69,7 @@ object Axis {
           zeroline: JBoolean         = null,
      zerolinewidth: JDouble          = null,
      zerolinecolor: Color            = null,
-             range: (Double, Double) = null,
+             range: Sequence         = null,
          autorange: JBoolean         = null,
              ticks: Ticks            = null,
             domain: (Double, Double) = null,
@@ -81,7 +82,8 @@ object Axis {
           tickvals: Sequence         = null,
           ticktext: Sequence         = null,
             nticks: JInt             = null,
-        automargin: JBoolean         = null
+        automargin: JBoolean         = null,
+       rangeslider: RangeSlider      = null
   ): Axis =
     Axis(
       Option(title),
@@ -118,6 +120,7 @@ object Axis {
       Option(tickvals),
       Option(ticktext),
       Option(nticks)         .map(x => x: Int),
-      Option(automargin)     .map(x => x: Boolean)
+      Option(automargin)     .map(x => x: Boolean),
+      Option(rangeslider)
     )
 }
