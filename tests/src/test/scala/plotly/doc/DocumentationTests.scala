@@ -228,6 +228,8 @@ class DocumentationTests extends FlatSpec with Matchers {
     "basic/horizontal-bar",
     // TODO? Pie charts
     "financial/time-series",
+    "financial/candlestick-charts",
+//    "financial/ohlc",
     "basic/bubble",
     "basic/area",
     "layout/sizing",

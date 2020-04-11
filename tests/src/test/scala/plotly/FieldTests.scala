@@ -58,4 +58,15 @@ class FieldTests extends FlatSpec with Matchers {
     traceHasShowlegendField(scatter)
   }
 
+  "Candlestick" should "have a showlegend field" in {
+
+    val candlestick = Candlestick(
+      1 to 10,
+    )
+
+    println(candlestick)
+    assert(true)
+//    traceHasShowlegendField(scatter)
+  }
+
 }
