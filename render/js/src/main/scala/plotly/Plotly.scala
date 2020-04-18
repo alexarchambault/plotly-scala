@@ -9,7 +9,7 @@ import plotly.element.Color
 import plotly.internals.BetterPrinter
 import plotly.layout._
 
-import scala.collection.Seq
+import scala.collection.immutable.Seq
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
 import scala.scalajs.js.JSON

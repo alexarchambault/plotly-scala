@@ -1,6 +1,6 @@
 package plotly
 
-import scala.collection.Seq
+import scala.collection.immutable.Seq
 import org.joda.time._
 import plotly.Sequence.DateTimes
 

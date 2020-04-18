@@ -1,6 +1,6 @@
 package plotly.element
 
-import scala.collection.Seq
+import scala.collection.immutable.Seq
 
 sealed abstract class OneOrSeq[T] extends Product with Serializable
 

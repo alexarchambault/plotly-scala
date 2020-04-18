@@ -1,7 +1,7 @@
 package plotly
 package element
 
-import scala.collection.Seq
+import scala.collection.immutable.Seq
 
 import dataclass.data
 
