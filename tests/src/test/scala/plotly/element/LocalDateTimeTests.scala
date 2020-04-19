@@ -1,10 +1,10 @@
-package plotly
+package plotly.element
 
 import org.scalatest.FlatSpec
-import plotly.JavaTime._
+import plotly.element.LocalDateTime.UnsafeImplicitConversions._
 import plotly.element.{LocalDateTime => PlotlyLocalDateTime}
 
-class JavaTimeTests extends FlatSpec {
+class LocalDateTimeTests extends FlatSpec {
 
   "JavaTime conversions" should "convert java.time.LocalDateTime to Plotly LocalDateTime" in {
     val javaLocalDateTime = java.time.LocalDateTime.parse("2020-04-18T14:52:52")

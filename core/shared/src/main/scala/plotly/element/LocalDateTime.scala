@@ -16,7 +16,7 @@ import scala.util.Try
     f"$year-$month%02d-$dayOfMonth%02d $hour%02d:$minute%02d:$second%02d"
 }
 
-object LocalDateTime {
+object LocalDateTime extends PlotlyJavaTimeConversions {
 
   private object IntStr {
     def unapply(s: String): Option[Int] =
