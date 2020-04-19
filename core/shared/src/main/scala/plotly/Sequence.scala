@@ -27,5 +27,4 @@ object Sequence extends MutableSequenceImplicitConversions {
     Strings(s)
   implicit def fromDateTimes(seq: Seq[LocalDateTime]): Sequence =
     DateTimes(seq)
-
 }
