@@ -1,7 +1,6 @@
 package plotly.internals
 
 import argonaut.{DecodeJson, EncodeJson}
-import scala.collection.immutable.Seq
 
 trait ArgonautCodecsExtra {
 

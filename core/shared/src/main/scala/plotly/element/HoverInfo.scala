@@ -1,7 +1,5 @@
 package plotly.element
 
-import scala.collection.immutable.Seq
-
 sealed abstract class HoverInfo extends Product with Serializable {
   def label: String
 }
@@ -12,7 +10,7 @@ object HoverInfo {
   def none: HoverInfo = None
   def skip: HoverInfo = Skip
   def apply(elements: Element*): HoverInfo =
-    Combination(Seq(elements: _*))
+    Combination(elements)
 
 
   sealed abstract class Element(override val label: String) extends HoverInfo

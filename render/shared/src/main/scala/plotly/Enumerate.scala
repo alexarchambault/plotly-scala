@@ -1,6 +1,5 @@
 package plotly
 
-import scala.collection.immutable.Seq
 import shapeless.{ :+:, ::, CNil, Coproduct, Generic, HList, HNil, Inl, Inr, Strict }
 
 sealed abstract class Enumerate[T] {
