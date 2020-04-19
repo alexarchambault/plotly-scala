@@ -4,7 +4,7 @@ import plotly.element.LocalDateTime
 
 sealed abstract class Sequence extends Product with Serializable
 
-object Sequence {
+object Sequence extends MutableSequenceImplicitConversions {
   final case class Doubles(seq: Seq[Double]) extends Sequence
   final case class NestedDoubles(seq: Seq[Seq[Double]]) extends Sequence
   final case class NestedInts(seq: Seq[Seq[Int]]) extends Sequence
