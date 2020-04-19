@@ -144,7 +144,7 @@ Some of these are illustrated in the [demo](https://alexarchambault.github.io/pl
 ## Adding support for extra plotly.js features
 
 The following workflow can be followed to add support for extra sections of the plotly.js documentation:
-- find the corresponding directory in the [source](https://github.com/plotly/documentation/tree/gh-pages/_posts/plotly_js) of the plotly.js documentation. These directories can also be found in the sources of plotly-scala, under `plotly-documentation/_posts/plotly_js`, if its repository has been cloned with the `--recursive` option,
+- find the corresponding directory in the [source](https://github.com/alexarchambault/plotly-documentation/tree/eae136bb920c7542654a5e13cff04a0de175a08d/) of the plotly.js documentation. These directories can also be found in the sources of plotly-scala, under `plotly-documentation/_posts/plotly_js`, if its repository has been cloned with the `--recursive` option,
 - enabling testing of the corresponding documentation section examples in the `DocumentationTests` class, around [this line](https://github.com/alexarchambault/plotly-scala/blob/master/tests/src/test/scala/plotly/doc/DocumentationTests.scala#L224),
 - running the tests with `sbt ~test`,
 - fixing the possible Javascript typos in the plotly-documentation submodule in the plotly-scala sources, so that the enabled JS snippets run fine with Rhino from the tests, then committing these fixes, either to [https://github.com/alexarchambault/plotly-documentation](`alexarchambault/plotly-documentation`) or [https://github.com/plotly/documentation](`plotly/documentation`),
