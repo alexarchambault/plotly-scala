@@ -1,6 +1,6 @@
 package plotly.demo
 
-import scala.scalajs.js.annotation.JSExport
+import scala.scalajs.js.annotation.{JSExport, JSExportTopLevel}
 
 import plotly.Plotly
 
@@ -8,7 +8,7 @@ import org.scalajs.dom
 
 import scalatags.JsDom.all.{area => _, _}
 
-@JSExport object Demo {
+@JSExportTopLevel("Demo") object Demo {
 
   val demos = Seq(
     "Line Charts" -> Seq(

@@ -95,7 +95,7 @@ lazy val renderJvm = render.jvm
 lazy val renderJs = render.js
 
 lazy val demo = project
-  .enablePlugins(ScalaJSPlugin)
+  .enablePlugins(JSDependenciesPlugin, ScalaJSPlugin)
   .dependsOn(renderJs)
   .settings(
     shared,
