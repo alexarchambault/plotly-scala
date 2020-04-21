@@ -99,7 +99,7 @@ lazy val demo = project
   .dependsOn(renderJs)
   .settings(
     shared,
-    dontPublish,
+    skip.in(publish) := true,
     plotlyPrefix,
     test in Test := (),
     testOnly in Test := (),
@@ -145,7 +145,7 @@ lazy val tests = project
   .dependsOn(coreJvm, renderJvm)
   .settings(
     shared,
-    dontPublish,
+    skip.in(publish) := true,
     plotlyPrefix,
     fetchTestData,
     libraryDependencies ++= Seq(
@@ -177,5 +177,5 @@ lazy val `plotly-scala` = project
   )
   .settings(
     shared,
-    dontPublish
+    skip.in(publish) := true,
   )
