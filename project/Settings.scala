@@ -113,12 +113,6 @@ object Settings {
     }
   )
 
-  lazy val dontPublish = Seq(
-    publish := (),
-    publishLocal := (),
-    publishArtifact := false
-  )
-
   lazy val plotlyPrefix = {
     name := "plotly-" + name.value
   }

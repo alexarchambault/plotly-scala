@@ -99,7 +99,7 @@ lazy val demo = project
   .dependsOn(renderJs)
   .settings(
     shared,
-    dontPublish,
+    skip.in(publish) := true,
     plotlyPrefix,
     test in Test := (),
     testOnly in Test := (),
@@ -145,7 +145,7 @@ lazy val tests = project
   .dependsOn(coreJvm, renderJvm)
   .settings(
     shared,
-    dontPublish,
+    skip.in(publish) := true,
     plotlyPrefix,
     fetchTestData,
     libraryDependencies ++= Seq(
@@ -162,20 +162,5 @@ lazy val almond = project
     libraryDependencies += Deps.almondScalaApi % "provided"
   )
 
-
-lazy val `plotly-scala` = project
-  .in(file("."))
-  .aggregate(
-    coreJvm,
-    coreJs,
-    `joda-time`,
-    renderJvm,
-    renderJs,
-    demo,
-    tests,
-    almond
-  )
-  .settings(
-    shared,
-    dontPublish
-  )
+crossScalaVersions := Nil
+skip.in(publish) := true,
