@@ -162,20 +162,5 @@ lazy val almond = project
     libraryDependencies += Deps.almondScalaApi % "provided"
   )
 
-
-lazy val `plotly-scala` = project
-  .in(file("."))
-  .aggregate(
-    coreJvm,
-    coreJs,
-    `joda-time`,
-    renderJvm,
-    renderJs,
-    demo,
-    tests,
-    almond
-  )
-  .settings(
-    shared,
-    skip.in(publish) := true,
-  )
+crossScalaVersions := Nil
+skip.in(publish) := true,
