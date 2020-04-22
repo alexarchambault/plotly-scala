@@ -1,3 +1,4 @@
 [submodule "plotly-documentation"]
 	path = plotly-documentation
 	url = https://github.com/alexarchambault/plotly-documentation
+    branch = source
