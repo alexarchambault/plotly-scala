@@ -47,7 +47,7 @@ object Plotly {
     b ++= printer.render(layout.asJson)
     b ++= ";\n\n  Plotly.plot('"
     b ++= div.replaceAll("'", "\\'")
-    b ++= "', data, layout);\n"
+    b ++= "', data, layout, {editable: true, responsive: true, showEditInChartStudio: true, plotlyServerURL: 'https://chart-studio.plotly.com'});\n"
 
     b ++= "})();"
 
