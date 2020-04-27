@@ -3,23 +3,25 @@ package layout
 
 import java.lang.{ Double => JDouble }
 
+import dataclass._
 import plotly.element._
-import dataclass.data
 
-@data class Legend(
-            x: Option[Double],
-            y: Option[Double],
-   traceorder: Option[TraceOrder],
-         yref: Option[Ref],
-         font: Option[Font],
-  bordercolor: Option[Color],
-      bgcolor: Option[Color],
-      xanchor: Option[Anchor],
-      yanchor: Option[Anchor],
-  orientation: Option[Orientation]
+@data(optionSetters = true) class Legend(
+            x: Option[Double] = None,
+            y: Option[Double] = None,
+   traceorder: Option[TraceOrder] = None,
+         yref: Option[Ref] = None,
+         font: Option[Font] = None,
+  bordercolor: Option[Color] = None,
+      bgcolor: Option[Color] = None,
+      xanchor: Option[Anchor] = None,
+      yanchor: Option[Anchor] = None,
+  @since
+  orientation: Option[Orientation] = None
 )
 
 object Legend {
+  @deprecated("Use Legend() and chain-call .with* methods on it instead", "0.8.0")
   def apply(
               x: JDouble    = null,
               y: JDouble    = null,

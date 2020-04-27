@@ -34,20 +34,19 @@ object AnnotatedHeatmap extends DemoChart {
 
   val layout = Layout(
     title = "Annotated Heatmap",
-    xaxis = Axis(ticks=Ticks.Empty, side=Side.Top),
-    yaxis = Axis(ticks=Ticks.Empty, ticksuffix=" "),
+    xaxis = Axis().withTicks(Ticks.Empty).withSide(Side.Top),
+    yaxis = Axis().withTicks(Ticks.Empty).withTicksuffix(" "),
     annotations = for {
       (xv, xi) <- x.zipWithIndex;
       (yv, yi) <- y.zipWithIndex
-    } yield Annotation(
-      x=xv,
-      y=yv,
-      xref=Ref.Axis(AxisReference.X1),
-      yref=Ref.Axis(AxisReference.Y1),
-      showarrow=false,
-      text=z(yi)(xi).toString,
-      font=Font(color=Color.StringColor("white"))
-    )
+    } yield Annotation()
+      .withX(xv)
+      .withY(yv)
+      .withXref(Ref.Axis(AxisReference.X1))
+      .withYref(Ref.Axis(AxisReference.Y1))
+      .withShowarrow(false)
+      .withText(z(yi)(xi).toString)
+      .withFont(Font(color=Color.StringColor("white")))
   )
 
   // demo source end

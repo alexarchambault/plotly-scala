@@ -4,16 +4,17 @@ package layout
 import java.lang.{ Integer => JInt, Boolean => JBoolean }
 import dataclass.data
 
-@data class Margin(
-  autoexpand: Option[Boolean],
-           l: Option[Int],
-           r: Option[Int],
-           t: Option[Int],
-           b: Option[Int],
-         pad: Option[Int]
+@data(optionSetters = true) class Margin(
+  autoexpand: Option[Boolean] = None,
+           l: Option[Int] = None,
+           r: Option[Int] = None,
+           t: Option[Int] = None,
+           b: Option[Int] = None,
+         pad: Option[Int] = None
 )
 
 object Margin {
+  @deprecated("Use Margin() and chain-call .with* methods on it instead", "0.8.0")
   def apply(
     autoexpand: JBoolean = null,
              l: JInt     = null,

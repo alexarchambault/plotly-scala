@@ -35,14 +35,13 @@ object BarChartWithDirectLabels extends DemoChart {
 
   val annotations = xValue.zip(yValue).map {
     case (x, y) =>
-      Annotation(
-        x = x,
-        y = y,
-        text = y.toString,
-        xanchor = Anchor.Center,
-        yanchor = Anchor.Bottom,
-        showarrow = false
-      )
+      Annotation()
+        .withX(x)
+        .withY(y)
+        .withText(y.toString)
+        .withXanchor(Anchor.Center)
+        .withYanchor(Anchor.Bottom)
+        .withShowarrow(false)
   }
 
   val layout = Layout(

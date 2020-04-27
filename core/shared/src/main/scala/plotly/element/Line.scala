@@ -5,16 +5,17 @@ import dataclass.data
 
 import java.lang.{ Double => JDouble }
 
-@data class Line(
-         shape: Option[LineShape],
-         color: Option[OneOrSeq[Color]],
-         width: Option[OneOrSeq[Double]],
-          dash: Option[Dash],
-  outliercolor: Option[Color],
-  outlierwidth: Option[Double]
+@data(optionSetters = true) class Line(
+         shape: Option[LineShape] = None,
+         color: Option[OneOrSeq[Color]] = None,
+         width: Option[OneOrSeq[Double]] = None,
+          dash: Option[Dash] = None,
+  outliercolor: Option[Color] = None,
+  outlierwidth: Option[Double] = None
 )
 
 object Line {
+  @deprecated("Use Line() and chain-call .with* methods on it instead", "0.8.0")
   def apply(
            shape: LineShape        = null,
            color: OneOrSeq[Color]  = null,

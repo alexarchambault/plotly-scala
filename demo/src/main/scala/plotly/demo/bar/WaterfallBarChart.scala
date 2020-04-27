@@ -83,29 +83,29 @@ object WaterfallBarChart extends DemoChart {
 
   val annotations = xData.zip(yData).zip(textList).map {
     case ((x, y), text) =>
-      Annotation(
-        x = x,
-        y = y,
-        text = text,
-        font = Font(
-          family = "Arial",
-          size = 14,
-          color = Color.RGBA(245, 246, 249, 1)
-        ),
-        showarrow = false
-      )
+      Annotation()
+        .withX(x)
+        .withY(y)
+        .withText(text)
+        .withFont(
+          Font(
+            family = "Arial",
+            size = 14,
+            color = Color.RGBA(245, 246, 249, 1)
+          )
+        )
+        .withShowarrow(false)
   }
 
-  val layout = Layout(
-    title = "Annual Profit 2015",
-    barmode = BarMode.Stack,
-    paper_bgcolor = Color.RGBA(245, 246, 249, 1),
-    plot_bgcolor = Color.RGBA(245, 246, 249, 1),
-    width = 600,
-    height = 400,
-    showlegend = false,
-    annotations = annotations
-  )
+  val layout = Layout()
+    .withTitle("Annual Profit 2015")
+    .withBarmode(BarMode.Stack)
+    .withPaper_bgcolor(Color.RGBA(245, 246, 249, 1))
+    .withPlot_bgcolor(Color.RGBA(245, 246, 249, 1))
+    .withWidth(600)
+    .withHeight(400)
+    .withShowlegend(false)
+    .withAnnotations(annotations)
 
   // demo source end
 

@@ -3,41 +3,42 @@ package layout
 
 import java.lang.{ Integer => JInt, Double => JDouble, Boolean => JBoolean }
 
-import plotly.element._
 import dataclass.data
+import plotly.element._
 
-@data class Layout(
-          title: Option[String],
-         legend: Option[Legend],
-          width: Option[Int],
-         height: Option[Int],
-     showlegend: Option[Boolean],
-          xaxis: Option[Axis],
-          yaxis: Option[Axis],
-         xaxis1: Option[Axis],
-         xaxis2: Option[Axis],
-         xaxis3: Option[Axis],
-         xaxis4: Option[Axis],
-         yaxis1: Option[Axis],
-         yaxis2: Option[Axis],
-         yaxis3: Option[Axis],
-         yaxis4: Option[Axis],
-        barmode: Option[BarMode],
-       autosize: Option[Boolean],
-         margin: Option[Margin],
-    annotations: Option[Seq[Annotation]],
-   plot_bgcolor: Option[Color],
-  paper_bgcolor: Option[Color],
-           font: Option[Font],
-         bargap: Option[Double],
-    bargroupgap: Option[Double],
-      hovermode: Option[HoverMode],
-        boxmode: Option[BoxMode],
-          scene: Option[Scene]
+@data(optionSetters = true) class Layout(
+          title: Option[String] = None,
+         legend: Option[Legend] = None,
+          width: Option[Int] = None,
+         height: Option[Int] = None,
+     showlegend: Option[Boolean] = None,
+          xaxis: Option[Axis] = None,
+          yaxis: Option[Axis] = None,
+         xaxis1: Option[Axis] = None,
+         xaxis2: Option[Axis] = None,
+         xaxis3: Option[Axis] = None,
+         xaxis4: Option[Axis] = None,
+         yaxis1: Option[Axis] = None,
+         yaxis2: Option[Axis] = None,
+         yaxis3: Option[Axis] = None,
+         yaxis4: Option[Axis] = None,
+        barmode: Option[BarMode] = None,
+       autosize: Option[Boolean] = None,
+         margin: Option[Margin] = None,
+    annotations: Option[Seq[Annotation]] = None,
+   plot_bgcolor: Option[Color] = None,
+  paper_bgcolor: Option[Color] = None,
+           font: Option[Font] = None,
+         bargap: Option[Double] = None,
+    bargroupgap: Option[Double] = None,
+      hovermode: Option[HoverMode] = None,
+        boxmode: Option[BoxMode] = None,
+          scene: Option[Scene] = None
 
 )
 
 object Layout {
+  @deprecated("Use Layout() and chain-call .with* methods on it instead", "0.8.0")
   def apply(
             title: String          = null,
            legend: Legend          = null,

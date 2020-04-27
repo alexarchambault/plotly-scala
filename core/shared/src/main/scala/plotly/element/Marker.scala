@@ -5,19 +5,20 @@ import java.lang.{ Double => JDouble }
 
 import dataclass.data
 
-@data class Marker(
-          size: Option[OneOrSeq[Int]],
-         color: Option[OneOrSeq[Color]],
-       opacity: Option[OneOrSeq[Double]],
-          line: Option[Line],
-        symbol: Option[OneOrSeq[Symbol]],
-  outliercolor: Option[Color],
-       sizeref: Option[Double],
-      sizemode: Option[SizeMode],
-         width: Option[OneOrSeq[Int]]
+@data(optionSetters = true) class Marker(
+          size: Option[OneOrSeq[Int]] = None,
+         color: Option[OneOrSeq[Color]] = None,
+       opacity: Option[OneOrSeq[Double]] = None,
+          line: Option[Line] = None,
+        symbol: Option[OneOrSeq[Symbol]] = None,
+  outliercolor: Option[Color] = None,
+       sizeref: Option[Double] = None,
+      sizemode: Option[SizeMode] = None,
+         width: Option[OneOrSeq[Int]] = None
 )
 
 object Marker {
+  @deprecated("Use Marker() and chain-call .with* methods on it instead", "0.8.0")
   def apply(
             size: OneOrSeq[Int]    = null,
            color: OneOrSeq[Color]  = null,
