@@ -23,31 +23,33 @@ object AnnotatedHeatmap extends DemoChart {
   )
 
   val data = Seq(
-    Heatmap(
-      z=z, x=x, y=y, showscale=false,
-      colorscale = ColorScale.CustomScale(Seq(
-        (0, Color.StringColor("#3D9970")),
-        (1, Color.StringColor("#001f3f"))
-      ))
-    )
+    Heatmap(z, x, y)
+      .withShowscale(false)
+      .withColorscale(
+        ColorScale.CustomScale(Seq(
+          (0, Color.StringColor("#3D9970")),
+          (1, Color.StringColor("#001f3f"))
+        ))
+      )
   )
 
-  val layout = Layout(
-    title = "Annotated Heatmap",
-    xaxis = Axis().withTicks(Ticks.Empty).withSide(Side.Top),
-    yaxis = Axis().withTicks(Ticks.Empty).withTicksuffix(" "),
-    annotations = for {
-      (xv, xi) <- x.zipWithIndex;
-      (yv, yi) <- y.zipWithIndex
-    } yield Annotation()
-      .withX(xv)
-      .withY(yv)
-      .withXref(Ref.Axis(AxisReference.X1))
-      .withYref(Ref.Axis(AxisReference.Y1))
-      .withShowarrow(false)
-      .withText(z(yi)(xi).toString)
-      .withFont(Font(color=Color.StringColor("white")))
-  )
+  val layout = Layout()
+    .withTitle("Annotated Heatmap")
+    .withXaxis(Axis().withTicks(Ticks.Empty).withSide(Side.Top))
+    .withYaxis(Axis().withTicks(Ticks.Empty).withTicksuffix(" "))
+    .withAnnotations(
+      for {
+        (xv, xi) <- x.zipWithIndex;
+        (yv, yi) <- y.zipWithIndex
+      } yield Annotation()
+        .withX(xv)
+        .withY(yv)
+        .withXref(Ref.Axis(AxisReference.X1))
+        .withYref(Ref.Axis(AxisReference.Y1))
+        .withShowarrow(false)
+        .withText(z(yi)(xi).toString)
+        .withFont(Font(Color.StringColor("white")))
+    )
 
   // demo source end
 

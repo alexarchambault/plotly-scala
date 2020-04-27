@@ -53,6 +53,7 @@ object Plotly {
     def plot(div: String, layout: Layout): Unit =
       Plotly.plot(div, trace, layout)
 
+    @deprecated("Create a Layout and call plot(div, layout) instead", "0.8.0")
     def plot(
                 div: String,
               title: String          = null,
@@ -119,6 +120,7 @@ object Plotly {
     def plot(div: String, layout: Layout): Unit =
       Plotly.plot(div, traces, layout)
 
+    @deprecated("Create a Layout and call plot(div, layout) instead", "0.8.0")
     def plot(
                 div: String,
               title: String          = null,

@@ -14,6 +14,9 @@ import dataclass.data
 )
 
 object Margin {
+  def apply(l: Int, r: Int, t: Int, b: Int): Margin =
+    Margin().withL(l).withR(r).withT(t).withB(b)
+
   @deprecated("Use Margin() and chain-call .with* methods on it instead", "0.8.0")
   def apply(
     autoexpand: JBoolean = null,

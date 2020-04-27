@@ -17,19 +17,18 @@ object BarChartWithDirectLabels extends DemoChart {
 
   val yValue = Seq(20, 14, 23)
 
-  val trace1 = Bar(
-    xValue,
-    yValue,
-    text = Seq("27% market share", "24% market share", "19% market share"),
-    marker = Marker(
-      color = Color.RGB(158, 202, 225),
-      opacity = 0.6,
-      line = Line(
-        color = Color.RGB(8, 48, 107),
-        width = 1.5
-      )
+  val trace1 = Bar(xValue, yValue)
+    .withText(Seq("27% market share", "24% market share", "19% market share"))
+    .withMarker(
+      Marker()
+        .withColor(Color.RGB(158, 202, 225))
+        .withOpacity(0.6)
+        .withLine(
+          Line()
+            .withColor(Color.RGB(8, 48, 107))
+            .withWidth(1.5)
+        )
     )
-  )
 
   val data = Seq(trace1)
 
@@ -44,10 +43,9 @@ object BarChartWithDirectLabels extends DemoChart {
         .withShowarrow(false)
   }
 
-  val layout = Layout(
-    title = "January 2013 Sales Report",
-    annotations = annotations
-  )
+  val layout = Layout()
+    .withTitle("January 2013 Sales Report")
+    .withAnnotations(annotations)
 
   // demo source end
 

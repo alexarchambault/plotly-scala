@@ -34,6 +34,12 @@ sealed abstract class Trace extends Product with Serializable
 ) extends Trace
 
 object Scatter {
+  def apply(x: Sequence, y: Sequence): Scatter =
+    Scatter().withX(x).withY(y)
+
+  def apply(y: Sequence): Scatter =
+    Scatter().withY(y)
+
   @deprecated("Use Scatter() and chain-call .with* methods on it instead", "0.8.0")
   def apply(
           values: Sequence         = null,
@@ -107,6 +113,12 @@ object Scatter {
 ) extends Trace
 
 object Box {
+  def apply(y: Sequence): Box =
+    Box().withY(y)
+
+  def apply(y: Sequence, x: Sequence): Box =
+    Box().withY(y).withX(x)
+
   @deprecated("Use Box() and chain-call .with* methods on it instead", "0.8.0")
   def apply(
                y: Sequence        = null,
@@ -212,6 +224,12 @@ object Bar {
 ) extends Trace
 
 object Histogram {
+  def apply(x: Sequence): Histogram =
+    Histogram().withX(x)
+
+  def apply(x: Sequence, y: Sequence): Histogram =
+    Histogram().withX(x).withY(y)
+
   @deprecated("Use Histogram() and chain-call .with* methods on it instead", "0.8.0")
   def apply(
            x: Sequence   = null,
@@ -278,6 +296,12 @@ autocolorscale: Option[Boolean] = None,
 ) extends Trace
 
 object Heatmap {
+  def apply(z: Sequence): Heatmap =
+    Heatmap().withZ(z)
+
+  def apply(z: Sequence, x: Sequence, y: Sequence): Heatmap =
+    Heatmap().withZ(z).withX(x).withY(y)
+
   @deprecated("Use Heatmap() and chain-call .with* methods on it instead", "0.8.0")
   def apply(
                y: Sequence        = null,
