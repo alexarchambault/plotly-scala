@@ -88,7 +88,7 @@ object Settings {
   )
 
   private val scala212 = "2.12.11"
-  private val scala213 = "2.13.1"
+  private val scala213 = "2.13.2"
 
   private lazy val isAtLeastScala213 = Def.setting {
     import Ordering.Implicits._

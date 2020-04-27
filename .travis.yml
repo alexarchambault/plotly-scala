@@ -19,6 +19,6 @@ stages:
 jobs:
   include:
     - scala: 2.12.11
-    - scala: 2.13.1
+    - scala: 2.13.2
     - stage: release
       script: ./sbt ci-release
