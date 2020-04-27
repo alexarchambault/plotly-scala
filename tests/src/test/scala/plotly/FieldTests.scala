@@ -1,9 +1,10 @@
 package plotly
 
 import argonaut.Json
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class FieldTests extends FlatSpec with Matchers {
+class FieldTests extends AnyFlatSpec with Matchers {
 
   def traceHasShowlegendField(trace: Trace): Unit = {
 

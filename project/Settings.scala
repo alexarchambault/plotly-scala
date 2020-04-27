@@ -107,6 +107,7 @@ object Settings {
       if (isAtLeastScala213.value) Nil
       else Seq(compilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full))
     },
+    scalacOptions ++= Seq("-deprecation", "-feature"),
     scalacOptions ++= {
       if (isAtLeastScala213.value) Seq("-Ymacro-annotations")
       else Nil

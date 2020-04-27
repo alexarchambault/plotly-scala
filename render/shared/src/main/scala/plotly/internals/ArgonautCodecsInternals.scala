@@ -230,7 +230,7 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
               c.history
             )
           else
-            DecodeResult.ok(HoverInfo(results.flatMap(_.right.toSeq): _*))
+            DecodeResult.ok(HoverInfo(results.flatMap(_.toSeq).toIndexedSeq: _*))
       }
     }
 

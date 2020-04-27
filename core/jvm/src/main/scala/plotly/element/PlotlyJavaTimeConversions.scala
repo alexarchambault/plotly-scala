@@ -3,6 +3,8 @@ package plotly.element
 import java.time._
 import plotly.element.{LocalDateTime => PlotlyLocalDateTime}
 
+import scala.language.implicitConversions
+
 trait PlotlyJavaTimeConversions {
 
   implicit def fromJavaLocalDateTime(javaLocalDateTime: java.time.LocalDateTime): PlotlyLocalDateTime =

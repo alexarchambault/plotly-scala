@@ -101,8 +101,8 @@ lazy val demo = project
     shared,
     skip.in(publish) := true,
     plotlyPrefix,
-    test in Test := (),
-    testOnly in Test := (),
+    test.in(Test) := {},
+    testOnly.in(Test) := {},
     libraryDependencies += Deps.scalatags.value,
     jsDependencies ++= Seq(
       WebDeps.plotlyJs
