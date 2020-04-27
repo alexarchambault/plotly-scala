@@ -21,7 +21,8 @@ object Color {
       "blue",
       "cls", // ???
       "pink",
-      "green"
+      "green",
+      "magenta"
     )
   }
 

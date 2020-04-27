@@ -57,5 +57,4 @@ class FieldTests extends FlatSpec with Matchers {
 
     traceHasShowlegendField(scatter)
   }
-
 }
