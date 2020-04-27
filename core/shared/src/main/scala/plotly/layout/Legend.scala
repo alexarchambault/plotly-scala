@@ -15,7 +15,8 @@ import dataclass.data
   bordercolor: Option[Color],
       bgcolor: Option[Color],
       xanchor: Option[Anchor],
-      yanchor: Option[Anchor]
+      yanchor: Option[Anchor],
+  orientation: Option[Orientation]
 )
 
 object Legend {
@@ -28,7 +29,8 @@ object Legend {
     bordercolor: Color      = null,
         bgcolor: Color      = null,
         xanchor: Anchor     = null,
-        yanchor: Anchor     = null
+        yanchor: Anchor     = null,
+    orientation: Orientation= null
   ): Legend =
     Legend(
       Option(x).map(v => v: Double),
@@ -39,6 +41,7 @@ object Legend {
       Option(bordercolor),
       Option(bgcolor),
       Option(xanchor),
-      Option(yanchor)
+      Option(yanchor),
+      Option(orientation)
     )
 }

@@ -14,4 +14,6 @@ object Codecs extends ArgonautCodecsExtra {
   implicit val argonautEncodeLayout = EncodeJson.of[Layout]
   implicit val argonautDecodeLayout = DecodeJson.of[Layout]
 
+  implicit val argonautEncodeConfig = EncodeJson.of[Config]
+  implicit val argonautDecodeConfig = DecodeJson.of[Config]
 }
