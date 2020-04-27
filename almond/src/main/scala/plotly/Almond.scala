@@ -59,6 +59,7 @@ object Almond {
   def plotJs(
     data: Seq[Trace],
     layout: Layout,
+    config: Config,
     div: String = ""
   )(implicit
     publish: OutputHandler
@@ -71,8 +72,8 @@ object Almond {
       } else
         (div, "")
 
-    val baseJs = Plotly.jsSnippet(div0, data, layout)
-    val json = Plotly.jsonSnippet(data, layout)
+    val baseJs = Plotly.jsSnippet(div0, data, layout, config)
+    val json = Plotly.jsonSnippet(data, layout, config)
 
     val js =
      s"""require(['plotly'], function(Plotly) {
@@ -101,6 +102,7 @@ object Almond {
   def plot(
     data: Seq[Trace],
     layout: Layout = Layout(),
+    config: Config = Config(),
     div: String = ""
   )(implicit
     publish: OutputHandler
@@ -114,39 +116,43 @@ object Almond {
         }
       }
 
-    plotJs(data, layout)
+    plotJs(data, layout, config)
   }
 
   implicit class DataOps(val data: Trace) extends AnyVal {
 
     def plot(
-              title: String          = null,
-             legend: Legend          = null,
-              width: JInt            = null,
-             height: JInt            = null,
-         showlegend: JBoolean        = null,
-              xaxis: Axis            = null,
-              yaxis: Axis            = null,
-             xaxis1: Axis            = null,
-             xaxis2: Axis            = null,
-             xaxis3: Axis            = null,
-             xaxis4: Axis            = null,
-             yaxis1: Axis            = null,
-             yaxis2: Axis            = null,
-             yaxis3: Axis            = null,
-             yaxis4: Axis            = null,
-            barmode: BarMode         = null,
-           autosize: JBoolean        = null,
-             margin: Margin          = null,
-        annotations: Seq[Annotation] = null,
-       plot_bgcolor: Color           = null,
-      paper_bgcolor: Color           = null,
-               font: Font            = null,
-             bargap: JDouble         = null,
-        bargroupgap: JDouble         = null,
-          hovermode: HoverMode       = null,
-            boxmode: BoxMode         = null,
-                div: String          = ""
+                        title: String          = null,
+                       legend: Legend          = null,
+                        width: JInt            = null,
+                       height: JInt            = null,
+                   showlegend: JBoolean        = null,
+                        xaxis: Axis            = null,
+                        yaxis: Axis            = null,
+                       xaxis1: Axis            = null,
+                       xaxis2: Axis            = null,
+                       xaxis3: Axis            = null,
+                       xaxis4: Axis            = null,
+                       yaxis1: Axis            = null,
+                       yaxis2: Axis            = null,
+                       yaxis3: Axis            = null,
+                       yaxis4: Axis            = null,
+                      barmode: BarMode         = null,
+                     autosize: JBoolean        = null,
+                       margin: Margin          = null,
+                  annotations: Seq[Annotation] = null,
+                 plot_bgcolor: Color           = null,
+                paper_bgcolor: Color           = null,
+                         font: Font            = null,
+                       bargap: JDouble         = null,
+                  bargroupgap: JDouble         = null,
+                    hovermode: HoverMode       = null,
+                      boxmode: BoxMode         = null,
+                     editable: JBoolean        = null,
+                   responsive: JBoolean        = null,
+        showEditInChartStudio: JBoolean        = null,
+              plotlyServerURL: String          = null,
+                          div: String          = ""
     )(implicit
       publish: OutputHandler
     ): String =
@@ -179,47 +185,58 @@ object Almond {
           hovermode,
           boxmode
         ),
+        Config(
+          editable,
+          responsive,
+          showEditInChartStudio,
+          plotlyServerURL,
+        ),
         div
       )
 
     def plot(
       layout: Layout,
+      config: Config,
       div: String
     )(implicit
       publish: OutputHandler
     ): String =
-      Almond.plot(Seq(data), layout, div = div)
+      Almond.plot(Seq(data), layout, config, div = div)
   }
 
   implicit class DataSeqOps(val data: Seq[Trace]) extends AnyVal {
     def plot(
-              title: String          = null,
-             legend: Legend          = null,
-              width: JInt            = null,
-             height: JInt            = null,
-         showlegend: JBoolean        = null,
-              xaxis: Axis            = null,
-              yaxis: Axis            = null,
-             xaxis1: Axis            = null,
-             xaxis2: Axis            = null,
-             xaxis3: Axis            = null,
-             xaxis4: Axis            = null,
-             yaxis1: Axis            = null,
-             yaxis2: Axis            = null,
-             yaxis3: Axis            = null,
-             yaxis4: Axis            = null,
-            barmode: BarMode         = null,
-           autosize: JBoolean        = null,
-             margin: Margin          = null,
-        annotations: Seq[Annotation] = null,
-       plot_bgcolor: Color           = null,
-      paper_bgcolor: Color           = null,
-               font: Font            = null,
-             bargap: JDouble         = null,
-        bargroupgap: JDouble         = null,
-          hovermode: HoverMode       = null,
-            boxmode: BoxMode         = null,
-                div: String          = ""
+                      title: String          = null,
+                     legend: Legend          = null,
+                      width: JInt            = null,
+                     height: JInt            = null,
+                 showlegend: JBoolean        = null,
+                      xaxis: Axis            = null,
+                      yaxis: Axis            = null,
+                     xaxis1: Axis            = null,
+                     xaxis2: Axis            = null,
+                     xaxis3: Axis            = null,
+                     xaxis4: Axis            = null,
+                     yaxis1: Axis            = null,
+                     yaxis2: Axis            = null,
+                     yaxis3: Axis            = null,
+                     yaxis4: Axis            = null,
+                    barmode: BarMode         = null,
+                   autosize: JBoolean        = null,
+                     margin: Margin          = null,
+                annotations: Seq[Annotation] = null,
+               plot_bgcolor: Color           = null,
+              paper_bgcolor: Color           = null,
+                       font: Font            = null,
+                     bargap: JDouble         = null,
+                bargroupgap: JDouble         = null,
+                  hovermode: HoverMode       = null,
+                    boxmode: BoxMode         = null,
+                   editable: JBoolean        = null,
+                 responsive: JBoolean        = null,
+      showEditInChartStudio: JBoolean        = null,
+            plotlyServerURL: String          = null,
+                        div: String          = ""
     )(implicit
       publish: OutputHandler
     ): String =
@@ -252,16 +269,23 @@ object Almond {
           hovermode,
           boxmode
         ),
+        Config(
+          editable,
+          responsive,
+          showEditInChartStudio,
+          plotlyServerURL,
+        ),
         div
       )
 
     def plot(
       layout: Layout,
+      config: Config,
       div: String
     )(implicit
       publish: OutputHandler
     ): String =
-      Almond.plot(data, layout, div = div)
+      Almond.plot(data, layout, config, div = div)
   }
 
 }
