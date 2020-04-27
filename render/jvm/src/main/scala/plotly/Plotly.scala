@@ -18,17 +18,18 @@ object Plotly {
 
   private val printer = BetterPrinter(PrettyParams.nospace.copy(dropNullKeys = true))
 
-  def jsonSnippet(data: Seq[Trace], layout: Layout): String = {
+  def jsonSnippet(data: Seq[Trace], layout: Layout, config: Config): String = {
 
     val json = Json.obj(
       "data" -> data.toList.asJson,
-      "layout" -> layout.asJson
+      "layout" -> layout.asJson,
+      "config" -> config.asJson
     )
 
     printer.render(json)
   }
 
-  def jsSnippet(div: String, data: Seq[Trace], layout: Layout): String = {
+  def jsSnippet(div: String, data: Seq[Trace], layout: Layout, config: Config): String = {
 
     val b = new StringBuilder
 
@@ -45,9 +46,11 @@ object Plotly {
     b ++= "\n"
     b ++= "  var layout = "
     b ++= printer.render(layout.asJson)
+    b ++= ";\n var config = "
+    b ++= printer.render(config.asJson)
     b ++= ";\n\n  Plotly.plot('"
     b ++= div.replaceAll("'", "\\'")
-    b ++= "', data, layout, {editable: true, responsive: true, showEditInChartStudio: true, plotlyServerURL: 'https://chart-studio.plotly.com'});\n"
+    b ++= "', data, layout, config);\n"
 
     b ++= "})();"
 
@@ -89,6 +92,7 @@ object Plotly {
     path: String,
     traces: Seq[Trace],
     layout: Layout,
+    config: Config = Config(),
     useCdn: Boolean = true,
     openInBrowser: Boolean = true,
     addSuffixIfExists: Boolean = true
@@ -146,7 +150,7 @@ object Plotly {
          |<body>
          |<div id="$divId"></div>
          |<script>
-         |${jsSnippet(divId, traces, layout)}
+         |${jsSnippet(divId, traces, layout, config)}
          |</script>
          |</body>
          |</html>
