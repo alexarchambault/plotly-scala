@@ -6,7 +6,8 @@ import java.nio.file.Files
 
 import argonaut.ArgonautShapeless._
 import argonaut.{DecodeJson, DecodeResult, Json, Parse}
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 import plotly.element._
 import shapeless.Witness
 
@@ -103,7 +104,7 @@ object SchemaTests {
 
 }
 
-class SchemaTests extends FlatSpec with Matchers {
+class SchemaTests extends AnyFlatSpec with Matchers {
 
   private def compareValues(fromSchema: Set[String], fromLib: Set[String]): Unit = {
     val onlySchema = (fromSchema -- fromLib).toVector.sorted

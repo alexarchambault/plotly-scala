@@ -2,7 +2,7 @@ language: scala
 jdk: openjdk8
 before_install:
   - git fetch --tags
-script: ./sbt -batch ++${TRAVIS_SCALA_VERSION} test
+script: ./sbt -batch ++${TRAVIS_SCALA_VERSION} test mimaReportBinaryIssues
 branches:
   only:
   - master
@@ -18,7 +18,7 @@ stages:
     if: (branch = master AND type = push) OR (tag IS present)
 jobs:
   include:
-    - scala: 2.12.10
-    - scala: 2.13.1
+    - scala: 2.12.11
+    - scala: 2.13.2
     - stage: release
       script: ./sbt ci-release

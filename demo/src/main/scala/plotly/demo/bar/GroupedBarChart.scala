@@ -13,23 +13,16 @@ object GroupedBarChart extends DemoChart {
 
   // demo source start
 
-  val trace1 = Bar(
-    Seq("giraffes", "orangutans", "monkeys"),
-    Seq(20, 14, 23),
-    name = "SF Zoo"
-  )
+  val trace1 = Bar(Seq("giraffes", "orangutans", "monkeys"), Seq(20, 14, 23))
+    .withName("SF Zoo")
 
-  val trace2 = Bar(
-    Seq("giraffes", "orangutans", "monkeys"),
-    Seq(12, 18, 29),
-    name = "LA Zoo"
-  )
+  val trace2 = Bar(Seq("giraffes", "orangutans", "monkeys"), Seq(12, 18, 29))
+    .withName("LA Zoo")
 
   val data = Seq(trace1, trace2)
 
-  val layout = Layout( 
-    barmode = BarMode.Group
-  )
+  val layout = Layout()
+    .withBarmode(BarMode.Group)
 
   // demo source end
 

@@ -1,5 +1,7 @@
 package plotly.element
 
+import scala.language.implicitConversions
+
 sealed abstract class OneOrSeq[T] extends Product with Serializable
 
 object OneOrSeq {

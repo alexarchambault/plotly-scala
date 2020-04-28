@@ -20,10 +20,14 @@ inThisBuild(List(
 
 
 lazy val core = crossProject(JVMPlatform, JSPlatform)
+  .jsConfigure(_.disablePlugins(MimaPlugin))
   .settings(
     shared,
     plotlyPrefix,
     libraryDependencies += Deps.dataClass
+  )
+  .jvmSettings(
+    Mima.settings
   )
 
 lazy val coreJvm = core.jvm
@@ -34,14 +38,17 @@ lazy val `joda-time` = project
   .settings(
     shared,
     plotlyPrefix,
-    libraryDependencies += Deps.jodaTime
+    libraryDependencies += Deps.jodaTime,
+    Mima.settings
   )
 
 lazy val render = crossProject(JVMPlatform, JSPlatform)
   .jvmConfigure(_.enablePlugins(ShadingPlugin))
+  .jsConfigure(_.disablePlugins(MimaPlugin))
   .dependsOn(core)
   .jvmSettings(
-    shading("plotly.internals.shaded")
+    shading("plotly.internals.shaded"),
+    Mima.renderFilters
   )
   .settings(
     shared,
@@ -82,7 +89,8 @@ lazy val render = crossProject(JVMPlatform, JSPlatform)
       state.value.log.info(s"Wrote $f")
 
       Seq(f)
-    }
+    },
+    Mima.settings
   )
   .jsSettings(
     libraryDependencies ++= Seq(
@@ -96,13 +104,14 @@ lazy val renderJs = render.js
 
 lazy val demo = project
   .enablePlugins(JSDependenciesPlugin, ScalaJSPlugin)
+  .disablePlugins(MimaPlugin)
   .dependsOn(renderJs)
   .settings(
     shared,
     skip.in(publish) := true,
     plotlyPrefix,
-    test in Test := (),
-    testOnly in Test := (),
+    test.in(Test) := {},
+    testOnly.in(Test) := {},
     libraryDependencies += Deps.scalatags.value,
     jsDependencies ++= Seq(
       WebDeps.plotlyJs
@@ -142,6 +151,7 @@ lazy val demo = project
   )
 
 lazy val tests = project
+  .disablePlugins(MimaPlugin)
   .dependsOn(coreJvm, renderJvm)
   .settings(
     shared,
@@ -159,8 +169,10 @@ lazy val almond = project
   .settings(
     shared,
     plotlyPrefix,
-    libraryDependencies += Deps.almondScalaApi % "provided"
+    libraryDependencies += Deps.almondScalaApi % "provided",
+    Mima.settings
   )
 
 crossScalaVersions := Nil
-skip.in(publish) := true,
+skip.in(publish) := true
+disablePlugins(MimaPlugin)

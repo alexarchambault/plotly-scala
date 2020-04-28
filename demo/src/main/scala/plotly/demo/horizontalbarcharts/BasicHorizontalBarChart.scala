@@ -12,11 +12,10 @@ object BasicHorizontalBarChart extends NoLayoutDemoChart {
 
   // demo source start
 
-  val data = Seq(Bar(
-    Seq(20, 14, 23),
-    Seq("giraffes", "orangutans", "monkeys"),
-    orientation = Orientation.Horizontal
-  ))
+  val data = Seq(
+    Bar(Seq(20, 14, 23), Seq("giraffes", "orangutans", "monkeys"))
+      .withOrientation(Orientation.Horizontal)
+  )
 
   // demo source end
 

@@ -3,6 +3,8 @@ package plotly
 import org.joda.time._
 import plotly.Sequence.DateTimes
 
+import scala.language.implicitConversions
+
 object Joda {
 
   implicit def fromJodaLocalDates(seq: Seq[LocalDate]): Sequence =

@@ -1,6 +1,8 @@
 package plotly
 package element
 
+import scala.language.implicitConversions
+
 sealed abstract class Element extends Product with Serializable
 
 object Element {

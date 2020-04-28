@@ -87,8 +87,8 @@ object Settings {
     sourceGenerators.in(Compile) += customSourceGenerators.taskValue
   )
 
-  private val scala212 = "2.12.10"
-  private val scala213 = "2.13.1"
+  private val scala212 = "2.12.11"
+  private val scala213 = "2.13.2"
 
   private lazy val isAtLeastScala213 = Def.setting {
     import Ordering.Implicits._
@@ -107,6 +107,7 @@ object Settings {
       if (isAtLeastScala213.value) Nil
       else Seq(compilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full))
     },
+    scalacOptions ++= Seq("-deprecation", "-feature"),
     scalacOptions ++= {
       if (isAtLeastScala213.value) Seq("-Ymacro-annotations")
       else Nil

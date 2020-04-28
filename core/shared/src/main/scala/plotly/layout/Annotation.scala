@@ -6,19 +6,20 @@ import java.lang.{ Boolean => JBoolean }
 import dataclass.data
 import plotly.element._
 
-@data class Annotation(
-       xref: Option[Ref],
-       yref: Option[Ref],
-          x: Option[Element],
-          y: Option[Element],
-    xanchor: Option[Anchor],
-    yanchor: Option[Anchor],
-       text: Option[Element],
-       font: Option[Font],
-  showarrow: Option[Boolean]
+@data(optionSetters = true) class Annotation(
+       xref: Option[Ref] = None,
+       yref: Option[Ref] = None,
+          x: Option[Element] = None,
+          y: Option[Element] = None,
+    xanchor: Option[Anchor] = None,
+    yanchor: Option[Anchor] = None,
+       text: Option[Element] = None,
+       font: Option[Font] = None,
+  showarrow: Option[Boolean] = None
 )
 
 object Annotation {
+  @deprecated("Use Annotation() and chain-call .with* methods on it instead", "0.8.0")
   def apply(
          xref: Ref      = null,
          yref: Ref      = null,

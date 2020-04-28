@@ -2,7 +2,9 @@ package plotly
 
 import plotly.Sequence.{DateTimes, Doubles, NestedDoubles, NestedInts, Strings}
 import plotly.element.LocalDateTime
+
 import scala.collection.{Seq => BaseScalaSeq}
+import scala.language.implicitConversions
 
 trait MutableSequenceImplicitConversions {
 

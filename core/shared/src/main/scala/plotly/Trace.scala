@@ -4,36 +4,43 @@ import scala.language.implicitConversions
 
 import java.lang.{ Boolean => JBoolean, Double => JDouble }
 
-import dataclass.data
+import dataclass._
 import plotly.element._
 
 sealed abstract class Trace extends Product with Serializable
 
-@data class Scatter(
-             x: Option[Sequence],
-             y: Option[Sequence],
-          text: Option[OneOrSeq[String]],
-          mode: Option[ScatterMode],
-        marker: Option[Marker],
-          line: Option[Line],
-  textposition: Option[TextPosition],
-      textfont: Option[TextFont],
-          name: Option[String],
-   connectgaps: Option[Boolean],
-         xaxis: Option[AxisReference],
-         yaxis: Option[AxisReference],
-          fill: Option[Fill],
-       error_x: Option[Error],
-       error_y: Option[Error],
-    showlegend: Option[Boolean],
-     fillcolor: Option[OneOrSeq[Color]],
-     hoverinfo: Option[HoverInfo],
-       hoveron: Option[HoverOn],
-    stackgroup: Option[String],
-     groupnorm: Option[GroupNorm]
+@data(optionSetters = true) class Scatter(
+             x: Option[Sequence] = None,
+             y: Option[Sequence] = None,
+          text: Option[OneOrSeq[String]] = None,
+          mode: Option[ScatterMode] = None,
+        marker: Option[Marker] = None,
+          line: Option[Line] = None,
+  textposition: Option[TextPosition] = None,
+      textfont: Option[TextFont] = None,
+          name: Option[String] = None,
+   connectgaps: Option[Boolean] = None,
+         xaxis: Option[AxisReference] = None,
+         yaxis: Option[AxisReference] = None,
+          fill: Option[Fill] = None,
+       error_x: Option[Error] = None,
+       error_y: Option[Error] = None,
+    showlegend: Option[Boolean] = None,
+     fillcolor: Option[OneOrSeq[Color]] = None,
+     hoverinfo: Option[HoverInfo] = None,
+       hoveron: Option[HoverOn] = None,
+    stackgroup: Option[String] = None,
+     groupnorm: Option[GroupNorm] = None
 ) extends Trace
 
 object Scatter {
+  def apply(x: Sequence, y: Sequence): Scatter =
+    Scatter().withX(x).withY(y)
+
+  def apply(y: Sequence): Scatter =
+    Scatter().withY(y)
+
+  @deprecated("Use Scatter() and chain-call .with* methods on it instead", "0.8.0")
   def apply(
           values: Sequence         = null,
     secondValues: Sequence         = null,
@@ -89,23 +96,30 @@ object Scatter {
   }
 }
 
-@data class Box(
-             y: Option[Sequence],
-             x: Option[Sequence],
-     boxpoints: Option[BoxPoints],
-        jitter: Option[Double],
-      pointpos: Option[Double],
-          name: Option[String],
-        marker: Option[Marker],
-   orientation: Option[Orientation],
-  whiskerwidth: Option[Double],
-       boxmean: Option[BoxMean],
-     fillcolor: Option[OneOrSeq[Color]],
-          line: Option[Line],
-    showlegend: Option[Boolean]
+@data(optionSetters = true) class Box(
+             y: Option[Sequence] = None,
+             x: Option[Sequence] = None,
+     boxpoints: Option[BoxPoints] = None,
+        jitter: Option[Double] = None,
+      pointpos: Option[Double] = None,
+          name: Option[String] = None,
+        marker: Option[Marker] = None,
+   orientation: Option[Orientation] = None,
+  whiskerwidth: Option[Double] = None,
+       boxmean: Option[BoxMean] = None,
+     fillcolor: Option[OneOrSeq[Color]] = None,
+          line: Option[Line] = None,
+    showlegend: Option[Boolean] = None
 ) extends Trace
 
 object Box {
+  def apply(y: Sequence): Box =
+    Box().withY(y)
+
+  def apply(y: Sequence, x: Sequence): Box =
+    Box().withY(y).withX(x)
+
+  @deprecated("Use Box() and chain-call .with* methods on it instead", "0.8.0")
   def apply(
                y: Sequence        = null,
                x: Sequence        = null,
@@ -138,25 +152,27 @@ object Box {
     )
 }
 
-@data class Bar(
+@data(optionSetters = true) class Bar(
              x: Sequence,
              y: Sequence,
-          name: Option[String],
-          text: Option[Seq[String]],
-        marker: Option[Marker],
-   orientation: Option[Orientation],
-         xaxis: Option[AxisReference],
-         yaxis: Option[AxisReference],
-       error_y: Option[Error],
-    showlegend: Option[Boolean],
-     hoverinfo: Option[HoverInfo],
-  textposition: Option[BarTextPosition],
-       opacity: Option[Double],
-         width: Option[OneOrSeq[Double]],
-          base: Option[OneOrSeq[Double]]
+  @since
+          name: Option[String] = None,
+          text: Option[Seq[String]] = None,
+        marker: Option[Marker] = None,
+   orientation: Option[Orientation] = None,
+         xaxis: Option[AxisReference] = None,
+         yaxis: Option[AxisReference] = None,
+       error_y: Option[Error] = None,
+    showlegend: Option[Boolean] = None,
+     hoverinfo: Option[HoverInfo] = None,
+  textposition: Option[BarTextPosition] = None,
+       opacity: Option[Double] = None,
+         width: Option[OneOrSeq[Double]] = None,
+          base: Option[OneOrSeq[Double]] = None
 ) extends Trace
 
 object Bar {
+  @deprecated("Use Bar() and chain-call .with* methods on it instead", "0.8.0")
   def apply(
                x: Sequence,
                y: Sequence,
@@ -193,21 +209,28 @@ object Bar {
     )
 }
 
-@data class Histogram(
-          x: Option[Sequence],
-          y: Option[Sequence],
-    opacity: Option[Double],
-       name: Option[String],
-   autobinx: Option[Boolean],
-     marker: Option[Marker],
-      xbins: Option[Bins],
-   histnorm: Option[HistNorm],
- showlegend: Option[Boolean],
- cumulative: Option[Cumulative],
-   histfunc: Option[HistFunc]
+@data(optionSetters = true) class Histogram(
+          x: Option[Sequence] = None,
+          y: Option[Sequence] = None,
+    opacity: Option[Double] = None,
+       name: Option[String] = None,
+   autobinx: Option[Boolean] = None,
+     marker: Option[Marker] = None,
+      xbins: Option[Bins] = None,
+   histnorm: Option[HistNorm] = None,
+ showlegend: Option[Boolean] = None,
+ cumulative: Option[Cumulative] = None,
+   histfunc: Option[HistFunc] = None
 ) extends Trace
 
 object Histogram {
+  def apply(x: Sequence): Histogram =
+    Histogram().withX(x)
+
+  def apply(x: Sequence, y: Sequence): Histogram =
+    Histogram().withX(x).withY(y)
+
+  @deprecated("Use Histogram() and chain-call .with* methods on it instead", "0.8.0")
   def apply(
            x: Sequence   = null,
            y: Sequence   = null,
@@ -236,15 +259,16 @@ object Histogram {
     )
 }
 
-@data class Surface(
-          x: Option[Sequence],
-          y: Option[Sequence],
-          z: Option[Sequence],
-  showscale: Option[Boolean],
-    opacity: Option[Double]
+@data(optionSetters = true) class Surface(
+          x: Option[Sequence] = None,
+          y: Option[Sequence] = None,
+          z: Option[Sequence] = None,
+  showscale: Option[Boolean] = None,
+    opacity: Option[Double] = None
 ) extends Trace
 
 object Surface {
+  @deprecated("Use Surface() and chain-call .with* methods on it instead", "0.8.0")
   def apply(
             x: Sequence  = null,
             y: Sequence  = null,
@@ -261,17 +285,24 @@ object Surface {
     )
 }
 
-@data class Heatmap(
-             y: Option[Sequence],
-             x: Option[Sequence],
-             z: Option[Sequence],
-autocolorscale: Option[Boolean],
-    colorscale: Option[ColorScale],
-     showscale: Option[Boolean],
-          name: Option[String]
+@data(optionSetters = true) class Heatmap(
+             y: Option[Sequence] = None,
+             x: Option[Sequence] = None,
+             z: Option[Sequence] = None,
+autocolorscale: Option[Boolean] = None,
+    colorscale: Option[ColorScale] = None,
+     showscale: Option[Boolean] = None,
+          name: Option[String] = None
 ) extends Trace
 
 object Heatmap {
+  def apply(z: Sequence): Heatmap =
+    Heatmap().withZ(z)
+
+  def apply(z: Sequence, x: Sequence, y: Sequence): Heatmap =
+    Heatmap().withZ(z).withX(x).withY(y)
+
+  @deprecated("Use Heatmap() and chain-call .with* methods on it instead", "0.8.0")
   def apply(
                y: Sequence        = null,
                x: Sequence        = null,

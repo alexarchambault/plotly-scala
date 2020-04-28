@@ -13,34 +13,29 @@ object ColoredBarChart extends DemoChart {
 
   // demo source start
 
-  val trace1 = Bar(
-    Seq(20, 14, 23),
-    Seq("giraffes", "orangutans", "monkeys"),
-    name = "SF Zoo",
-    orientation = Orientation.Horizontal,
-    marker = Marker(
-      color = Color.RGBA(55, 128, 191, 0.6),
-      width = 1
+  val trace1 = Bar(Seq(20, 14, 23), Seq("giraffes", "orangutans", "monkeys"))
+    .withName("SF Zoo")
+    .withOrientation(Orientation.Horizontal)
+    .withMarker(
+      Marker()
+        .withColor(Color.RGBA(55, 128, 191, 0.6))
+        .withWidth(1)
     )
-  )
 
-  val trace2 = Bar(
-    Seq(12, 18, 29),
-    Seq("giraffes", "orangutans", "monkeys"),
-    name = "LA Zoo",
-    orientation = Orientation.Horizontal,
-    marker = Marker(
-      color = Color.RGBA(255, 153, 51, 0.6),
-      width = 1
+  val trace2 = Bar(Seq(12, 18, 29), Seq("giraffes", "orangutans", "monkeys"))
+    .withName("LA Zoo")
+    .withOrientation(Orientation.Horizontal)
+    .withMarker(
+      Marker()
+        .withColor(Color.RGBA(255, 153, 51, 0.6))
+        .withWidth(1)
     )
-  )
 
   val data = Seq(trace1, trace2)
 
-  val layout = Layout(
-    title = "Colored Bar Chart",
-    barmode = BarMode.Stack
-  )
+  val layout = Layout()
+    .withTitle("Colored Bar Chart")
+    .withBarmode(BarMode.Stack)
 
   // demo source end
 

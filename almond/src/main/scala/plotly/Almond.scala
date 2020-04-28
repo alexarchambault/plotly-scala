@@ -97,7 +97,7 @@ object Almond {
   }
 
   def randomDiv(): String =
-    almond.api.helpers.Display.newDiv("plot-")
+    almond.display.UpdatableDisplay.generateDiv("plot-")
 
   def plot(
     data: Seq[Trace],
@@ -121,6 +121,7 @@ object Almond {
 
   implicit class DataOps(val data: Trace) extends AnyVal {
 
+    @deprecated("Create a Layout and / or a Config, and call one of the other plot methods instead", "0.8.0")
     def plot(
                         title: String          = null,
                        legend: Legend          = null,
@@ -185,14 +186,40 @@ object Almond {
           hovermode,
           boxmode
         ),
-        Config(
-          editable,
-          responsive,
-          showEditInChartStudio,
-          plotlyServerURL,
-        ),
+        Config()
+          .withEditable(Option(editable).map[Boolean](identity))
+          .withResponsive(Option(responsive).map[Boolean](identity))
+          .withShowEditInChartStudio(Option(showEditInChartStudio).map[Boolean](identity))
+          .withPlotlyServerURL(Option(plotlyServerURL)),
         div
       )
+
+    def plot()(implicit
+      publish: OutputHandler
+    ): String =
+      plot(Layout(), Config(), "")
+
+    def plot(
+      layout: Layout
+    )(implicit
+      publish: OutputHandler
+    ): String =
+      plot(layout, Config(), "")
+
+    def plot(
+      config: Config
+    )(implicit
+      publish: OutputHandler
+    ): String =
+      plot(Layout(), config, "")
+
+    def plot(
+      layout: Layout,
+      config: Config
+    )(implicit
+      publish: OutputHandler
+    ): String =
+      plot(layout, config, "")
 
     def plot(
       layout: Layout,
@@ -269,12 +296,11 @@ object Almond {
           hovermode,
           boxmode
         ),
-        Config(
-          editable,
-          responsive,
-          showEditInChartStudio,
-          plotlyServerURL,
-        ),
+        Config()
+          .withEditable(Option(editable).map[Boolean](identity))
+          .withResponsive(Option(responsive).map[Boolean](identity))
+          .withShowEditInChartStudio(Option(showEditInChartStudio).map[Boolean](identity))
+          .withPlotlyServerURL(plotlyServerURL),
         div
       )
 

@@ -9,7 +9,8 @@ import argonaut.Argonaut._
 import argonaut.{Json, Parse}
 import plotly.layout.Layout
 import org.mozilla.javascript._
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.util.matching.Regex
 
@@ -49,7 +50,7 @@ object DocumentationTests {
   def resourceTrace(res: String): Trace = {
     val dataStr = load(res)
     val result = dataStr.decodeEither[Trace]
-    result.right.getOrElse {
+    result.getOrElse {
       throw new Exception(s"$res: $result")
     }
   }
@@ -57,7 +58,7 @@ object DocumentationTests {
   def resourceLayout(res: String): Layout = {
     val dataStr = load(res)
     val result = dataStr.decodeEither[Layout]
-    result.right.getOrElse {
+    result.getOrElse {
       throw new Exception(s"$res: $result")
     }
   }
@@ -216,7 +217,7 @@ object DocumentationTests {
 
 }
 
-class DocumentationTests extends FlatSpec with Matchers {
+class DocumentationTests extends AnyFlatSpec with Matchers {
 
   import DocumentationTests._
 

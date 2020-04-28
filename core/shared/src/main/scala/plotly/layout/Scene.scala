@@ -6,13 +6,14 @@ import java.lang.{ Integer => JInt, Double => JDouble, Boolean => JBoolean }
 import dataclass.data
 import plotly.element._
 
-@data class Scene(
-  xaxis: Option[Axis],
-  yaxis: Option[Axis],
-  zaxis: Option[Axis]
+@data(optionSetters = true) class Scene(
+  xaxis: Option[Axis] = None,
+  yaxis: Option[Axis] = None,
+  zaxis: Option[Axis] = None
 )
 
 object Scene {
+  @deprecated("Use Scene() and chain-call .with* methods on it instead", "0.8.0")
   def apply(
     xaxis: Axis = null,
     yaxis: Axis = null,

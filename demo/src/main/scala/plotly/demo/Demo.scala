@@ -48,7 +48,7 @@ import scalatags.JsDom.all.{area => _, _}
 
   def unindent(source: String): String = {
 
-    val lines = source.lines.toVector
+    val lines = source.linesIterator.toVector
     val nonEmptyLines = lines.filter(_.exists(!_.isSpaceChar))
 
     if (nonEmptyLines.isEmpty)
