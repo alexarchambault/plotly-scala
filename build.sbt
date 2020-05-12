@@ -1,4 +1,7 @@
 
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
+
 import Settings._
 
 import sbtcrossproject.CrossPlugin.autoImport.crossProject
@@ -24,7 +27,7 @@ lazy val core = crossProject(JVMPlatform, JSPlatform)
   .settings(
     shared,
     plotlyPrefix,
-    libraryDependencies += Deps.dataClass
+    libraryDependencies += Deps.dataClass % Provided
   )
   .jvmSettings(
     Mima.settings
@@ -46,29 +49,31 @@ lazy val render = crossProject(JVMPlatform, JSPlatform)
   .jvmConfigure(_.enablePlugins(ShadingPlugin))
   .jsConfigure(_.disablePlugins(MimaPlugin))
   .dependsOn(core)
-  .jvmSettings(
-    shading("plotly.internals.shaded"),
-    Mima.renderFilters
-  )
   .settings(
     shared,
     plotlyPrefix
   )
   .jvmSettings(
+    Mima.renderFilters,
+    shadedModules += Deps.argonautShapeless.value.module,
+    shadingRules ++= {
+      val shadeUnder = "plotly.internals.shaded"
+      val shadeNamespaces = Seq("argonaut", "macrocompat", "shapeless")
+      for (ns <- shadeNamespaces)
+        yield ShadingRule.moveUnder(ns, shadeUnder),
+    },
+    validNamespaces += "plotly",
     libraryDependencies ++= Seq(
-      Deps.argonautShapeless.value % "shaded",
+      Deps.argonautShapeless.value,
       // depending on that one so that it doesn't get shaded
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
       WebDeps.plotlyJs,
       Deps.scalaTest % "test"
     ),
-    shadeNamespaces ++= Set(
-      "argonaut",
-      "macrocompat",
-      "shapeless"
-    ),
     resourceGenerators.in(Compile) += Def.task {
       import sys.process._
+
+      val log = state.value.log
 
       val dir = classDirectory.in(Compile).value / "plotly"
       val ver = version.value
@@ -76,19 +81,34 @@ lazy val render = crossProject(JVMPlatform, JSPlatform)
       val f = dir / "plotly-scala.properties"
       dir.mkdirs()
 
-      val p = new java.util.Properties
+      val props = Seq(
+        "plotly-js-version" -> WebDeps.Versions.plotlyJs,
+        "version" -> ver,
+        "commit-hash" -> Seq("git", "rev-parse", "HEAD").!!.trim
+      )
 
-      p.setProperty("plotly-js-version", WebDeps.Versions.plotlyJs)
-      p.setProperty("version", ver)
-      p.setProperty("commit-hash", Seq("git", "rev-parse", "HEAD").!!.trim)
+      val b = props
+        .map {
+          case (k, v) =>
+            assert(!v.contains("\n"), s"Invalid ${"\\n"} character in property $k")
+            s"$k=$v"
+        }
+        .mkString("\n")
+        .getBytes(StandardCharsets.UTF_8)
 
-      val w = new java.io.FileOutputStream(f)
-      p.store(w, "plotly-scala properties")
-      w.close()
+      val currentContentOpt = Some(f.toPath)
+        .filter(Files.exists(_))
+        .map(p => Files.readAllBytes(p))
 
-      state.value.log.info(s"Wrote $f")
+      if (currentContentOpt.forall(b0 => !java.util.Arrays.equals(b, b0))) {
+        val w = new java.io.FileOutputStream(f)
+        w.write(b)
+        w.close()
 
-      Seq(f)
+        log.info(s"Wrote $f")
+      }
+
+      Nil
     },
     Mima.settings
   )
