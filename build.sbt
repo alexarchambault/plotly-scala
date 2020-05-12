@@ -49,26 +49,26 @@ lazy val render = crossProject(JVMPlatform, JSPlatform)
   .jvmConfigure(_.enablePlugins(ShadingPlugin))
   .jsConfigure(_.disablePlugins(MimaPlugin))
   .dependsOn(core)
-  .jvmSettings(
-    shading("plotly.internals.shaded"),
-    Mima.renderFilters
-  )
   .settings(
     shared,
     plotlyPrefix
   )
   .jvmSettings(
+    Mima.renderFilters,
+    shadedModules += Deps.argonautShapeless.value.module,
+    shadingRules ++= {
+      val shadeUnder = "plotly.internals.shaded"
+      val shadeNamespaces = Seq("argonaut", "macrocompat", "shapeless")
+      for (ns <- shadeNamespaces)
+        yield ShadingRule.moveUnder(ns, shadeUnder),
+    },
+    validNamespaces += "plotly",
     libraryDependencies ++= Seq(
-      Deps.argonautShapeless.value % "shaded",
+      Deps.argonautShapeless.value,
       // depending on that one so that it doesn't get shaded
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
       WebDeps.plotlyJs,
       Deps.scalaTest % "test"
-    ),
-    shadeNamespaces ++= Set(
-      "argonaut",
-      "macrocompat",
-      "shapeless"
     ),
     resourceGenerators.in(Compile) += Def.task {
       import sys.process._
