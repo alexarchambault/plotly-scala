@@ -24,7 +24,7 @@ lazy val core = crossProject(JVMPlatform, JSPlatform)
   .settings(
     shared,
     plotlyPrefix,
-    libraryDependencies += Deps.dataClass
+    libraryDependencies += Deps.dataClass % Provided
   )
   .jvmSettings(
     Mima.settings
