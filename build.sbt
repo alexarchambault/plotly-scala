@@ -1,4 +1,7 @@
 
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
+
 import Settings._
 
 import sbtcrossproject.CrossPlugin.autoImport.crossProject
@@ -70,25 +73,42 @@ lazy val render = crossProject(JVMPlatform, JSPlatform)
     resourceGenerators.in(Compile) += Def.task {
       import sys.process._
 
+      val log = state.value.log
+
       val dir = classDirectory.in(Compile).value / "plotly"
       val ver = version.value
 
       val f = dir / "plotly-scala.properties"
       dir.mkdirs()
 
-      val p = new java.util.Properties
+      val props = Seq(
+        "plotly-js-version" -> WebDeps.Versions.plotlyJs,
+        "version" -> ver,
+        "commit-hash" -> Seq("git", "rev-parse", "HEAD").!!.trim
+      )
 
-      p.setProperty("plotly-js-version", WebDeps.Versions.plotlyJs)
-      p.setProperty("version", ver)
-      p.setProperty("commit-hash", Seq("git", "rev-parse", "HEAD").!!.trim)
+      val b = props
+        .map {
+          case (k, v) =>
+            assert(!v.contains("\n"), s"Invalid ${"\\n"} character in property $k")
+            s"$k=$v"
+        }
+        .mkString("\n")
+        .getBytes(StandardCharsets.UTF_8)
 
-      val w = new java.io.FileOutputStream(f)
-      p.store(w, "plotly-scala properties")
-      w.close()
+      val currentContentOpt = Some(f.toPath)
+        .filter(Files.exists(_))
+        .map(p => Files.readAllBytes(p))
 
-      state.value.log.info(s"Wrote $f")
+      if (currentContentOpt.forall(b0 => !java.util.Arrays.equals(b, b0))) {
+        val w = new java.io.FileOutputStream(f)
+        w.write(b)
+        w.close()
 
-      Seq(f)
+        log.info(s"Wrote $f")
+      }
+
+      Nil
     },
     Mima.settings
   )
