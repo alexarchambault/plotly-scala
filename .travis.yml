@@ -2,7 +2,7 @@ language: scala
 jdk: openjdk8
 before_install:
   - git fetch --tags
-script: ./sbt -batch ++${TRAVIS_SCALA_VERSION} test mimaReportBinaryIssues
+script: ./sbt -batch ++${TRAVIS_SCALA_VERSION} test compatibilityCheck
 branches:
   only:
   - master

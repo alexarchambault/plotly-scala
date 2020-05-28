@@ -30,7 +30,7 @@ lazy val core = crossProject(JVMPlatform, JSPlatform)
     libraryDependencies += Deps.dataClass % Provided
   )
   .jvmSettings(
-    Mima.settings
+    compatibilitySettings
   )
 
 lazy val coreJvm = core.jvm
@@ -40,9 +40,9 @@ lazy val `joda-time` = project
   .dependsOn(coreJvm)
   .settings(
     shared,
+    compatibilitySettings,
     plotlyPrefix,
-    libraryDependencies += Deps.jodaTime,
-    Mima.settings
+    libraryDependencies += Deps.jodaTime
   )
 
 lazy val render = crossProject(JVMPlatform, JSPlatform)
@@ -54,6 +54,8 @@ lazy val render = crossProject(JVMPlatform, JSPlatform)
     plotlyPrefix
   )
   .jvmSettings(
+    compatibilitySettings,
+    mimaCurrentClassfiles := shadedPackageBin.value,
     Mima.renderFilters,
     shadedModules += Deps.argonautShapeless.value.module,
     shadingRules ++= {
@@ -109,8 +111,7 @@ lazy val render = crossProject(JVMPlatform, JSPlatform)
       }
 
       Nil
-    },
-    Mima.settings
+    }
   )
   .jsSettings(
     libraryDependencies ++= Seq(
@@ -188,9 +189,9 @@ lazy val almond = project
   .dependsOn(coreJvm, renderJvm)
   .settings(
     shared,
+    compatibilitySettings,
     plotlyPrefix,
-    libraryDependencies += Deps.almondScalaApi % "provided",
-    Mima.settings
+    libraryDependencies += Deps.almondScalaApi % "provided"
   )
 
 crossScalaVersions := Nil

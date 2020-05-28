@@ -113,6 +113,15 @@ object Settings {
     }
   )
 
+  lazy val compatibilitySettings = Def.settings(
+    sbtcompatibility.SbtCompatibilityPlugin.autoImport.compatibilityIgnored ++= Seq(
+      // former dependency of core, now marked as "provided"
+      "io.github.alexarchambault" %% "data-class",
+      // transitive dependency of data-class
+      "org.scala-lang" % "scala-reflect"
+    )
+  )
+
   lazy val plotlyPrefix = {
     name := "plotly-" + name.value
   }
