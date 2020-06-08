@@ -198,18 +198,6 @@ object Plotly {
         addSuffixIfExists = addSuffixIfExists
       )
 
-    def plot(
-      path: String,
-      layout: Layout
-    ): Unit =
-      plot(
-        path,
-        layout,
-        useCdn = true,
-        openInBrowser = true,
-        addSuffixIfExists = true
-      )
-
     @deprecated("Create a Layout and call plot(path, layout) instead", "0.8.0")
     def plot(
                    path: String          = "./plot.html",
@@ -276,6 +264,18 @@ object Plotly {
         useCdn,
         openInBrowser,
         addSuffixIfExists
+      )
+
+    def plot(
+      path: String,
+      layout: Layout
+    ): Unit =
+      plot(
+        path,
+        layout,
+        useCdn = true,
+        openInBrowser = true,
+        addSuffixIfExists = true
       )
   }
 
@@ -296,18 +296,6 @@ object Plotly {
         addSuffixIfExists = addSuffixIfExists
       )
 
-    def plot(
-      path: String,
-      layout: Layout
-    ): Unit =
-      plot(
-        path,
-        layout,
-        useCdn = true,
-        openInBrowser = true,
-        addSuffixIfExists = true
-      )
-
     @deprecated("Create a Layout and call plot(path, layout) instead", "0.8.0")
     def plot(
                    path: String          = "./plot.html",
@@ -374,6 +362,18 @@ object Plotly {
         useCdn,
         openInBrowser,
         addSuffixIfExists
+      )
+
+    def plot(
+      path: String,
+      layout: Layout
+    ): Unit =
+      plot(
+        path,
+        layout,
+        useCdn = true,
+        openInBrowser = true,
+        addSuffixIfExists = true
       )
   }
 
