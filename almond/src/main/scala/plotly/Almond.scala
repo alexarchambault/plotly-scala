@@ -194,6 +194,15 @@ object Almond {
         div
       )
 
+    def plot(
+      layout: Layout,
+      config: Config,
+      div: String
+    )(implicit
+      publish: OutputHandler
+    ): String =
+      Almond.plot(Seq(data), layout, config, div = div)
+
     def plot()(implicit
       publish: OutputHandler
     ): String =
@@ -220,15 +229,6 @@ object Almond {
       publish: OutputHandler
     ): String =
       plot(layout, config, "")
-
-    def plot(
-      layout: Layout,
-      config: Config,
-      div: String
-    )(implicit
-      publish: OutputHandler
-    ): String =
-      Almond.plot(Seq(data), layout, config, div = div)
   }
 
   implicit class DataSeqOps(val data: Seq[Trace]) extends AnyVal {
