@@ -168,7 +168,8 @@ lazy val demo = project
         .commonJSName("PrismScala")
         .dependsOn("prism-java.js")
     ),
-    generateCustomSources
+    generateCustomSources,
+    evictionRules += "org.scala-js" % "scalajs-dom_*" % "semver"
   )
 
 lazy val tests = project
