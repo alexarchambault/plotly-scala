@@ -49,6 +49,8 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
   implicit val sequenceNestedIntsIsWrapper: IsWrapper[Sequence.NestedInts] = null
   implicit val sequenceStringsIsWrapper: IsWrapper[Sequence.Strings] = null
   implicit val sequenceDatetimesIsWrapper: IsWrapper[Sequence.DateTimes] = null
+  implicit val rangeDoublesIsWrapper: IsWrapper[Range.Doubles] = null
+  implicit val rangeDatetimesIsWrapper: IsWrapper[Range.DateTimes] = null
   implicit val doubleElementIsWrapper: IsWrapper[Element.DoubleElement] = null
   implicit val stringElementIsWrapper: IsWrapper[Element.StringElement] = null
   implicit def oneOrSeqOneIsWrapper[T]: IsWrapper[OneOrSeq.One[T]] = null
@@ -407,6 +409,9 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
 
   implicit val sequenceJsonCodec: JsonSumCodecFor[Sequence] =
     JsonSumCodecFor(jsonSumDirectCodecFor("sequence"))
+
+  implicit val rangeJsonCodec: JsonSumCodecFor[Range] =
+    JsonSumCodecFor(jsonSumDirectCodecFor("range"))
 
   implicit val boxPointsJsonCodec: JsonSumCodecFor[BoxPoints] =
     JsonSumCodecFor(jsonSumDirectCodecFor("box points"))

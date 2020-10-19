@@ -1,8 +1,8 @@
 package plotly.layout
 
 import dataclass.data
-import plotly.Sequence
+import plotly.Range
 
 @data(optionSetters = true) class RangeSlider(
-  range: Option[Sequence] = None
+  range: Option[Range] = None
 )
