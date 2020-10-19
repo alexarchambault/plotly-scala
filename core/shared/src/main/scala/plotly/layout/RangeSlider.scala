@@ -3,9 +3,6 @@ package plotly.layout
 import dataclass.data
 import plotly.Sequence
 
-@data class RangeSlider(
-  range: Option[Sequence]
+@data(optionSetters = true) class RangeSlider(
+  range: Option[Sequence] = None
 )
-object RangeSlider {
-  def apply(range: Sequence = null): RangeSlider = RangeSlider(Option(range))
-}

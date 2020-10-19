@@ -42,7 +42,8 @@ import plotly.element._
         ticktext: Option[Sequence] = None,
           nticks: Option[Int] = None,
       automargin: Option[Boolean] = None,
-      rangeslider: Option[RangeSlider],
+  @since("0.8.0")
+      rangeslider: Option[RangeSlider] = None
 )
 
 object Axis {
@@ -82,8 +83,7 @@ object Axis {
           tickvals: Sequence         = null,
           ticktext: Sequence         = null,
             nticks: JInt             = null,
-        automargin: JBoolean         = null,
-       rangeslider: RangeSlider      = null
+        automargin: JBoolean         = null
   ): Axis =
     Axis(
       Option(title),
@@ -120,7 +120,6 @@ object Axis {
       Option(tickvals),
       Option(ticktext),
       Option(nticks)         .map(x => x: Int),
-      Option(automargin)     .map(x => x: Boolean),
-      Option(rangeslider)
+      Option(automargin)     .map(x => x: Boolean)
     )
 }

@@ -3,15 +3,15 @@ package plotly.layout
 import dataclass.data
 import plotly.element.{Color, Line}
 
-@data class Shape (
-     `type`: Option[String],
-       xref: Option[String],
-       yref: Option[String],
-         x0: Option[String],
-         y0: Option[Double],
-         x1: Option[String],
-         y1: Option[Double],
-  fillcolor: Option[Color],
-    opacity: Option[Double],
-       line: Option[Line],
+@data(optionSetters = true) class Shape (
+     `type`: Option[String] = None,
+       xref: Option[String] = None,
+       yref: Option[String] = None,
+         x0: Option[String] = None,
+         y0: Option[Double] = None,
+         x1: Option[String] = None,
+         y1: Option[Double] = None,
+  fillcolor: Option[Color] = None,
+    opacity: Option[Double] = None,
+       line: Option[Line] = None
 )

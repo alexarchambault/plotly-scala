@@ -16,6 +16,7 @@ import plotly.element._
        text: Option[Element] = None,
        font: Option[Font] = None,
   showarrow: Option[Boolean] = None,
+  @since("0.8.0")
          ax: Option[Double] = None,
          ay: Option[Double] = None
 )
@@ -31,9 +32,7 @@ object Annotation {
       yanchor: Anchor   = null,
          text: Element  = null,
          font: Font     = null,
-    showarrow: JBoolean = null,
-           ax: JDouble  = null,
-           ay: JDouble  = null
+    showarrow: JBoolean = null
   ): Annotation =
     Annotation(
       Option(xref),
@@ -44,8 +43,6 @@ object Annotation {
       Option(yanchor),
       Option(text),
       Option(font),
-      Option(showarrow).map(v => v: Boolean),
-      Option(ax).map(x => x: Double),
-      Option(ay).map(x => x: Double)
+      Option(showarrow).map(v => v: Boolean)
     )
 }
