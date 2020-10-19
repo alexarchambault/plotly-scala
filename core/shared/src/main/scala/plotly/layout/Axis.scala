@@ -28,10 +28,10 @@ import plotly.element._
         zeroline: Option[Boolean] = None,
    zerolinewidth: Option[Double] = None,
    zerolinecolor: Option[Color] = None,
-           range: Option[(Double, Double)] = None,
+           range: Option[Range] = None,
        autorange: Option[Boolean] = None,
            ticks: Option[Ticks] = None,
-          domain: Option[(Double, Double)] = None,
+          domain: Option[Range] = None,
             side: Option[Side] = None,
           anchor: Option[AxisAnchor] = None,
           `type`: Option[AxisType] = None,
@@ -41,7 +41,9 @@ import plotly.element._
         tickvals: Option[Sequence] = None,
         ticktext: Option[Sequence] = None,
           nticks: Option[Int] = None,
-      automargin: Option[Boolean] = None
+      automargin: Option[Boolean] = None,
+  @since("0.8.0")
+      rangeslider: Option[RangeSlider] = None
 )
 
 object Axis {
@@ -105,10 +107,10 @@ object Axis {
       Option(zeroline)       .map(x => x: Boolean),
       Option(zerolinewidth)  .map(x => x: Double),
       Option(zerolinecolor),
-      Option(range),
+      Option(range)          .map(x => x: Range),
       Option(autorange)      .map(x => x: Boolean),
       Option(ticks),
-      Option(domain),
+      Option(domain)         .map(x => x: Range),
       Option(side),
       Option(anchor),
       Option(`type`),

@@ -30,6 +30,8 @@ object LocalDateTime extends PlotlyJavaTimeConversions {
         (d.split('-'), t.split(':')) match {
           case (Array(IntStr(y), IntStr(m), IntStr(d)), Array(IntStr(h), IntStr(min), IntStr(s))) =>
             Some(LocalDateTime(y, m, d, h, min, s))
+          case (Array(IntStr(y), IntStr(m), IntStr(d)), Array(IntStr(h), IntStr(min))) =>
+            Some(LocalDateTime(y, m, d, h, min, 0))
           case _ => None
         }
       case _ => None

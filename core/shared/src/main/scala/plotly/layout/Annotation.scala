@@ -1,7 +1,7 @@
 package plotly
 package layout
 
-import java.lang.{ Boolean => JBoolean }
+import java.lang.{ Boolean => JBoolean, Double => JDouble }
 
 import dataclass.data
 import plotly.element._
@@ -15,7 +15,10 @@ import plotly.element._
     yanchor: Option[Anchor] = None,
        text: Option[Element] = None,
        font: Option[Font] = None,
-  showarrow: Option[Boolean] = None
+  showarrow: Option[Boolean] = None,
+  @since("0.8.0")
+         ax: Option[Double] = None,
+         ay: Option[Double] = None
 )
 
 object Annotation {

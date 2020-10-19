@@ -30,7 +30,9 @@ lazy val core = crossProject(JVMPlatform, JSPlatform)
     libraryDependencies += Deps.dataClass % Provided
   )
   .jvmSettings(
-    compatibilitySettings
+    compatibilitySettings,
+    mimaPreviousArtifacts := mimaPreviousArtifacts.value
+      .filter(!_.revision.startsWith("0.7."))
   )
 
 lazy val coreJvm = core.jvm

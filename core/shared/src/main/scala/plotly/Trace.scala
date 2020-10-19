@@ -200,10 +200,10 @@ object Bar {
       Option(xaxis),
       Option(yaxis),
       Option(error_y),
-      Option(showlegend).map(b => b: Boolean),
+      Option(showlegend) .map(b => b: Boolean),
       Option(hoverinfo),
       Option(textposition),
-      Option(opacity).map(d => d: Double),
+      Option(opacity)    .map(d => d: Double),
       Option(width),
       Option(base)
     )
@@ -316,9 +316,50 @@ object Heatmap {
       Option(y),
       Option(x),
       Option(z),
-      Option(autocolorscale).map(b => b: Boolean),
+      Option(autocolorscale) .map(b => b: Boolean),
       Option(colorscale),
-      Option(showscale).map(b => b: Boolean),
+      Option(showscale)      .map(b => b: Boolean),
       Option(name)
+    )
+}
+
+@data(optionSetters = true) class Candlestick(
+           x: Option[Sequence] = None,
+       close: Option[Sequence] = None,
+        high: Option[Sequence] = None,
+         low: Option[Sequence] = None,
+        open: Option[Sequence] = None,
+  decreasing: Option[Marker] = None,
+  increasing: Option[Marker] = None,
+        line: Option[Marker] = None,
+       xaxis: Option[AxisReference] = None,
+       yaxis: Option[AxisReference] = None
+) extends Trace
+
+object Candlestick {
+  @deprecated("Use Candlestick() and chain-call .with* methods on it instead", "0.8.0")
+  def apply(
+             x: Sequence      = null,
+         close: Sequence      = null,
+          high: Sequence      = null,
+           low: Sequence      = null,
+          open: Sequence      = null,
+    decreasing: Marker        = null,
+    increasing: Marker        = null,
+          line: Marker        = null,
+         xaxis: AxisReference = null,
+         yaxis: AxisReference = null
+  ): Candlestick =
+    Candlestick(
+      Option(x),
+      Option(close),
+      Option(high),
+      Option(low),
+      Option(open),
+      Option(decreasing),
+      Option(increasing),
+      Option(line),
+      Option(xaxis),
+      Option(yaxis)
     )
 }
