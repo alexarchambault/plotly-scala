@@ -28,10 +28,10 @@ It is published for both scala 2.12 and 2.13.
 
 ### From almond
 
-Add the `org.plotly-scala::plotly-almond:0.7.2` dependency to the notebook. (Latest version: [![Maven Central](https://img.shields.io/maven-central/v/org.plotly-scala/plotly-render_2.13.svg)](https://maven-badges.herokuapp.com/maven-central/org.plotly-scala/plotly-render_2.13))
+Add the `org.plotly-scala::plotly-almond:0.8.0` dependency to the notebook. (Latest version: [![Maven Central](https://img.shields.io/maven-central/v/org.plotly-scala/plotly-render_2.13.svg)](https://maven-badges.herokuapp.com/maven-central/org.plotly-scala/plotly-render_2.13))
 Then initialize plotly-scala, and use it, like
 ```scala
-import $ivy.`org.plotly-scala::plotly-almond:0.7.2`
+import $ivy.`org.plotly-scala::plotly-almond:0.8.0`
 
 import plotly._
 import plotly.element._
@@ -57,7 +57,7 @@ jupyter labextension install @jupyterlab/plotly-extension
 
 Add the corresponding dependency to your project, like
 ```scala
-libraryDependencies += "org.plotly-scala" %%% "plotly-render" % "0.7.2"
+libraryDependencies += "org.plotly-scala" %%% "plotly-render" % "0.8.0"
 ```
 (Latest version: [![Maven Central](https://img.shields.io/maven-central/v/org.plotly-scala/plotly-render_2.13.svg)](https://maven-badges.herokuapp.com/maven-central/org.plotly-scala/plotly-render_2.13))
 
@@ -93,7 +93,7 @@ plot.plot(
 
 Load the corresponding dependency, and some imports, like
 ```scala
-import $ivy.`org.plotly-scala::plotly-render:0.5.2`
+import $ivy.`org.plotly-scala::plotly-render:0.8.0`
 import plotly._, element._, layout._, Plotly._
 ```
 
