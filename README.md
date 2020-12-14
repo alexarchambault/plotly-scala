@@ -48,9 +48,9 @@ Bar(x, y).plot()
 ```
 
 #### JupyterLab
-If you're using [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/), you have to install the [plotly-extension](https://github.com/jupyterlab/jupyter-renderers/tree/master/packages/plotly-extension) to enable support for rendering Plotly charts:
+If you're using [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/), you have to install [jupyterlab-plotly](https://plotly.com/python/getting-started/#jupyterlab-support-python-35) to enable support for rendering Plotly charts:
 ```bash
-jupyter labextension install @jupyterlab/plotly-extension
+jupyter labextension install jupyterlab-plotly
 ```
 
 ### From scala-js
