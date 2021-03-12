@@ -43,7 +43,11 @@ import plotly.element._
           nticks: Option[Int] = None,
       automargin: Option[Boolean] = None,
   @since("0.8.0")
-      rangeslider: Option[RangeSlider] = None
+     rangeslider: Option[RangeSlider] = None,
+  @since("0.8.2")
+           width: Option[Int] = None,
+          height: Option[Int] = None,
+        autosize: Option[Boolean] = None
 )
 
 object Axis {

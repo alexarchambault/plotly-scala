@@ -77,10 +77,6 @@ object SchemaTests {
     traces: Map[String, Trace]
   )
 
-  case class SchemaFile(
-    schema: Schema
-  )
-
   val schemaFile = new File("plotly-documentation/_data/plotschema.json")
 
   lazy val schema: Schema = {
@@ -93,12 +89,12 @@ object SchemaTests {
       case Right(json) => json
     }
 
-    schemaJson.as[SchemaFile].toEither match {
+    schemaJson.as[Schema].toEither match {
       case Left(error) =>
         println(schemaJson.obj.map(_.fields).getOrElse(Nil).mkString("\n"))
         throw new Exception(s"Cannot decode schema: $error")
-      case Right(schemaFile) =>
-        schemaFile.schema
+      case Right(schema) =>
+        schema
     }
   }
 
