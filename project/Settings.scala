@@ -87,8 +87,8 @@ object Settings {
     sourceGenerators.in(Compile) += customSourceGenerators.taskValue
   )
 
-  private val scala212 = "2.12.11"
-  private val scala213 = "2.13.2"
+  private val scala212 = "2.12.13"
+  private val scala213 = "2.13.5"
 
   private lazy val isAtLeastScala213 = Def.setting {
     import Ordering.Implicits._
