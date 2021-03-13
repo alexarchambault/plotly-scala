@@ -68,6 +68,11 @@ object DocumentationTests {
     var dataOpt = Option.empty[Object]
     var layoutOpt = Option.empty[Object]
 
+    def newPlot(div: String, data: Object, layout: Object, other: Object): Unit = {
+      dataOpt = Option(data)
+      layoutOpt = Option(layout)
+    }
+
     def newPlot(div: String, data: Object, layout: Object): Unit = {
       dataOpt = Option(data)
       layoutOpt = Option(layout)
@@ -116,11 +121,19 @@ object DocumentationTests {
       val step = (to - from).toDouble / (count - 1)
       new NativeArrayWithDefault((0 until count).map(n => from + n * step: JDouble).toArray[AnyRef], 0.0: JDouble)
     }
+    def linspace(from: Double, to: Double, count: Int) = {
+      val step = (to - from) / (count - 1)
+      new NativeArrayWithDefault((0 until count).map(n => from + n * step: JDouble).toArray[AnyRef], 0.0: JDouble)
+    }
   }
 
   def linspaceImpl(cx: Context, thisObj: Scriptable, args: Array[Object], funObj: Function): AnyRef =
     args.toSeq.map(x => x: Any) match {
       case Seq(from: Int, to: Int, step: Int) =>
+        Numeric.linspace(from, to, step)
+      case Seq(from: Double, to: Int, step: Int) =>
+        Numeric.linspace(from, to.toDouble, step)
+      case Seq(from: Double, to: Double, step: Int) =>
         Numeric.linspace(from, to, step)
       case other => throw new NoSuchElementException(s"linspace${other.mkString("(", ", ", ")")}")
     }
@@ -155,6 +168,7 @@ object DocumentationTests {
       ScriptableObject.putProperty(scope, "document", Document)
       ScriptableObject.putProperty(scope, "numeric", Numeric)
       ScriptableObject.putProperty(scope, "require", require(scope))
+      ScriptableObject.putProperty(scope, "linspace", linspace(scope))
       cx.evaluateString(scope, demo, "<cmd>", 1, null)
       plotly.result(cx, scope)
     } catch {
@@ -233,7 +247,7 @@ class DocumentationTests extends AnyFlatSpec with Matchers {
 //    "financial/ohlc",
     "basic/bubble",
     "basic/area",
-    "layout/sizing",
+    "fundamentals/sizing",
     // TODO? Gauge charts
     // TODO Multiple chart types (needs contour)
     // TODO Shapes (need mock of d3)
@@ -273,6 +287,10 @@ class DocumentationTests extends AnyFlatSpec with Matchers {
         .replace("</br>", "\\n")
         .replace("(...size)", "(size[0])") // rhino doesn't seem to support the spead (...) operator
         .replace("desired_maximum_marker_size**2", "desired_maximum_marker_size*desired_maximum_marker_size")
+        .replace("""function linspace(a,b,n) {
+  return Plotly.d3.range(n).map(function(i){return a+i*(b-a)/(n-1);});
+}
+""", "")
 
       if (content.contains("Plotly.d3.csv"))
         println(s"Ignoring $post (Plotly.d3.csv not implemented)")
