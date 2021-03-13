@@ -156,6 +156,29 @@ object Box {
     )
 }
 
+@data(optionSetters = true) class Image(
+  z: Seq[Seq[Seq[Double]]],
+  x0: Option[Element] = None,
+  y0: Option[Element] = None,
+  name: Option[String] = None,
+  text: Option[Seq[String]] = None,
+  opacity: Option[Double] = None,
+  ids: Option[Seq[String]] = None,
+  dx: Option[Double] = None,
+  dy: Option[Double] = None,
+  source: Option[String] = None,
+  hoverinfo: Option[HoverInfo] = None,
+  hovertemplate: Option[Seq[String]] = None,
+  meta: Option[String] = None,
+  customdata: Option[Seq[String]] = None,
+  xaxis: Option[AxisReference] = None,
+  yaxis: Option[AxisReference] = None,
+  colormodel: Option[ColorModel] = None,
+  zmax: Option[Seq[Double]] = None,
+  zmin: Option[Seq[Double]] = None,
+  hoverlabel: Option[HoverLabel] = None
+) extends Trace
+
 @data(optionSetters = true) class Bar(
               x: Sequence,
               y: Sequence,

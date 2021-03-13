@@ -149,6 +149,8 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
   implicit val tickModeIsEnum = IsEnum.instance[TickMode](_.mode)
   implicit val patternIsEnum = IsEnum.instance[Pattern](_.label)
   implicit val rowOrderIsEnum = IsEnum.instance[RowOrder](_.label)
+  implicit val alignmentIsEnum = IsEnum.instance[Alignment](_.label)
+  implicit val colorModelIsEnum = IsEnum.instance[ColorModel](_.label)
 
   def jsonSumDirectCodecFor(name: String): JsonSumCodec = new JsonSumCodec {
     def encodeEmpty: Nothing =
@@ -225,6 +227,7 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
             case "x" => Right(HoverInfo.X)
             case "y" => Right(HoverInfo.Y)
             case "z" => Right(HoverInfo.Z)
+            case "color" => Right(HoverInfo.Color)
             case "text" => Right(HoverInfo.Text)
             case "name" => Right(HoverInfo.Name)
             case other => Left(s"Unrecognized hover info element: $other")

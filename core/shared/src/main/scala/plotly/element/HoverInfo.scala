@@ -20,6 +20,7 @@ object HoverInfo {
   case object Z extends Element("z")
   case object Text extends Element("text")
   case object Name extends Element("name")
+  case object Color extends Element("color")
 
 
   case object All extends HoverInfo {
