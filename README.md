@@ -28,10 +28,10 @@ It is published for both scala 2.12 and 2.13.
 
 ### From almond
 
-Add the `org.plotly-scala::plotly-almond:0.8.0` dependency to the notebook. (Latest version: [![Maven Central](https://img.shields.io/maven-central/v/org.plotly-scala/plotly-render_2.13.svg)](https://maven-badges.herokuapp.com/maven-central/org.plotly-scala/plotly-render_2.13))
+Add the `org.plotly-scala::plotly-almond:0.8.1` dependency to the notebook. (Latest version: [![Maven Central](https://img.shields.io/maven-central/v/org.plotly-scala/plotly-render_2.13.svg)](https://maven-badges.herokuapp.com/maven-central/org.plotly-scala/plotly-render_2.13))
 Then initialize plotly-scala, and use it, like
 ```scala
-import $ivy.`org.plotly-scala::plotly-almond:0.8.0`
+import $ivy.`org.plotly-scala::plotly-almond:0.8.1`
 
 import plotly._
 import plotly.element._
@@ -57,7 +57,7 @@ jupyter labextension install jupyterlab-plotly
 
 Add the corresponding dependency to your project, like
 ```scala
-libraryDependencies += "org.plotly-scala" %%% "plotly-render" % "0.8.0"
+libraryDependencies += "org.plotly-scala" %%% "plotly-render" % "0.8.1"
 ```
 (Latest version: [![Maven Central](https://img.shields.io/maven-central/v/org.plotly-scala/plotly-render_2.13.svg)](https://maven-badges.herokuapp.com/maven-central/org.plotly-scala/plotly-render_2.13))
 
@@ -89,7 +89,7 @@ plot.plot("plot", lay)  // attaches to div element with id 'plot'
 
 Load the corresponding dependency, and some imports, like
 ```scala
-import $ivy.`org.plotly-scala::plotly-render:0.8.0`
+import $ivy.`org.plotly-scala::plotly-render:0.8.1`
 import plotly._, element._, layout._, Plotly._
 ```
 
@@ -133,7 +133,8 @@ plotly-scala supports the features illustrated in the following sections of the 
 - [Subplots](https://plot.ly/javascript/subplots/),
 - [Multiple Axes](https://plot.ly/javascript/multiple-axes/),
 - [Histograms](https://plot.ly/javascript/histograms/),
-- [Log Plots](https://plot.ly/javascript/log-plot/).
+- [Log Plots](https://plot.ly/javascript/log-plot/), 
+- [Image](https://plotly.com/javascript/reference/image/).
 
 Some of these are illustrated in the [demo](https://alexarchambault.github.io/plotly-scala/) page.
 
