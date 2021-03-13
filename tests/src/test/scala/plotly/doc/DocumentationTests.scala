@@ -63,7 +63,7 @@ object DocumentationTests {
     }
   }
 
-  private class Plotly {
+  private class Plotly extends plotly.doc.Plotly {
 
     var dataOpt = Option.empty[Object]
     var layoutOpt = Option.empty[Object]
@@ -111,7 +111,7 @@ object DocumentationTests {
     }
   }
 
-  private object Document {
+  private object Document extends plotly.doc.Document {
     // stub...
     def getElementById(id: String): String = id
   }
