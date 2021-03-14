@@ -149,6 +149,8 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
   implicit val tickModeIsEnum = IsEnum.instance[TickMode](_.mode)
   implicit val patternIsEnum = IsEnum.instance[Pattern](_.label)
   implicit val rowOrderIsEnum = IsEnum.instance[RowOrder](_.label)
+  implicit val alignmentIsEnum = IsEnum.instance[Alignment](_.label)
+  implicit val colorModelIsEnum = IsEnum.instance[ColorModel](_.label)
 
   def jsonSumDirectCodecFor(name: String): JsonSumCodec = new JsonSumCodec {
     def encodeEmpty: Nothing =
