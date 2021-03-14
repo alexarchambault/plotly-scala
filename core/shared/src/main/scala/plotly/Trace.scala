@@ -158,7 +158,6 @@ object Box {
 
 @data(optionSetters = true) class Image(
   z: Seq[Seq[Seq[Double]]],
-  @since
   x0: Option[Element] = None,
   y0: Option[Element] = None,
   name: Option[String] = None,
