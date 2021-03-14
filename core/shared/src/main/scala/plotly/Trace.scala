@@ -175,8 +175,8 @@ object Box {
   xaxis: Option[AxisReference] = None,
   yaxis: Option[AxisReference] = None,
   colormodel: Option[ColorModel] = None,
-  zmax: Option[Seq[Int]] = None,
-  zmin: Option[Seq[Int]] = None,
+  zmax: Option[Seq[Double]] = None,
+  zmin: Option[Seq[Double]] = None,
   hoverlabel: Option[HoverLabel] = None
 ) extends Trace
 
