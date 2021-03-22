@@ -227,6 +227,7 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
             case "x" => Right(HoverInfo.X)
             case "y" => Right(HoverInfo.Y)
             case "z" => Right(HoverInfo.Z)
+            case "color" => Right(HoverInfo.Color)
             case "text" => Right(HoverInfo.Text)
             case "name" => Right(HoverInfo.Name)
             case other => Left(s"Unrecognized hover info element: $other")

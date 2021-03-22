@@ -4,13 +4,15 @@ package doc
 import java.io.{ByteArrayOutputStream, File, InputStream}
 import java.lang.{Double => JDouble}
 import java.nio.file.Files
-
 import argonaut.Argonaut._
 import argonaut.{Json, Parse}
 import plotly.layout.Layout
 import org.mozilla.javascript._
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
+import plotly.element.HoverInfo
+import plotly.element.HoverInfo.{X,Y,Z}
+import plotly.element.ColorModel._
 
 import scala.util.matching.Regex
 
@@ -305,6 +307,55 @@ class DocumentationTests extends AnyFlatSpec with Matchers {
         if (lines.nonEmpty)
           plotlyDemoElements(content)
       }
+    }
+  }
+
+  it should "demo Image Trace" in {
+    val js =
+      """
+        |var data = [
+        |  {
+        |    type: "image",
+        |    opacity: 0.1,
+        |    x0: 0.05,
+        |    y0: 0.05,
+        |    colormodel: "rgb",
+        |    hoverinfo: "x+y+z+color",
+        |    z: [[[255, 0, 0], [0, 255, 0], [0, 0, 255]]]
+        |  }
+        |];
+        |
+        |var layout = {
+        |    width: 400,
+        |    height: 400,
+        |    title: "image with opacity 0.1"
+        |};
+        |
+        |Plotly.newPlot('myDiv', data, layout);
+        |""".stripMargin
+    val (data, maybeLayout) = plotlyDemoElements(js)
+    maybeLayout should ===(Some(
+      Layout()
+        .withWidth(400)
+        .withHeight(400)
+        .withTitle("image with opacity 0.1")
+    ))
+
+    data.headOption match {
+      case Some(image) =>
+        val colors = Seq(
+          Seq(Seq(255d, 0d, 0d), Seq(0d, 255, 0), Seq(0d, 0, 255)),
+        )
+        val expected = Image(z = colors)
+          .withOpacity(0.1)
+          .withX0(0.05)
+          .withY0(0.05)
+          .withHoverinfo(HoverInfo(X, Y, Z, HoverInfo.Color))
+          .withColormodel(RGB)
+
+        image should ===(expected)
+      case None =>
+        fail("data must contain an image trace")
     }
   }
 
