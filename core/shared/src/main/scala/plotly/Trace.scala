@@ -179,6 +179,13 @@ object Box {
   hoverlabel: Option[HoverLabel] = None
 ) extends Trace
 
+@data(optionSetters = true) class Pie(
+  values: Option[Sequence] = None,
+  marker: Option[Marker] = None,
+  name: Option[String] = None,
+  showlegend: Option[Boolean] = None,
+) extends Trace
+
 @data(optionSetters = true) class Bar(
               x: Sequence,
               y: Sequence,
