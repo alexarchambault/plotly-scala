@@ -97,11 +97,7 @@ object Settings {
   lazy val shared = Def.settings(
     crossScalaVersions := Seq(scala213, scala212),
     scalaVersion := scala213,
-    resolvers ++= Seq(
-      "Webjars Bintray" at "https://dl.bintray.com/webjars/maven/",
-      Resolver.sonatypeRepo("releases"),
-      "jitpack" at "https://jitpack.io"
-    ),
+    resolvers += "jitpack" at "https://jitpack.io",
     libraryDependencies ++= {
       if (isAtLeastScala213.value) Nil
       else Seq(compilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full))
