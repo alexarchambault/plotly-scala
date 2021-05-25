@@ -17,6 +17,5 @@ object Deps {
   def scalajsDom = setting("org.scala-js" %%% "scalajs-dom" % "1.1.0")
   def scalatags = setting("com.lihaoyi" %%% "scalatags" % "0.9.4")
   def scalaTest = "org.scalatest" %% "scalatest" % "3.2.9"
-  def utest = setting("com.lihaoyi" %%% "utest" % "0.6.6")
 
 }

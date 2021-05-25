@@ -117,11 +117,6 @@ object Settings {
     name := "plotly-" + name.value
   }
 
-  lazy val utest = Seq(
-    libraryDependencies += Deps.utest.value % "test",
-    testFrameworks += new TestFramework("utest.runner.Framework")
-  )
-
   val gitLock = new Object
 
   def runCommand(cmd: Seq[String], dir: File): Unit = {
