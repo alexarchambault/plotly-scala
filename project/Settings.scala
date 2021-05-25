@@ -2,7 +2,6 @@
 import com.jsuereth.sbtpgp._
 import sbt._
 import sbt.Keys._
-import sbtevictionrules.EvictionRulesPlugin.autoImport._
 
 object Settings {
 
@@ -111,17 +110,7 @@ object Settings {
     scalacOptions ++= {
       if (isAtLeastScala213.value) Seq("-Ymacro-annotations")
       else Nil
-    },
-    evictionRules += "org.scala-js" %% "scalajs-library" % "semver"
-  )
-
-  lazy val compatibilitySettings = Def.settings(
-    sbtcompatibility.SbtCompatibilityPlugin.autoImport.compatibilityIgnored ++= Seq(
-      // former dependency of core, now marked as "provided"
-      "io.github.alexarchambault" %% "data-class",
-      // transitive dependency of data-class
-      "org.scala-lang" % "scala-reflect"
-    )
+    }
   )
 
   lazy val plotlyPrefix = {

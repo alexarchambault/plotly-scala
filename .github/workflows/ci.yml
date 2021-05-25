@@ -21,7 +21,7 @@ jobs:
       with:
         jvm: 8
         apps: sbt-launcher
-    - run: sbt ++$SCALA_VERSION test evictionCheck compatibilityCheck
+    - run: sbt ++$SCALA_VERSION test mimaReportBinaryIssues
       env:
         SCALA_VERSION: ${{ matrix.SCALA_VERSION }}
 
