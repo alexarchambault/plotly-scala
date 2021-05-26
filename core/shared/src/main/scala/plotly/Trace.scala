@@ -4,7 +4,7 @@ import scala.language.implicitConversions
 import java.lang.{Boolean => JBoolean, Double => JDouble}
 import dataclass._
 import plotly.element._
-import plotly.element.pie.{Direction, PieTextPosition, Title}
+import plotly.element.pie.{Direction, PieHoverInfo, PieTextPosition, Title}
 
 sealed abstract class Trace extends Product with Serializable
 
@@ -212,7 +212,7 @@ object Box {
           yaxis: Option[AxisReference] = None,
         error_y: Option[Error] = None,
      showlegend: Option[Boolean] = None,
-      hoverinfo: Option[HoverInfo] = None,
+      hoverinfo: Option[PieHoverInfo] = None,
    textposition: Option[BarTextPosition] = None,
         opacity: Option[Double] = None,
           width: Option[OneOrSeq[Double]] = None,
