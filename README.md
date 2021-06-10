@@ -53,7 +53,7 @@ If you're using [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/), you 
 jupyter labextension install jupyterlab-plotly
 ```
 
-Also, you may have to install `plotlywidget` and `plotly-extension` with `--no-build` option and then build them if graph won't show up and you find a message `ReferenceError: require is not defined` in debug console in browser.
+Also, you may have to install plotlywidget and plotly-extension with `--no-build` option and then build them if graph won't show up and you find a message `ReferenceError: require is not defined` in debug console in browser.
 
 ```bash
 export NODE_OPTIONS=--max-old-space-size=4096
