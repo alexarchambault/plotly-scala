@@ -53,6 +53,18 @@ If you're using [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/), you 
 jupyter labextension install jupyterlab-plotly
 ```
 
+Also, you may have to install `plotlywidget` and `plotly-extension` with `--no-build` option and then build them if graph won't show up and you find a message `ReferenceError: require is not defined` in debug console in browser.
+
+```bash
+export NODE_OPTIONS=--max-old-space-size=4096
+jupyter labextension install plotlywidget@0.8.0 --no-build
+jupyter labextension install @jupyterlab/plotly-extension@0.18.2 --no-build
+jupyter lab build
+unset NODE_OPTIONS
+```
+
+Reference is [here](https://github.com/plotly/plotly_express/issues/38)
+
 ### From scala-js
 
 Add the corresponding dependency to your project, like
