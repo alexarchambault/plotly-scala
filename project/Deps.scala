@@ -11,7 +11,7 @@ object Deps {
   def argonautShapeless = setting("com.github.alexarchambault" %%% "argonaut-shapeless_6.3" % "1.3.0")
   def dataClass = "io.github.alexarchambault" %% "data-class" % "0.2.5"
   def jodaTime = "joda-time" % "joda-time" % "2.10.10"
-  def rhino = "org.mozilla" % "rhino" % "1.7.13"
+  def rhino = "org.mozilla" % "rhino" % "1.7.14"
   def shapeless = setting("com.chuusai" %%% "shapeless" % "2.3.7")
   def scalacheckShapeless = setting("com.github.alexarchambault" %%% "scalacheck-shapeless_1.15" % "1.3.0")
   def scalajsDom = setting("org.scala-js" %%% "scalajs-dom" % "1.1.0")
