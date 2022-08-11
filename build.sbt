@@ -21,6 +21,10 @@ inThisBuild(List(
   )
 ))
 
+val previousVersions = Set.empty[String]
+lazy val mimaSettings = Def.settings(
+  mimaPreviousArtifacts := previousVersions.map(organization.value %% moduleName.value % _)
+)
 
 lazy val core = crossProject(JVMPlatform, JSPlatform)
   .jsConfigure(_.disablePlugins(MimaPlugin))
@@ -30,9 +34,7 @@ lazy val core = crossProject(JVMPlatform, JSPlatform)
     libraryDependencies += Deps.dataClass % Provided
   )
   .jvmSettings(
-    compatibilitySettings,
-    mimaPreviousArtifacts := mimaPreviousArtifacts.value
-      .filter(!_.revision.startsWith("0.7."))
+    mimaSettings
   )
 
 lazy val coreJvm = core.jvm
@@ -42,7 +44,7 @@ lazy val `joda-time` = project
   .dependsOn(coreJvm)
   .settings(
     shared,
-    compatibilitySettings,
+    mimaSettings,
     plotlyPrefix,
     libraryDependencies += Deps.jodaTime
   )
@@ -56,7 +58,7 @@ lazy val render = crossProject(JVMPlatform, JSPlatform)
     plotlyPrefix
   )
   .jvmSettings(
-    compatibilitySettings,
+    mimaSettings,
     mimaCurrentClassfiles := shadedPackageBin.value,
     Mima.renderFilters,
     shadedModules += Deps.argonautShapeless.value.module,
@@ -74,12 +76,12 @@ lazy val render = crossProject(JVMPlatform, JSPlatform)
       WebDeps.plotlyJs,
       Deps.scalaTest % "test"
     ),
-    resourceGenerators.in(Compile) += Def.task {
+    (Compile / resourceGenerators) += Def.task {
       import sys.process._
 
       val log = state.value.log
 
-      val dir = classDirectory.in(Compile).value / "plotly"
+      val dir = (Compile / classDirectory).value / "plotly"
       val ver = version.value
 
       val f = dir / "plotly-scala.properties"
@@ -131,10 +133,10 @@ lazy val demo = project
   .dependsOn(renderJs)
   .settings(
     shared,
-    skip.in(publish) := true,
+    (publish / skip) := true,
     plotlyPrefix,
-    test.in(Test) := {},
-    testOnly.in(Test) := {},
+    (Test / test) := {},
+    (Test / testOnly) := {},
     libraryDependencies += Deps.scalatags.value,
     jsDependencies ++= Seq(
       WebDeps.plotlyJs
@@ -170,8 +172,7 @@ lazy val demo = project
         .commonJSName("PrismScala")
         .dependsOn("prism-java.js")
     ),
-    generateCustomSources,
-    evictionRules += "org.scala-js" % "scalajs-dom_*" % "semver"
+    generateCustomSources
   )
 
 lazy val tests = project
@@ -179,7 +180,7 @@ lazy val tests = project
   .dependsOn(coreJvm, renderJvm)
   .settings(
     shared,
-    skip.in(publish) := true,
+    (publish / skip) := true,
     plotlyPrefix,
     fetchTestData,
     libraryDependencies ++= Seq(
@@ -192,11 +193,11 @@ lazy val almond = project
   .dependsOn(coreJvm, renderJvm)
   .settings(
     shared,
-    compatibilitySettings,
+    mimaSettings,
     plotlyPrefix,
     libraryDependencies += Deps.almondScalaApi % "provided"
   )
 
 crossScalaVersions := Nil
-skip.in(publish) := true
+(publish / skip) := true
 disablePlugins(MimaPlugin)
