@@ -2,7 +2,6 @@
 import com.jsuereth.sbtpgp._
 import sbt._
 import sbt.Keys._
-import sbtevictionrules.EvictionRulesPlugin.autoImport._
 
 object Settings {
 
@@ -87,8 +86,8 @@ object Settings {
     sourceGenerators.in(Compile) += customSourceGenerators.taskValue
   )
 
-  private val scala212 = "2.12.11"
-  private val scala213 = "2.13.2"
+  private val scala212 = "2.12.16"
+  private val scala213 = "2.13.6"
 
   private lazy val isAtLeastScala213 = Def.setting {
     import Ordering.Implicits._
@@ -98,11 +97,7 @@ object Settings {
   lazy val shared = Def.settings(
     crossScalaVersions := Seq(scala213, scala212),
     scalaVersion := scala213,
-    resolvers ++= Seq(
-      "Webjars Bintray" at "https://dl.bintray.com/webjars/maven/",
-      Resolver.sonatypeRepo("releases"),
-      "jitpack" at "https://jitpack.io"
-    ),
+    resolvers += "jitpack" at "https://jitpack.io",
     libraryDependencies ++= {
       if (isAtLeastScala213.value) Nil
       else Seq(compilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full))
@@ -111,27 +106,12 @@ object Settings {
     scalacOptions ++= {
       if (isAtLeastScala213.value) Seq("-Ymacro-annotations")
       else Nil
-    },
-    evictionRules += "org.scala-js" %% "scalajs-library" % "semver"
-  )
-
-  lazy val compatibilitySettings = Def.settings(
-    sbtcompatibility.SbtCompatibilityPlugin.autoImport.compatibilityIgnored ++= Seq(
-      // former dependency of core, now marked as "provided"
-      "io.github.alexarchambault" %% "data-class",
-      // transitive dependency of data-class
-      "org.scala-lang" % "scala-reflect"
-    )
+    }
   )
 
   lazy val plotlyPrefix = {
     name := "plotly-" + name.value
   }
-
-  lazy val utest = Seq(
-    libraryDependencies += Deps.utest.value % "test",
-    testFrameworks += new TestFramework("utest.runner.Framework")
-  )
 
   val gitLock = new Object
 

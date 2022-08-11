@@ -28,10 +28,10 @@ It is published for both scala 2.12 and 2.13.
 
 ### From almond
 
-Add the `org.plotly-scala::plotly-almond:0.7.2` dependency to the notebook. (Latest version: [![Maven Central](https://img.shields.io/maven-central/v/org.plotly-scala/plotly-render_2.13.svg)](https://maven-badges.herokuapp.com/maven-central/org.plotly-scala/plotly-render_2.13))
+Add the `org.plotly-scala::plotly-almond:0.8.1` dependency to the notebook. (Latest version: [![Maven Central](https://img.shields.io/maven-central/v/org.plotly-scala/plotly-render_2.13.svg)](https://maven-badges.herokuapp.com/maven-central/org.plotly-scala/plotly-render_2.13))
 Then initialize plotly-scala, and use it, like
 ```scala
-import $ivy.`org.plotly-scala::plotly-almond:0.7.2`
+import $ivy.`org.plotly-scala::plotly-almond:0.8.1`
 
 import plotly._
 import plotly.element._
@@ -48,16 +48,16 @@ Bar(x, y).plot()
 ```
 
 #### JupyterLab
-If you're using [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/), you have to install the [plotly-extension](https://github.com/jupyterlab/jupyter-renderers/tree/master/packages/plotly-extension) to enable support for rendering Plotly charts:
+If you're using [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/), you have to install [jupyterlab-plotly](https://plotly.com/python/getting-started/#jupyterlab-support-python-35) to enable support for rendering Plotly charts:
 ```bash
-jupyter labextension install @jupyterlab/plotly-extension
+jupyter labextension install jupyterlab-plotly
 ```
 
 ### From scala-js
 
 Add the corresponding dependency to your project, like
 ```scala
-libraryDependencies += "org.plotly-scala" %%% "plotly-render" % "0.7.2"
+libraryDependencies += "org.plotly-scala" %%% "plotly-render" % "0.8.1"
 ```
 (Latest version: [![Maven Central](https://img.shields.io/maven-central/v/org.plotly-scala/plotly-render_2.13.svg)](https://maven-badges.herokuapp.com/maven-central/org.plotly-scala/plotly-render_2.13))
 
@@ -68,24 +68,20 @@ import plotly._, element._, layout._, Plotly._
 
 Then define plots like
 ```scala
-val x = 0.0 to 10.0 by 0.1
+val x = (0 to 100).map(_ * 0.1)
 val y1 = x.map(d => 2.0 * d + util.Random.nextGaussian())
 val y2 = x.map(math.exp)
 
 val plot = Seq(
-  Scatter(
-    x, y1, name = "Approx twice"
-  ),
-  Scatter(
-    x, y2, name = "Exp"
-  )
+  Scatter(x, y1).withName("Approx twice"),
+  Scatter(x, y2).withName("Exp")
 )
 ```
 and plot them with
+
 ```scala
-plot.plot(
-  title = "Curves"
-)
+val lay = Layout().withTitle("Curves")
+plot.plot("plot", lay)  // attaches to div element with id 'plot'
 ```
 
 
@@ -93,7 +89,7 @@ plot.plot(
 
 Load the corresponding dependency, and some imports, like
 ```scala
-import $ivy.`org.plotly-scala::plotly-render:0.5.2`
+import $ivy.`org.plotly-scala::plotly-render:0.8.1`
 import plotly._, element._, layout._, Plotly._
 ```
 
@@ -137,7 +133,8 @@ plotly-scala supports the features illustrated in the following sections of the 
 - [Subplots](https://plot.ly/javascript/subplots/),
 - [Multiple Axes](https://plot.ly/javascript/multiple-axes/),
 - [Histograms](https://plot.ly/javascript/histograms/),
-- [Log Plots](https://plot.ly/javascript/log-plot/).
+- [Log Plots](https://plot.ly/javascript/log-plot/), 
+- [Image](https://plotly.com/javascript/reference/image/).
 
 Some of these are illustrated in the [demo](https://alexarchambault.github.io/plotly-scala/) page.
 

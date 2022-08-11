@@ -4,13 +4,15 @@ package doc
 import java.io.{ByteArrayOutputStream, File, InputStream}
 import java.lang.{Double => JDouble}
 import java.nio.file.Files
-
 import argonaut.Argonaut._
 import argonaut.{Json, Parse}
 import plotly.layout.Layout
 import org.mozilla.javascript._
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
+import plotly.element.HoverInfo
+import plotly.element.HoverInfo.{X,Y,Z}
+import plotly.element.ColorModel._
 
 import scala.util.matching.Regex
 
@@ -63,10 +65,15 @@ object DocumentationTests {
     }
   }
 
-  private class Plotly {
+  private class Plotly extends plotly.doc.Plotly {
 
     var dataOpt = Option.empty[Object]
     var layoutOpt = Option.empty[Object]
+
+    def newPlot(div: String, data: Object, layout: Object, other: Object): Unit = {
+      dataOpt = Option(data)
+      layoutOpt = Option(layout)
+    }
 
     def newPlot(div: String, data: Object, layout: Object): Unit = {
       dataOpt = Option(data)
@@ -106,7 +113,7 @@ object DocumentationTests {
     }
   }
 
-  private object Document {
+  private object Document extends plotly.doc.Document {
     // stub...
     def getElementById(id: String): String = id
   }
@@ -116,11 +123,19 @@ object DocumentationTests {
       val step = (to - from).toDouble / (count - 1)
       new NativeArrayWithDefault((0 until count).map(n => from + n * step: JDouble).toArray[AnyRef], 0.0: JDouble)
     }
+    def linspace(from: Double, to: Double, count: Int) = {
+      val step = (to - from) / (count - 1)
+      new NativeArrayWithDefault((0 until count).map(n => from + n * step: JDouble).toArray[AnyRef], 0.0: JDouble)
+    }
   }
 
   def linspaceImpl(cx: Context, thisObj: Scriptable, args: Array[Object], funObj: Function): AnyRef =
     args.toSeq.map(x => x: Any) match {
       case Seq(from: Int, to: Int, step: Int) =>
+        Numeric.linspace(from, to, step)
+      case Seq(from: Double, to: Int, step: Int) =>
+        Numeric.linspace(from, to.toDouble, step)
+      case Seq(from: Double, to: Double, step: Int) =>
         Numeric.linspace(from, to, step)
       case other => throw new NoSuchElementException(s"linspace${other.mkString("(", ", ", ")")}")
     }
@@ -155,6 +170,7 @@ object DocumentationTests {
       ScriptableObject.putProperty(scope, "document", Document)
       ScriptableObject.putProperty(scope, "numeric", Numeric)
       ScriptableObject.putProperty(scope, "require", require(scope))
+      ScriptableObject.putProperty(scope, "linspace", linspace(scope))
       cx.evaluateString(scope, demo, "<cmd>", 1, null)
       plotly.result(cx, scope)
     } catch {
@@ -233,7 +249,7 @@ class DocumentationTests extends AnyFlatSpec with Matchers {
 //    "financial/ohlc",
     "basic/bubble",
     "basic/area",
-    "layout/sizing",
+    "fundamentals/sizing",
     // TODO? Gauge charts
     // TODO Multiple chart types (needs contour)
     // TODO Shapes (need mock of d3)
@@ -273,6 +289,10 @@ class DocumentationTests extends AnyFlatSpec with Matchers {
         .replace("</br>", "\\n")
         .replace("(...size)", "(size[0])") // rhino doesn't seem to support the spead (...) operator
         .replace("desired_maximum_marker_size**2", "desired_maximum_marker_size*desired_maximum_marker_size")
+        .replace("""function linspace(a,b,n) {
+  return Plotly.d3.range(n).map(function(i){return a+i*(b-a)/(n-1);});
+}
+""", "")
 
       if (content.contains("Plotly.d3.csv"))
         println(s"Ignoring $post (Plotly.d3.csv not implemented)")
@@ -287,6 +307,55 @@ class DocumentationTests extends AnyFlatSpec with Matchers {
         if (lines.nonEmpty)
           plotlyDemoElements(content)
       }
+    }
+  }
+
+  it should "demo Image Trace" in {
+    val js =
+      """
+        |var data = [
+        |  {
+        |    type: "image",
+        |    opacity: 0.1,
+        |    x0: 0.05,
+        |    y0: 0.05,
+        |    colormodel: "rgb",
+        |    hoverinfo: "x+y+z+color",
+        |    z: [[[255, 0, 0], [0, 255, 0], [0, 0, 255]]]
+        |  }
+        |];
+        |
+        |var layout = {
+        |    width: 400,
+        |    height: 400,
+        |    title: "image with opacity 0.1"
+        |};
+        |
+        |Plotly.newPlot('myDiv', data, layout);
+        |""".stripMargin
+    val (data, maybeLayout) = plotlyDemoElements(js)
+    maybeLayout should ===(Some(
+      Layout()
+        .withWidth(400)
+        .withHeight(400)
+        .withTitle("image with opacity 0.1")
+    ))
+
+    data.headOption match {
+      case Some(image) =>
+        val colors = Seq(
+          Seq(Seq(255d, 0d, 0d), Seq(0d, 255, 0), Seq(0d, 0, 255)),
+        )
+        val expected = Image(z = colors)
+          .withOpacity(0.1)
+          .withX0(0.05)
+          .withY0(0.05)
+          .withHoverinfo(HoverInfo(X, Y, Z, HoverInfo.Color))
+          .withColormodel(RGB)
+
+        image should ===(expected)
+      case None =>
+        fail("data must contain an image trace")
     }
   }
 

@@ -10,27 +10,29 @@ import plotly.element._
 sealed abstract class Trace extends Product with Serializable
 
 @data(optionSetters = true) class Scatter(
-             x: Option[Sequence] = None,
-             y: Option[Sequence] = None,
-          text: Option[OneOrSeq[String]] = None,
-          mode: Option[ScatterMode] = None,
-        marker: Option[Marker] = None,
-          line: Option[Line] = None,
-  textposition: Option[TextPosition] = None,
-      textfont: Option[TextFont] = None,
-          name: Option[String] = None,
-   connectgaps: Option[Boolean] = None,
-         xaxis: Option[AxisReference] = None,
-         yaxis: Option[AxisReference] = None,
-          fill: Option[Fill] = None,
-       error_x: Option[Error] = None,
-       error_y: Option[Error] = None,
-    showlegend: Option[Boolean] = None,
-     fillcolor: Option[OneOrSeq[Color]] = None,
-     hoverinfo: Option[HoverInfo] = None,
-       hoveron: Option[HoverOn] = None,
-    stackgroup: Option[String] = None,
-     groupnorm: Option[GroupNorm] = None
+              x: Option[Sequence] = None,
+              y: Option[Sequence] = None,
+           text: Option[OneOrSeq[String]] = None,
+           mode: Option[ScatterMode] = None,
+         marker: Option[Marker] = None,
+           line: Option[Line] = None,
+   textposition: Option[TextPosition] = None,
+       textfont: Option[TextFont] = None,
+           name: Option[String] = None,
+    connectgaps: Option[Boolean] = None,
+          xaxis: Option[AxisReference] = None,
+          yaxis: Option[AxisReference] = None,
+           fill: Option[Fill] = None,
+        error_x: Option[Error] = None,
+        error_y: Option[Error] = None,
+     showlegend: Option[Boolean] = None,
+      fillcolor: Option[OneOrSeq[Color]] = None,
+      hoverinfo: Option[HoverInfo] = None,
+        hoveron: Option[HoverOn] = None,
+     stackgroup: Option[String] = None,
+      groupnorm: Option[GroupNorm] = None,
+  @since("0.8.2")
+  hovertemplate: Option[OneOrSeq[String]] = None
 ) extends Trace
 
 object Scatter {
@@ -97,19 +99,21 @@ object Scatter {
 }
 
 @data(optionSetters = true) class Box(
-             y: Option[Sequence] = None,
-             x: Option[Sequence] = None,
-     boxpoints: Option[BoxPoints] = None,
-        jitter: Option[Double] = None,
-      pointpos: Option[Double] = None,
-          name: Option[String] = None,
-        marker: Option[Marker] = None,
-   orientation: Option[Orientation] = None,
-  whiskerwidth: Option[Double] = None,
-       boxmean: Option[BoxMean] = None,
-     fillcolor: Option[OneOrSeq[Color]] = None,
-          line: Option[Line] = None,
-    showlegend: Option[Boolean] = None
+              y: Option[Sequence] = None,
+              x: Option[Sequence] = None,
+      boxpoints: Option[BoxPoints] = None,
+         jitter: Option[Double] = None,
+       pointpos: Option[Double] = None,
+           name: Option[String] = None,
+         marker: Option[Marker] = None,
+    orientation: Option[Orientation] = None,
+   whiskerwidth: Option[Double] = None,
+        boxmean: Option[BoxMean] = None,
+      fillcolor: Option[OneOrSeq[Color]] = None,
+           line: Option[Line] = None,
+     showlegend: Option[Boolean] = None,
+  @since("0.8.2")
+  hovertemplate: Option[OneOrSeq[String]] = None
 ) extends Trace
 
 object Box {
@@ -152,23 +156,48 @@ object Box {
     )
 }
 
+@data(optionSetters = true) class Image(
+  z: Seq[Seq[Seq[Double]]],
+  x0: Option[Element] = None,
+  y0: Option[Element] = None,
+  name: Option[String] = None,
+  text: Option[Seq[String]] = None,
+  opacity: Option[Double] = None,
+  ids: Option[Seq[String]] = None,
+  dx: Option[Double] = None,
+  dy: Option[Double] = None,
+  source: Option[String] = None,
+  hoverinfo: Option[HoverInfo] = None,
+  hovertemplate: Option[Seq[String]] = None,
+  meta: Option[String] = None,
+  customdata: Option[Seq[String]] = None,
+  xaxis: Option[AxisReference] = None,
+  yaxis: Option[AxisReference] = None,
+  colormodel: Option[ColorModel] = None,
+  zmax: Option[Seq[Double]] = None,
+  zmin: Option[Seq[Double]] = None,
+  hoverlabel: Option[HoverLabel] = None
+) extends Trace
+
 @data(optionSetters = true) class Bar(
-             x: Sequence,
-             y: Sequence,
+              x: Sequence,
+              y: Sequence,
   @since
-          name: Option[String] = None,
-          text: Option[Seq[String]] = None,
-        marker: Option[Marker] = None,
-   orientation: Option[Orientation] = None,
-         xaxis: Option[AxisReference] = None,
-         yaxis: Option[AxisReference] = None,
-       error_y: Option[Error] = None,
-    showlegend: Option[Boolean] = None,
-     hoverinfo: Option[HoverInfo] = None,
-  textposition: Option[BarTextPosition] = None,
-       opacity: Option[Double] = None,
-         width: Option[OneOrSeq[Double]] = None,
-          base: Option[OneOrSeq[Double]] = None
+           name: Option[String] = None,
+           text: Option[Seq[String]] = None,
+         marker: Option[Marker] = None,
+    orientation: Option[Orientation] = None,
+          xaxis: Option[AxisReference] = None,
+          yaxis: Option[AxisReference] = None,
+        error_y: Option[Error] = None,
+     showlegend: Option[Boolean] = None,
+      hoverinfo: Option[HoverInfo] = None,
+   textposition: Option[BarTextPosition] = None,
+        opacity: Option[Double] = None,
+          width: Option[OneOrSeq[Double]] = None,
+           base: Option[OneOrSeq[Double]] = None,
+  @since("0.8.2")
+  hovertemplate: Option[OneOrSeq[String]] = None
 ) extends Trace
 
 object Bar {
@@ -210,17 +239,19 @@ object Bar {
 }
 
 @data(optionSetters = true) class Histogram(
-          x: Option[Sequence] = None,
-          y: Option[Sequence] = None,
-    opacity: Option[Double] = None,
-       name: Option[String] = None,
-   autobinx: Option[Boolean] = None,
-     marker: Option[Marker] = None,
-      xbins: Option[Bins] = None,
-   histnorm: Option[HistNorm] = None,
- showlegend: Option[Boolean] = None,
- cumulative: Option[Cumulative] = None,
-   histfunc: Option[HistFunc] = None
+              x: Option[Sequence] = None,
+              y: Option[Sequence] = None,
+        opacity: Option[Double] = None,
+           name: Option[String] = None,
+       autobinx: Option[Boolean] = None,
+         marker: Option[Marker] = None,
+          xbins: Option[Bins] = None,
+       histnorm: Option[HistNorm] = None,
+     showlegend: Option[Boolean] = None,
+     cumulative: Option[Cumulative] = None,
+       histfunc: Option[HistFunc] = None,
+  @since("0.8.2")
+  hovertemplate: Option[OneOrSeq[String]] = None
 ) extends Trace
 
 object Histogram {
@@ -260,11 +291,13 @@ object Histogram {
 }
 
 @data(optionSetters = true) class Surface(
-          x: Option[Sequence] = None,
-          y: Option[Sequence] = None,
-          z: Option[Sequence] = None,
-  showscale: Option[Boolean] = None,
-    opacity: Option[Double] = None
+              x: Option[Sequence] = None,
+              y: Option[Sequence] = None,
+              z: Option[Sequence] = None,
+      showscale: Option[Boolean] = None,
+        opacity: Option[Double] = None,
+  @since("0.8.2")
+  hovertemplate: Option[OneOrSeq[String]] = None
 ) extends Trace
 
 object Surface {
@@ -286,13 +319,16 @@ object Surface {
 }
 
 @data(optionSetters = true) class Heatmap(
-             y: Option[Sequence] = None,
-             x: Option[Sequence] = None,
-             z: Option[Sequence] = None,
-autocolorscale: Option[Boolean] = None,
-    colorscale: Option[ColorScale] = None,
-     showscale: Option[Boolean] = None,
-          name: Option[String] = None
+              y: Option[Sequence] = None,
+              x: Option[Sequence] = None,
+              z: Option[Sequence] = None,
+ autocolorscale: Option[Boolean] = None,
+     colorscale: Option[ColorScale] = None,
+      showscale: Option[Boolean] = None,
+           name: Option[String] = None,
+  @since("0.8.2")
+  hovertemplate: Option[OneOrSeq[String]] = None,
+    hoverongaps: Option[Boolean] = None
 ) extends Trace
 
 object Heatmap {

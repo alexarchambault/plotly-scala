@@ -36,7 +36,9 @@ import plotly.element._
           scene: Option[Scene] = None,
   @since("0.8.0")
        dragmode: Option[String] = None,
-         shapes: Option[Seq[Shape]] = None
+         shapes: Option[Seq[Shape]] = None,
+  @since("0.8.2")
+           grid: Option[Grid] = None
 )
 
 object Layout {

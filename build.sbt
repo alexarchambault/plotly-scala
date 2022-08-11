@@ -21,6 +21,10 @@ inThisBuild(List(
   )
 ))
 
+val previousVersions = Set.empty[String]
+lazy val mimaSettings = Def.settings(
+  mimaPreviousArtifacts := previousVersions.map(organization.value %% moduleName.value % _)
+)
 
 lazy val core = crossProject(JVMPlatform, JSPlatform)
   .jsConfigure(_.disablePlugins(MimaPlugin))
@@ -30,9 +34,7 @@ lazy val core = crossProject(JVMPlatform, JSPlatform)
     libraryDependencies += Deps.dataClass % Provided
   )
   .jvmSettings(
-    compatibilitySettings,
-    mimaPreviousArtifacts := mimaPreviousArtifacts.value
-      .filter(!_.revision.startsWith("0.7."))
+    mimaSettings
   )
 
 lazy val coreJvm = core.jvm
@@ -42,7 +44,7 @@ lazy val `joda-time` = project
   .dependsOn(coreJvm)
   .settings(
     shared,
-    compatibilitySettings,
+    mimaSettings,
     plotlyPrefix,
     libraryDependencies += Deps.jodaTime
   )
@@ -56,7 +58,7 @@ lazy val render = crossProject(JVMPlatform, JSPlatform)
     plotlyPrefix
   )
   .jvmSettings(
-    compatibilitySettings,
+    mimaSettings,
     mimaCurrentClassfiles := shadedPackageBin.value,
     Mima.renderFilters,
     shadedModules += Deps.argonautShapeless.value.module,
@@ -170,8 +172,7 @@ lazy val demo = project
         .commonJSName("PrismScala")
         .dependsOn("prism-java.js")
     ),
-    generateCustomSources,
-    evictionRules += "org.scala-js" % "scalajs-dom_*" % "semver"
+    generateCustomSources
   )
 
 lazy val tests = project
@@ -192,7 +193,7 @@ lazy val almond = project
   .dependsOn(coreJvm, renderJvm)
   .settings(
     shared,
-    compatibilitySettings,
+    mimaSettings,
     plotlyPrefix,
     libraryDependencies += Deps.almondScalaApi % "provided"
   )

@@ -1,2 +1,5 @@
 target/
 .bsp/
+.idea/
+metals.sbt
+.vscode/
