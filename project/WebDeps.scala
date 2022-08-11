@@ -4,12 +4,12 @@ import sbt._
 object WebDeps {
 
   object Versions {
-    def plotlyJs = "1.52.2"
+    def plotlyJs = "1.54.1"
   }
 
-  def bootstrap = "org.webjars.bower" % "bootstrap" % "3.4.0"
-  def jquery = "org.webjars.bower" % "jquery" % "3.3.1"
+  def bootstrap = "org.webjars.bower" % "bootstrap" % "3.4.1"
+  def jquery = "org.webjars.bower" % "jquery" % "3.6.0"
   def plotlyJs = "org.webjars.bower" % "plotly.js" % Versions.plotlyJs
-  def prism = "org.webjars.bower" % "prism" % "1.15.0"
+  def prism = "org.webjars.bower" % "prism" % "1.16.0"
 
 }
