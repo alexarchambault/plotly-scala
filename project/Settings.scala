@@ -79,15 +79,15 @@ object Settings {
         }
       }
 
-      process(dir / "plotly", Vector(), scalaSource.in(Compile).value / "plotly" / "demo")
+      process(dir / "plotly", Vector(), (Compile / scalaSource).value / "plotly" / "demo")
 
       files
     },
-    sourceGenerators.in(Compile) += customSourceGenerators.taskValue
+    (Compile / sourceGenerators) += customSourceGenerators.taskValue
   )
 
-  private val scala212 = "2.12.13"
-  private val scala213 = "2.13.6"
+  private val scala212 = "2.12.16"
+  private val scala213 = "2.13.8"
 
   private lazy val isAtLeastScala213 = Def.setting {
     import Ordering.Implicits._
@@ -127,9 +127,9 @@ object Settings {
 
 
   lazy val fetchTestData = {
-    unmanagedResources.in(Test) ++= {
+    (Test / unmanagedResources) ++= {
       val log = streams.value.log
-      val baseDir = baseDirectory.in(LocalRootProject).value
+      val baseDir = (LocalRootProject / baseDirectory).value
       val testsPostsDir = baseDir / "plotly-documentation" / "_posts"
       if (!testsPostsDir.exists())
         gitLock.synchronized {

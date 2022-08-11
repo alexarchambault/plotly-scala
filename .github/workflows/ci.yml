@@ -13,15 +13,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        SCALA: [2.12.13, 2.13.6]
+        SCALA_VERSION: ["2.12.16", "2.13.8"]
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: coursier/cache-action@v6
-    - uses: laughedelic/coursier-setup@v1
+    - uses: coursier/setup-action@v1.2.0
       with:
         jvm: 8
-        apps: sbt-launcher
-    - run: sbt ++$SCALA_VERSION test mimaReportBinaryIssues
+    - run: |
+        sbtn ++$SCALA_VERSION test
+        sbtn ++$SCALA_VERSION mimaReportBinaryIssues
       env:
         SCALA_VERSION: ${{ matrix.SCALA_VERSION }}
 
@@ -30,14 +31,13 @@ jobs:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: coursier/cache-action@v6
-    - uses: laughedelic/coursier-setup@v1
+    - uses: coursier/setup-action@v1.2.0
       with:
         jvm: 8
-        apps: sbt-launcher
     - name: Release
-      run: sbt ci-release
+      run: sbtn ci-release
       env:
         PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
         PGP_SECRET: ${{ secrets.PGP_SECRET }}
