@@ -10,7 +10,7 @@ object Deps {
   def almondScalaApi = "sh.almond" %% "jupyter-api" % "0.13.0"
   def argonautShapeless = setting("com.github.alexarchambault" %%% "argonaut-shapeless_6.3" % "1.3.1")
   def dataClass = "io.github.alexarchambault" %% "data-class" % "0.2.5"
-  def jodaTime = "joda-time" % "joda-time" % "2.10.14"
+  def jodaTime = "joda-time" % "joda-time" % "2.11.0"
   def rhino = "org.mozilla" % "rhino" % "1.7.14"
   def shapeless = setting("com.chuusai" %%% "shapeless" % "2.3.7")
   def scalacheckShapeless = setting("com.github.alexarchambault" %%% "scalacheck-shapeless_1.15" % "1.3.0")
