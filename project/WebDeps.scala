@@ -8,7 +8,7 @@ object WebDeps {
   }
 
   def bootstrap = "org.webjars.bower" % "bootstrap" % "3.4.1"
-  def jquery = "org.webjars.bower" % "jquery" % "3.6.1"
+  def jquery = "org.webjars.bower" % "jquery" % "3.6.2"
   def plotlyJs = "org.webjars.bower" % "plotly.js" % Versions.plotlyJs
   def prism = "org.webjars.bower" % "prism" % "1.16.0"
 
