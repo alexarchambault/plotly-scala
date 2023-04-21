@@ -7,7 +7,7 @@ object Deps {
 
   import Def.setting
 
-  def almondScalaApi = "sh.almond" %% "jupyter-api" % "0.13.4"
+  def almondScalaApi = "sh.almond" %% "jupyter-api" % "0.13.9"
   def argonautShapeless = setting("com.github.alexarchambault" %%% "argonaut-shapeless_6.3" % "1.3.1")
   def dataClass = "io.github.alexarchambault" %% "data-class" % "0.2.6"
   def jodaTime = "joda-time" % "joda-time" % "2.12.4"
