@@ -2,7 +2,6 @@ package plotly
 package internals
 
 import java.math.BigInteger
-
 import argonaut._
 import argonaut.Argonaut._
 import argonaut.ArgonautShapeless._
@@ -11,6 +10,7 @@ import shapeless._
 
 import scala.util.Try
 import plotly.element._
+import plotly.element.pie.{Direction, PieHoverInfo, PieTextPosition, PieTitlePosition}
 import plotly.layout._
 
 object ArgonautCodecsInternals extends ArgonautCodecsExtra {
@@ -151,6 +151,9 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
   implicit val rowOrderIsEnum = IsEnum.instance[RowOrder](_.label)
   implicit val alignmentIsEnum = IsEnum.instance[Alignment](_.label)
   implicit val colorModelIsEnum = IsEnum.instance[ColorModel](_.label)
+  implicit val directionIsEnum = IsEnum.instance[Direction](_.label)
+  implicit val pieTextPositionIsEnum = IsEnum.instance[PieTextPosition](_.label)
+  implicit val pieTitlePositionIsEnum = IsEnum.instance[PieTitlePosition](_.label)
 
   def jsonSumDirectCodecFor(name: String): JsonSumCodec = new JsonSumCodec {
     def encodeEmpty: Nothing =
@@ -242,6 +245,32 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
       }
     }
 
+  implicit val encodePieHoverInfo: EncodeJson[PieHoverInfo] =
+    EncodeJson.of[String].contramap(_.label)
+  implicit val decodePieHoverInfo: DecodeJson[PieHoverInfo] =
+    DecodeJson { c =>
+      DecodeJson.of[String].apply(c).flatMap {
+        case "all" => DecodeResult.ok(PieHoverInfo.All)
+        case "skip" => DecodeResult.ok(PieHoverInfo.Skip)
+        case "none" => DecodeResult.ok(PieHoverInfo.None)
+        case combination =>
+          val results = combination.split('+').map {
+            case "percent" => Right(PieHoverInfo.Percent)
+            case "value" => Right(PieHoverInfo.Value)
+            case "label" => Right(PieHoverInfo.Label)
+            case "text" => Right(PieHoverInfo.Text)
+            case "name" => Right(PieHoverInfo.Name)
+            case other => Left(s"Unrecognized pie hover info element: $other")
+          }
+          if (results.exists(_.isLeft))
+            DecodeResult.fail(
+              s"Unrecognized pie hover info elements: ${results.flatMap(_.left.toSeq).mkString(", ")}",
+              c.history
+            )
+          else
+            DecodeResult.ok(PieHoverInfo(results.flatMap(_.toSeq).toIndexedSeq: _*))
+      }
+    }
 
   implicit def defaultJsonProductCodecFor[T]: JsonProductCodecFor[T] =
     JsonProductCodecFor(JsonProductObjCodecNoEmpty.default)

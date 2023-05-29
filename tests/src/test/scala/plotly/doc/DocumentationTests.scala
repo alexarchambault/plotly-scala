@@ -11,8 +11,9 @@ import org.mozilla.javascript._
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import plotly.element.HoverInfo
-import plotly.element.HoverInfo.{X,Y,Z}
+import plotly.element.HoverInfo.{X, Y, Z}
 import plotly.element.ColorModel._
+import plotly.element.pie.Direction
 
 import scala.util.matching.Regex
 
@@ -243,7 +244,7 @@ class DocumentationTests extends AnyFlatSpec with Matchers {
     "basic/line-plots",
     "basic/bar",
     "basic/horizontal-bar",
-    // TODO? Pie charts
+    "basic/pie",
     "financial/time-series",
     "financial/candlestick-charts",
 //    "financial/ohlc",
@@ -356,6 +357,63 @@ class DocumentationTests extends AnyFlatSpec with Matchers {
         image should ===(expected)
       case None =>
         fail("data must contain an image trace")
+    }
+  }
+
+  it should "demo Pie Trace" in {
+    val js =
+      """
+        |var data = [
+        |  {
+        |    type: "pie",
+        |    name: "Best donuts",
+        |    values: [30, 60, 40, 20, 50],
+        |    labels: ["Vanilla", "Choco", "Strawberry", "Peanutbutter", "Cherry"],
+        |    showlegend: true,
+        |    opacity: 0.9,
+        |    pull: 0.02,
+        |    hole: 0.3,
+        |    direction: "clockwise",
+        |    sort: true,
+        |    rotation: -50
+        |  }
+        |];
+        |
+        |var layout = {
+        |    width: 400,
+        |    height: 400,
+        |    title: "Tasty donut chart"
+        |};
+        |
+        |Plotly.newPlot('myDonut', data, layout);
+        |""".stripMargin
+
+    val (data, maybeLayout) = plotlyDemoElements(js)
+
+    maybeLayout should === (Some(
+      new Layout()
+      .withWidth(400)
+      .withHeight(400)
+      .withTitle("Tasty donut chart")
+    ))
+
+    data.headOption match {
+      case Some(image) =>
+        val expected = Pie()
+          .withName("Best donuts")
+          .withValues(Seq(30, 60, 40, 20, 50))
+          .withLabels(Seq("Vanilla", "Choco", "Strawberry", "Peanutbutter", "Cherry"))
+          .withShowlegend(true)
+          .withOpacity(0.9)
+          .withPull(0.02)
+          .withHole(0.3)
+          .withDirection(Direction.Clockwise)
+          .withSort(true)
+          .withRotation(-50)
+
+        image should === (expected)
+      case None =>
+        fail("data must contain an pie trace")
     }
   }
 

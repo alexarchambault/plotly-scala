@@ -1,11 +1,10 @@
 package plotly
 
 import scala.language.implicitConversions
-
-import java.lang.{ Boolean => JBoolean, Double => JDouble }
-
+import java.lang.{Boolean => JBoolean, Double => JDouble}
 import dataclass._
 import plotly.element._
+import plotly.element.pie.{Direction, Domain, PieHoverInfo, PieTextPosition, Title}
 
 sealed abstract class Trace extends Product with Serializable
 
@@ -177,6 +176,34 @@ object Box {
   zmax: Option[Seq[Double]] = None,
   zmin: Option[Seq[Double]] = None,
   hoverlabel: Option[HoverLabel] = None
+) extends Trace
+
+/**
+  * See <a href="https://plotly.com/javascript/reference/pie">
+  *   https://plotly.com/javascript/reference/pie
+  * </a> for a description of the params.
+  */
+@data(optionSetters = true) class Pie(
+  name: Option[String] = None,
+  title: Option[Title] = None,
+  showlegend: Option[Boolean] = None,
+  legendgroup: Option[String] = None,
+  opacity: Option[Double] = None,
+  ids: Option[Seq[String]] = None,
+  values: Option[Sequence] = None,
+  labels: Option[Sequence] = None,
+  pull: Option[OneOrSeq[Double]] = None,
+  text: Option[Seq[String]] = None,
+  textposition: Option[PieTextPosition] = None,
+  hovertext: Option[OneOrSeq[String]] = None,
+  hoverinfo: Option[PieHoverInfo] = None,
+  domain: Option[Domain] = None,
+  marker: Option[Marker] = None,
+  direction: Option[Direction] = None,
+  hole: Option[Double] = None,
+  hoverlabel: Option[HoverLabel] = None,
+  rotation: Option[Double] = None,
+  sort: Option[Boolean] = None,
 ) extends Trace
 
 @data(optionSetters = true) class Bar(
