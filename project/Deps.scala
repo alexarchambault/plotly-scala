@@ -15,7 +15,7 @@ object Deps {
   def shapeless = setting("com.chuusai" %%% "shapeless" % "2.3.7")
   def scalacheckShapeless = setting("com.github.alexarchambault" %%% "scalacheck-shapeless_1.15" % "1.3.0")
   def scalajsDom = setting("org.scala-js" %%% "scalajs-dom" % "2.4.0")
-  def scalatags = setting("com.lihaoyi" %%% "scalatags" % "0.12.0")
+  def scalatags = setting("com.lihaoyi" %%% "scalatags" % "0.13.1")
   def scalaTest = "org.scalatest" %% "scalatest" % "3.2.15"
 
 }
