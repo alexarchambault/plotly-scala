@@ -1,0 +1,5 @@
+# activate meaningful git annotations with:
+# git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+# scalafmt
+0ad886c35bdf9c8ad2bfb0501070b8b2ce810710

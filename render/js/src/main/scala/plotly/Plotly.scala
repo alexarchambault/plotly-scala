@@ -1,14 +1,13 @@
 package plotly
 
-import java.lang.{Boolean => JBoolean, Double => JDouble, Integer => JInt}
-
 import argonaut.Argonaut._
-import argonaut.{Json, PrettyParams}
+import argonaut.{EncodeJson, PrettyParams}
 import plotly.Codecs._
 import plotly.element.Color
 import plotly.internals.BetterPrinter
 import plotly.layout._
 
+import java.lang.{Boolean => JBoolean, Double => JDouble, Integer => JInt}
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
 import scala.scalajs.js.JSON
@@ -16,38 +15,58 @@ import scala.scalajs.js.JSON
 object Plotly {
 
   private val printer = BetterPrinter(PrettyParams.nospace.copy(dropNullKeys = true))
-  private def stripNulls(json: Json): js.Any = {
-    // Remove empty objects
-    JSON.parse(printer.render(json))
+
+  // Remove empty objects
+  private def stripNulls[J: EncodeJson](value: J): js.Any = JSON.parse(printer.render(value.asJson))
+
+  trait PlotlyDyn {
+    def plotFn: js.Dynamic
+
+    def apply(div: String, data: Seq[Trace], layout: Layout, config: Config): Unit =
+      plotFn(
+        div,
+        stripNulls(data),
+        stripNulls(layout),
+        stripNulls(config)
+      )
+
+    def apply(div: String, data: Seq[Trace], layout: Layout): Unit =
+      plotFn(
+        div,
+        stripNulls(data),
+        stripNulls(layout)
+      )
+
+    def apply(div: String, data: Seq[Trace]): Unit =
+      plotFn(div, stripNulls(data))
+
+    def apply(div: String, data: Trace, layout: Layout): Unit =
+      plotFn(div, stripNulls(data), stripNulls(layout))
+
+    def apply(div: String, data: Trace): Unit =
+      plotFn(div, stripNulls(data))
   }
 
-  def plot(div: String, data: Seq[Trace], layout: Layout): Unit = {
-    g.Plotly.plot(
-      div,
-      stripNulls(data.asJson),
-      stripNulls(layout.asJson)
-    )
+  object newPlot extends PlotlyDyn {
+    val plotFn: js.Dynamic = g.Plotly.newPlot
   }
 
-  def plot(div: String, data: Seq[Trace]): Unit = {
-    g.Plotly.plot(
-      div,
-      stripNulls(data.asJson)
-    )
+  object plot extends PlotlyDyn {
+    val plotFn: js.Dynamic = g.Plotly.newPlot
   }
 
-  def plot(div: String, data: Trace, layout: Layout): Unit =
-    g.Plotly.plot(
-      div,
-      stripNulls(data.asJson),
-      stripNulls(layout.asJson)
-    )
+  object react extends PlotlyDyn {
+    val plotFn: js.Dynamic = g.Plotly.react
+  }
 
-  def plot(div: String, data: Trace): Unit =
-    g.Plotly.plot(
-      div,
-      stripNulls(data.asJson)
-    )
+  def relayout(div: String, layout: Layout): Unit =
+    g.Plotly.relayout(div, stripNulls(layout))
+
+  def purge(div: String): Unit =
+    g.Plotly.purge(div)
+
+  def validate(data: Seq[Trace], layout: Layout, config: Config): Unit =
+    g.Plotly.validate(stripNulls(data), stripNulls(layout))
 
   implicit class TraceOps(val trace: Trace) extends AnyVal {
     def plot(div: String, layout: Layout): Unit =

@@ -251,7 +251,10 @@ object Bar {
     cumulative: Option[Cumulative] = None,
     histfunc: Option[HistFunc] = None,
     @since("0.8.2")
-    hovertemplate: Option[OneOrSeq[String]] = None
+    hovertemplate: Option[OneOrSeq[String]] = None,
+    @since("0.8.5")
+    yaxis: Option[String] = None,
+    hovertext: Option[OneOrSeq[String]] = None
 ) extends Trace
 
 object Histogram {

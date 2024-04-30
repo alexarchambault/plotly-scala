@@ -47,7 +47,10 @@ import plotly.element._
     @since("0.8.2")
     width: Option[Int] = None,
     height: Option[Int] = None,
-    autosize: Option[Boolean] = None
+    autosize: Option[Boolean] = None,
+    @since("0.8.5")
+    tickformat: Option[String] = None,
+    fixedrange: Option[Boolean] = None
 )
 
 object Axis {

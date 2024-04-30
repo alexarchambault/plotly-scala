@@ -43,21 +43,25 @@ import scalatags.JsDom.all.{area => _, _}
       heatmaps.CategoricalAxisHeatmap,
       heatmaps.CustomColorScaleHeatmap,
       heatmaps.AnnotatedHeatmap
+    ),
+    "Histogram" -> Seq(
+      histogram.BasicHistogram,
+      histogram.StyledBasicHistogram
     )
   )
 
   def unindent(source: String): String = {
 
-    val lines         = source.linesIterator.toVector
-    val nonEmptyLines = lines.filter(_.exists(!_.isSpaceChar))
+    val lines                         = source.linesIterator.toVector
+    val nonEmptyLines: Vector[String] = lines.filter(_.exists(!_.isSpaceChar))
 
     if (nonEmptyLines.isEmpty)
       source
     else {
 
-      val dropCount = Stream
+      val dropCount = LazyList
         .from(0)
-        .takeWhile(idx => nonEmptyLines.forall(_(idx) == nonEmptyLines.head(idx)))
+        .takeWhile(idx => nonEmptyLines.forall(str => str(idx) == nonEmptyLines.head(idx)))
         .lastOption
         .fold(0)(_ + 1)
 
@@ -102,7 +106,7 @@ import scalatags.JsDom.all.{area => _, _}
       mainDiv.appendChild(chartTypeElem.render)
 
       for (demo <- chartDemos) {
-        Console.println(s"Rendering demo ${demo.id}")
+        Console.println(s"  Rendering demo ${demo.id}")
 
         val divId = s"demo-${demo.id}"
 
