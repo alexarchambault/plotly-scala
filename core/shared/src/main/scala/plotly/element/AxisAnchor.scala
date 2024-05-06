@@ -7,6 +7,6 @@ sealed abstract class AxisAnchor(val label: String) extends Product with Seriali
 
 object AxisAnchor {
   @data class Reference(axisReference: AxisReference) extends AxisAnchor(axisReference.label)
-  case object Free extends AxisAnchor("free")
-  case object Y extends AxisAnchor("y")
+  case object Free                                    extends AxisAnchor("free")
+  case object Y                                       extends AxisAnchor("y")
 }

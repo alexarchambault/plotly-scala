@@ -8,8 +8,8 @@ import plotly.layout.{BarMode, Layout}
 object ColoredBarChart extends DemoChart {
 
   def plotlyDocUrl = "https://plot.ly/javascript/horizontal-bar-charts/#colored-bar-chart"
-  def id = "colored-bar-chart"
-  def source = ColoredBarChartSource.source
+  def id           = "colored-bar-chart"
+  def source       = ColoredBarChartSource.source
 
   // demo source start
 

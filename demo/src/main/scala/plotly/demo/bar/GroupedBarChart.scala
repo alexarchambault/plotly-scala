@@ -8,8 +8,8 @@ import plotly.layout._
 object GroupedBarChart extends DemoChart {
 
   def plotlyDocUrl = "https://plot.ly/javascript/bar-charts/#grouped-bar-chart"
-  def id = "grouped-bar-chart"
-  def source = GroupedBarChartSource.source
+  def id           = "grouped-bar-chart"
+  def source       = GroupedBarChartSource.source
 
   // demo source start
 

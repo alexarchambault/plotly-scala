@@ -48,14 +48,15 @@ import scalatags.JsDom.all.{area => _, _}
 
   def unindent(source: String): String = {
 
-    val lines = source.linesIterator.toVector
+    val lines         = source.linesIterator.toVector
     val nonEmptyLines = lines.filter(_.exists(!_.isSpaceChar))
 
     if (nonEmptyLines.isEmpty)
       source
     else {
 
-      val dropCount = Stream.from(0)
+      val dropCount = Stream
+        .from(0)
         .takeWhile(idx => nonEmptyLines.forall(_(idx) == nonEmptyLines.head(idx)))
         .lastOption
         .fold(0)(_ + 1)
@@ -82,10 +83,9 @@ import scalatags.JsDom.all.{area => _, _}
       h2("Examples"),
       div(
         style := "margin-left: 3em;",
-        demos.map {
-          case (chartType, chartDemos) =>
-            val chartTypeId0 = chartTypeId(chartType)
-            a(href := "#" + chartTypeId0, h3(chartType))
+        demos.map { case (chartType, chartDemos) =>
+          val chartTypeId0 = chartTypeId(chartType)
+          a(href := "#" + chartTypeId0, h3(chartType))
         }
       )
     )
@@ -97,11 +97,7 @@ import scalatags.JsDom.all.{area => _, _}
 
       val chartTypeId0 = chartTypeId(chartType)
 
-      val chartTypeElem = h2(id := chartTypeId0,
-        a(href := "#" + chartTypeId0,
-          chartType
-        )
-      )
+      val chartTypeElem = h2(id := chartTypeId0, a(href := "#" + chartTypeId0, chartType))
 
       mainDiv.appendChild(chartTypeElem.render)
 
@@ -111,23 +107,24 @@ import scalatags.JsDom.all.{area => _, _}
         val divId = s"demo-${demo.id}"
 
         val elem =
-          div(id := demo.id, `class` := "panel panel-default",
-            div(`class` := "panel-heading",
-              a(href := "#" + demo.id,
-                h4(demo.id)
-              )
-            ),
-            div(`class` := "panel-body",
-              div(`class` := "example-code",
+          div(
+            id      := demo.id,
+            `class` := "panel panel-default",
+            div(`class` := "panel-heading", a(href := "#" + demo.id, h4(demo.id))),
+            div(
+              `class` := "panel-body",
+              div(
+                `class` := "example-code",
                 pre(
-                  code(`class` := "language-scala",
-                   s"""import plotly._
-                      |import plotly.element._${if (demo.layout == null) "" else "\nimport plotly.layout._"}
+                  code(
+                    `class` := "language-scala",
+                    s"""import plotly._
+                       |import plotly.element._${if (demo.layout == null) "" else "\nimport plotly.layout._"}
                     """.stripMargin +
-                    unindent(demo.source) +
-                    s"""
-                      |
-                      |Plotly.plot("div-id", data${if (demo.layout == null) "" else ", layout"})""".stripMargin
+                      unindent(demo.source) +
+                      s"""
+                         |
+                         |Plotly.plot("div-id", data${if (demo.layout == null) "" else ", layout"})""".stripMargin
                   )
                 )
               ),

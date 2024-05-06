@@ -7,8 +7,8 @@ import plotly.element.Orientation
 object BasicHorizontalBarChart extends NoLayoutDemoChart {
 
   def plotlyDocUrl = "https://plot.ly/javascript/horizontal-bar-charts/#basic-horizontal-bar-chart"
-  def id = "basic-horizontal-bar-chart"
-  def source = BasicHorizontalBarChartSource.source
+  def id           = "basic-horizontal-bar-chart"
+  def source       = BasicHorizontalBarChartSource.source
 
   // demo source start
 

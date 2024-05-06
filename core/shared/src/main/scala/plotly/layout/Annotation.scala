@@ -1,38 +1,38 @@
 package plotly
 package layout
 
-import java.lang.{ Boolean => JBoolean, Double => JDouble }
+import java.lang.{Boolean => JBoolean, Double => JDouble}
 
 import dataclass.data
 import plotly.element._
 
 @data(optionSetters = true) class Annotation(
-       xref: Option[Ref] = None,
-       yref: Option[Ref] = None,
-          x: Option[Element] = None,
-          y: Option[Element] = None,
+    xref: Option[Ref] = None,
+    yref: Option[Ref] = None,
+    x: Option[Element] = None,
+    y: Option[Element] = None,
     xanchor: Option[Anchor] = None,
     yanchor: Option[Anchor] = None,
-       text: Option[Element] = None,
-       font: Option[Font] = None,
-  showarrow: Option[Boolean] = None,
-  @since("0.8.0")
-         ax: Option[Double] = None,
-         ay: Option[Double] = None
+    text: Option[Element] = None,
+    font: Option[Font] = None,
+    showarrow: Option[Boolean] = None,
+    @since("0.8.0")
+    ax: Option[Double] = None,
+    ay: Option[Double] = None
 )
 
 object Annotation {
   @deprecated("Use Annotation() and chain-call .with* methods on it instead", "0.8.0")
   def apply(
-         xref: Ref      = null,
-         yref: Ref      = null,
-            x: Element  = null,
-            y: Element  = null,
-      xanchor: Anchor   = null,
-      yanchor: Anchor   = null,
-         text: Element  = null,
-         font: Font     = null,
-    showarrow: JBoolean = null
+      xref: Ref = null,
+      yref: Ref = null,
+      x: Element = null,
+      y: Element = null,
+      xanchor: Anchor = null,
+      yanchor: Anchor = null,
+      text: Element = null,
+      font: Font = null,
+      showarrow: JBoolean = null
   ): Annotation =
     Annotation(
       Option(xref),

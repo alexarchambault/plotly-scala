@@ -8,8 +8,8 @@ import plotly.layout._
 object AnnotatedHeatmap extends DemoChart {
 
   def plotlyDocUrl = "https://plot.ly/javascript/heatmaps/#annotated-heatmap"
-  def id = "annotated-heatmap"
-  def source = AnnotatedHeatmapSource.source
+  def id           = "annotated-heatmap"
+  def source       = AnnotatedHeatmapSource.source
 
   // demo source start
 
@@ -26,10 +26,12 @@ object AnnotatedHeatmap extends DemoChart {
     Heatmap(z, x, y)
       .withShowscale(false)
       .withColorscale(
-        ColorScale.CustomScale(Seq(
-          (0, Color.StringColor("#3D9970")),
-          (1, Color.StringColor("#001f3f"))
-        ))
+        ColorScale.CustomScale(
+          Seq(
+            (0, Color.StringColor("#3D9970")),
+            (1, Color.StringColor("#001f3f"))
+          )
+        )
       )
   )
 
@@ -39,7 +41,7 @@ object AnnotatedHeatmap extends DemoChart {
     .withYaxis(Axis().withTicks(Ticks.Empty).withTicksuffix(" "))
     .withAnnotations(
       for {
-        (xv, xi) <- x.zipWithIndex;
+        (xv, xi) <- x.zipWithIndex
         (yv, yi) <- y.zipWithIndex
       } yield Annotation()
         .withX(xv)

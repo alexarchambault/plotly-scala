@@ -7,8 +7,8 @@ import plotly.element._
 object BasicBarChart extends NoLayoutDemoChart {
 
   def plotlyDocUrl = "https://plot.ly/javascript/bar-charts/#basic-bar-chart"
-  def id = "basic-bar-chart"
-  def source = BasicBarChartSource.source
+  def id           = "basic-bar-chart"
+  def source       = BasicBarChartSource.source
 
   // demo source start
 

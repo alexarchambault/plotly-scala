@@ -11,7 +11,7 @@ import org.mozilla.javascript._
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import plotly.element.HoverInfo
-import plotly.element.HoverInfo.{X,Y,Z}
+import plotly.element.HoverInfo.{X, Y, Z}
 import plotly.element.ColorModel._
 
 import scala.util.matching.Regex
@@ -22,7 +22,7 @@ object DocumentationTests {
 
   private def readFully(is: InputStream): Array[Byte] = {
     val buffer = new ByteArrayOutputStream()
-    val data = Array.ofDim[Byte](16384)
+    val data   = Array.ofDim[Byte](16384)
 
     var nRead = is.read(data, 0, data.length)
     while (nRead != -1) {
@@ -34,12 +34,11 @@ object DocumentationTests {
     buffer.toByteArray
   }
 
-
   def load(path: String): String = {
 
-    val cl = getClass.getClassLoader // resources should be in the same JAR as this, so same loader
+    val cl      = getClass.getClassLoader // resources should be in the same JAR as this, so same loader
     val resPath = s"plotly/doc/$path"
-    val is = cl.getResourceAsStream(resPath)
+    val is      = cl.getResourceAsStream(resPath)
 
     if (is == null)
       throw new NoSuchElementException(s"Resource $resPath")
@@ -51,7 +50,7 @@ object DocumentationTests {
 
   def resourceTrace(res: String): Trace = {
     val dataStr = load(res)
-    val result = dataStr.decodeEither[Trace]
+    val result  = dataStr.decodeEither[Trace]
     result.getOrElse {
       throw new Exception(s"$res: $result")
     }
@@ -59,7 +58,7 @@ object DocumentationTests {
 
   def resourceLayout(res: String): Layout = {
     val dataStr = load(res)
-    val result = dataStr.decodeEither[Layout]
+    val result  = dataStr.decodeEither[Layout]
     result.getOrElse {
       throw new Exception(s"$res: $result")
     }
@@ -67,7 +66,7 @@ object DocumentationTests {
 
   private class Plotly extends plotly.doc.Plotly {
 
-    var dataOpt = Option.empty[Object]
+    var dataOpt   = Option.empty[Object]
     var layoutOpt = Option.empty[Object]
 
     def newPlot(div: String, data: Object, layout: Object, other: Object): Unit = {
@@ -95,9 +94,13 @@ object DocumentationTests {
 
       def jsonRepr(obj: Object): Json = {
         val jsonStr = stringify(obj)
-        Parse.parse(jsonStr).left.map { err =>
-          throw new Exception(s"Cannot parse JSON: $err\n$jsonStr")
-        }.merge
+        Parse
+          .parse(jsonStr)
+          .left
+          .map { err =>
+            throw new Exception(s"Cannot parse JSON: $err\n$jsonStr")
+          }
+          .merge
       }
 
       val data = dataOpt.map(jsonRepr) match {
@@ -143,7 +146,7 @@ object DocumentationTests {
   def requireImpl(cx: Context, thisObj: Scriptable, args: Array[Object], funObj: Function): AnyRef =
     args match {
       case Array("linspace") => linspace(thisObj)
-      case other => throw new NoSuchElementException(s"require${other.mkString("(", ", ", ")")}")
+      case other             => throw new NoSuchElementException(s"require${other.mkString("(", ", ", ")")}")
     }
 
   private def linspace(scope: Scriptable) = new FunctionObject(
@@ -164,28 +167,28 @@ object DocumentationTests {
 
     val cx = Context.enter()
 
-    val (rawDataElems, rawLayoutOpt) = try {
-      val scope = cx.initStandardObjects()
-      ScriptableObject.putProperty(scope, "Plotly", plotly)
-      ScriptableObject.putProperty(scope, "document", Document)
-      ScriptableObject.putProperty(scope, "numeric", Numeric)
-      ScriptableObject.putProperty(scope, "require", require(scope))
-      ScriptableObject.putProperty(scope, "linspace", linspace(scope))
-      cx.evaluateString(scope, demo, "<cmd>", 1, null)
-      plotly.result(cx, scope)
-    } catch {
-      case e: org.mozilla.javascript.EvaluatorException =>
-        println(s"Was running\n$demo\n\n")
-        throw new Exception(s"Evaluation error at line ${e.lineNumber()} column ${e.columnNumber()}", e)
-    } finally {
-      Context.exit()
-    }
+    val (rawDataElems, rawLayoutOpt) =
+      try {
+        val scope = cx.initStandardObjects()
+        ScriptableObject.putProperty(scope, "Plotly", plotly)
+        ScriptableObject.putProperty(scope, "document", Document)
+        ScriptableObject.putProperty(scope, "numeric", Numeric)
+        ScriptableObject.putProperty(scope, "require", require(scope))
+        ScriptableObject.putProperty(scope, "linspace", linspace(scope))
+        cx.evaluateString(scope, demo, "<cmd>", 1, null)
+        plotly.result(cx, scope)
+      } catch {
+        case e: org.mozilla.javascript.EvaluatorException =>
+          println(s"Was running\n$demo\n\n")
+          throw new Exception(s"Evaluation error at line ${e.lineNumber()} column ${e.columnNumber()}", e)
+      } finally {
+        Context.exit()
+      }
 
     val decodeData0 = rawDataElems.map(json => json -> json.as[Trace].toEither)
 
-    val dataErrors = decodeData0.collect {
-      case (json, Left((err, h))) =>
-        (json, err, h)
+    val dataErrors = decodeData0.collect { case (json, Left((err, h))) =>
+      (json, err, h)
     }
 
     if (dataErrors.nonEmpty) {
@@ -195,8 +198,8 @@ object DocumentationTests {
       throw new Exception("Error decoding data (see above messages)")
     }
 
-    val data = decodeData0.collect {
-      case (_, Right(data)) => data
+    val data = decodeData0.collect { case (_, Right(data)) =>
+      data
     }
 
     val decodeLayoutOpt = rawLayoutOpt.map(json => json -> json.as[Layout].toEither)
@@ -279,7 +282,7 @@ class DocumentationTests extends AnyFlatSpec with Matchers {
 
   for {
     subDir <- subDirs
-    post <- subDir.listFiles().sorted
+    post   <- subDir.listFiles().sorted
     if !post.getName.startsWith(".")
   } {
     s"$subDir" should s"$post" in {
@@ -289,18 +292,19 @@ class DocumentationTests extends AnyFlatSpec with Matchers {
         .replace("</br>", "\\n")
         .replace("(...size)", "(size[0])") // rhino doesn't seem to support the spead (...) operator
         .replace("desired_maximum_marker_size**2", "desired_maximum_marker_size*desired_maximum_marker_size")
-        .replace("""function linspace(a,b,n) {
+        .replace(
+          """function linspace(a,b,n) {
   return Plotly.d3.range(n).map(function(i){return a+i*(b-a)/(n-1);});
 }
-""", "")
+""",
+          ""
+        )
 
       if (content.contains("Plotly.d3.csv"))
         println(s"Ignoring $post (Plotly.d3.csv not implemented)")
       else {
 
-        val lines = content
-          .linesIterator
-          .toVector
+        val lines = content.linesIterator.toVector
           .map(_.trim)
           .filter(_.nonEmpty)
 
@@ -334,17 +338,19 @@ class DocumentationTests extends AnyFlatSpec with Matchers {
         |Plotly.newPlot('myDiv', data, layout);
         |""".stripMargin
     val (data, maybeLayout) = plotlyDemoElements(js)
-    maybeLayout should ===(Some(
-      Layout()
-        .withWidth(400)
-        .withHeight(400)
-        .withTitle("image with opacity 0.1")
-    ))
+    maybeLayout should ===(
+      Some(
+        Layout()
+          .withWidth(400)
+          .withHeight(400)
+          .withTitle("image with opacity 0.1")
+      )
+    )
 
     data.headOption match {
       case Some(image) =>
         val colors = Seq(
-          Seq(Seq(255d, 0d, 0d), Seq(0d, 255, 0), Seq(0d, 0, 255)),
+          Seq(Seq(255d, 0d, 0d), Seq(0d, 255, 0), Seq(0d, 0, 255))
         )
         val expected = Image(z = colors)
           .withOpacity(0.1)

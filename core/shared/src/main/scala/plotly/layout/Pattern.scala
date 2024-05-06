@@ -4,5 +4,5 @@ sealed abstract class Pattern(val label: String) extends Product with Serializab
 
 object Pattern {
   case object Independent extends Pattern("independent")
-  case object     Coupled extends Pattern("coupled")
+  case object Coupled     extends Pattern("coupled")
 }

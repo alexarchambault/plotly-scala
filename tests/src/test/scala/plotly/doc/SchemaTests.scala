@@ -19,17 +19,17 @@ object SchemaTests {
     case class ConstantString(value: String) extends Attribute
 
     case class Flag(
-      valType: Witness.`"flaglist"`.T,
-      flags: List[String],
-      description: String,
-      role: String
+        valType: Witness.`"flaglist"`.T,
+        flags: List[String],
+        description: String,
+        role: String
     ) extends Attribute
 
     case class Enumerated(
-      valType: Witness.`"enumerated"`.T,
-      description: String,
-      role: String,
-      values: List[String]
+        valType: Witness.`"enumerated"`.T,
+        description: String,
+        role: String,
+        values: List[String]
     ) extends Attribute
 
     case class Other(json: Json) extends Attribute
@@ -37,11 +37,12 @@ object SchemaTests {
     implicit val decode: DecodeJson[Attribute] =
       DecodeJson { c =>
         val constantString = c.as[String].map[Attribute](ConstantString(_))
-        def flag = c.as[Flag].map[Attribute](x => x)
-        def enumerated = c.as[Enumerated].map[Attribute](x => x)
-        def other = DecodeResult.ok[Attribute](Other(c.focus))
+        def flag           = c.as[Flag].map[Attribute](x => x)
+        def enumerated     = c.as[Enumerated].map[Attribute](x => x)
+        def other          = DecodeResult.ok[Attribute](Other(c.focus))
 
-        constantString.toOption.map(DecodeResult.ok)
+        constantString.toOption
+          .map(DecodeResult.ok)
           .orElse(flag.toOption.map(DecodeResult.ok))
           .orElse(enumerated.toOption.map(DecodeResult.ok))
           .getOrElse(other)
@@ -49,8 +50,8 @@ object SchemaTests {
   }
 
   case class Trace(
-    description: Option[String],
-    attributes: Map[String, Attribute]
+      description: Option[String],
+      attributes: Map[String, Attribute]
   ) {
     def flagAttribute(name: String): Attribute.Flag =
       attributes.get(name) match {
@@ -74,7 +75,7 @@ object SchemaTests {
   }
 
   case class Schema(
-    traces: Map[String, Trace]
+      traces: Map[String, Trace]
   )
 
   val schemaFile = new File("plotly-documentation/_data/plotschema.json")
@@ -104,7 +105,7 @@ class SchemaTests extends AnyFlatSpec with Matchers {
 
   private def compareValues(fromSchema: Set[String], fromLib: Set[String]): Unit = {
     val onlySchema = (fromSchema -- fromLib).toVector.sorted
-    val onlyLib = (fromLib -- fromSchema).toVector.sorted
+    val onlyLib    = (fromLib -- fromSchema).toVector.sorted
 
     assert(onlySchema.isEmpty, s"Only in schema: ${onlySchema.mkString(", ")}")
     assert(onlyLib.isEmpty, s"Only in lib: ${onlyLib.mkString(", ")}")
@@ -131,7 +132,8 @@ class SchemaTests extends AnyFlatSpec with Matchers {
       .values
       .toSet
 
-    val fromLib = Enumerate[TextPosition].apply()
+    val fromLib = Enumerate[TextPosition]
+      .apply()
       .map(_.label)
       .toSet
 
@@ -139,4 +141,3 @@ class SchemaTests extends AnyFlatSpec with Matchers {
   }
 
 }
-

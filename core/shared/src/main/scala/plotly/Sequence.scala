@@ -7,11 +7,11 @@ import scala.language.implicitConversions
 sealed abstract class Sequence extends Product with Serializable
 
 object Sequence extends MutableSequenceImplicitConversions {
-  final case class Doubles(seq: Seq[Double]) extends Sequence
+  final case class Doubles(seq: Seq[Double])            extends Sequence
   final case class NestedDoubles(seq: Seq[Seq[Double]]) extends Sequence
-  final case class NestedInts(seq: Seq[Seq[Int]]) extends Sequence
-  final case class Strings(seq: Seq[String]) extends Sequence
-  final case class DateTimes(seq: Seq[LocalDateTime]) extends Sequence
+  final case class NestedInts(seq: Seq[Seq[Int]])       extends Sequence
+  final case class Strings(seq: Seq[String])            extends Sequence
+  final case class DateTimes(seq: Seq[LocalDateTime])   extends Sequence
 
   implicit def fromDoubleSeq(s: Seq[Double]): Sequence =
     Doubles(s)
