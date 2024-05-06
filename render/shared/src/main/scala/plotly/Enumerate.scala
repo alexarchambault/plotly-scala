@@ -7,7 +7,7 @@ sealed abstract class Enumerate[T] {
 }
 
 object Enumerate {
-  def apply[T](implicit enum: Enumerate[T]): Enumerate[T] = enum
+  def apply[T](implicit enumerate: Enumerate[T]): Enumerate[T] = enumerate
 
   private def instance[T](values: => Seq[T]): Enumerate[T] =
     new Enumerate[T] {
