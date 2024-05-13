@@ -7,8 +7,8 @@ import plotly.element._
 object BasicHeatmap extends NoLayoutDemoChart {
 
   def plotlyDocUrl = "https://plot.ly/javascript/heatmaps/#basic-heatmap"
-  def id = "basic-heatmap"
-  def source = BasicHeatmapSource.source
+  def id           = "basic-heatmap"
+  def source       = BasicHeatmapSource.source
 
   // demo source start
 

@@ -10,7 +10,8 @@ class FieldTests extends AnyFlatSpec with Matchers {
 
     val expectedField = Json.jBool(true)
 
-    val field = Codecs.argonautEncodeTrace(trace)
+    val field = Codecs
+      .argonautEncodeTrace(trace)
       .obj
       .toList
       .flatMap(_.toList.filter(_._1 == "showlegend").map(_._2))

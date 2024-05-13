@@ -21,7 +21,7 @@ object Plotly {
   def jsonSnippet(data: Seq[Trace], layout: Layout, config: Config): String = {
 
     val json = Json.obj(
-      "data" -> data.toList.asJson,
+      "data"   -> data.toList.asJson,
       "layout" -> layout.asJson,
       "config" -> config.asJson
     )
@@ -59,7 +59,7 @@ object Plotly {
 
   private def readFully(is: InputStream): Array[Byte] = {
     val buffer = new ByteArrayOutputStream()
-    val data = Array.ofDim[Byte](16384)
+    val data   = Array.ofDim[Byte](16384)
 
     var nRead = is.read(data, 0, data.length)
     while (nRead != -1) {
@@ -77,7 +77,9 @@ object Plotly {
   def plotlyMinJs: String = {
     var is: InputStream = null
     try {
-      is = getClass.getClassLoader.getResourceAsStream(s"META-INF/resources/webjars/plotly.js/$plotlyVersion/dist/plotly.min.js")
+      is = getClass.getClassLoader.getResourceAsStream(
+        s"META-INF/resources/webjars/plotly.js/$plotlyVersion/dist/plotly.min.js"
+      )
       if (is == null)
         throw new Exception(s"plotly.min.js resource not found")
 
@@ -89,13 +91,13 @@ object Plotly {
   }
 
   def plot(
-    path: String,
-    traces: Seq[Trace],
-    layout: Layout,
-    config: Config = Config(),
-    useCdn: Boolean = true,
-    openInBrowser: Boolean = true,
-    addSuffixIfExists: Boolean = true
+      path: String,
+      traces: Seq[Trace],
+      layout: Layout,
+      config: Config = Config(),
+      useCdn: Boolean = true,
+      openInBrowser: Boolean = true,
+      addSuffixIfExists: Boolean = true
   ): File = {
 
     val f0 = new File(path)
@@ -103,7 +105,7 @@ object Plotly {
     val f =
       if (addSuffixIfExists) {
         lazy val name = f0.getName
-        lazy val idx = name.lastIndexOf('.')
+        lazy val idx  = name.lastIndexOf('.')
 
         lazy val (prefix, suffixOpt) =
           if (idx < 0)
@@ -184,11 +186,11 @@ object Plotly {
 
   implicit class TraceOps(val trace: Trace) extends AnyVal {
     def plot(
-      path: String,
-      layout: Layout,
-      useCdn: Boolean,
-      openInBrowser: Boolean,
-      addSuffixIfExists: Boolean
+        path: String,
+        layout: Layout,
+        useCdn: Boolean,
+        openInBrowser: Boolean,
+        addSuffixIfExists: Boolean
     ): Unit =
       Plotly.plot(
         path,
@@ -201,36 +203,36 @@ object Plotly {
 
     @deprecated("Create a Layout and call plot(path, layout) instead", "0.8.0")
     def plot(
-                   path: String          = "./plot.html",
-                  title: String          = null,
-                 legend: Legend          = null,
-                  width: JInt            = null,
-                 height: JInt            = null,
-             showlegend: JBoolean        = null,
-                  xaxis: Axis            = null,
-                  yaxis: Axis            = null,
-                 xaxis1: Axis            = null,
-                 xaxis2: Axis            = null,
-                 xaxis3: Axis            = null,
-                 xaxis4: Axis            = null,
-                 yaxis1: Axis            = null,
-                 yaxis2: Axis            = null,
-                 yaxis3: Axis            = null,
-                 yaxis4: Axis            = null,
-                barmode: BarMode         = null,
-               autosize: JBoolean        = null,
-                 margin: Margin          = null,
-            annotations: Seq[Annotation] = null,
-           plot_bgcolor: Color           = null,
-          paper_bgcolor: Color           = null,
-                   font: Font            = null,
-                 bargap: JDouble         = null,
-            bargroupgap: JDouble         = null,
-              hovermode: HoverMode       = null,
-                boxmode: BoxMode         = null,
-                 useCdn: Boolean         = true,
-          openInBrowser: Boolean         = true,
-      addSuffixIfExists: Boolean         = true
+        path: String = "./plot.html",
+        title: String = null,
+        legend: Legend = null,
+        width: JInt = null,
+        height: JInt = null,
+        showlegend: JBoolean = null,
+        xaxis: Axis = null,
+        yaxis: Axis = null,
+        xaxis1: Axis = null,
+        xaxis2: Axis = null,
+        xaxis3: Axis = null,
+        xaxis4: Axis = null,
+        yaxis1: Axis = null,
+        yaxis2: Axis = null,
+        yaxis3: Axis = null,
+        yaxis4: Axis = null,
+        barmode: BarMode = null,
+        autosize: JBoolean = null,
+        margin: Margin = null,
+        annotations: Seq[Annotation] = null,
+        plot_bgcolor: Color = null,
+        paper_bgcolor: Color = null,
+        font: Font = null,
+        bargap: JDouble = null,
+        bargroupgap: JDouble = null,
+        hovermode: HoverMode = null,
+        boxmode: BoxMode = null,
+        useCdn: Boolean = true,
+        openInBrowser: Boolean = true,
+        addSuffixIfExists: Boolean = true
     ): Unit =
       plot(
         path,
@@ -268,8 +270,8 @@ object Plotly {
       )
 
     def plot(
-      path: String,
-      layout: Layout
+        path: String,
+        layout: Layout
     ): Unit =
       plot(
         path,
@@ -282,11 +284,11 @@ object Plotly {
 
   implicit class TraceSeqOps(val traces: Seq[Trace]) extends AnyVal {
     def plot(
-      path: String,
-      layout: Layout,
-      useCdn: Boolean,
-      openInBrowser: Boolean,
-      addSuffixIfExists: Boolean
+        path: String,
+        layout: Layout,
+        useCdn: Boolean,
+        openInBrowser: Boolean,
+        addSuffixIfExists: Boolean
     ): Unit =
       Plotly.plot(
         path,
@@ -299,36 +301,36 @@ object Plotly {
 
     @deprecated("Create a Layout and call plot(path, layout) instead", "0.8.0")
     def plot(
-                   path: String          = "./plot.html",
-                  title: String          = null,
-                 legend: Legend          = null,
-                  width: JInt            = null,
-                 height: JInt            = null,
-             showlegend: JBoolean        = null,
-                  xaxis: Axis            = null,
-                  yaxis: Axis            = null,
-                 xaxis1: Axis            = null,
-                 xaxis2: Axis            = null,
-                 xaxis3: Axis            = null,
-                 xaxis4: Axis            = null,
-                 yaxis1: Axis            = null,
-                 yaxis2: Axis            = null,
-                 yaxis3: Axis            = null,
-                 yaxis4: Axis            = null,
-                barmode: BarMode         = null,
-               autosize: JBoolean        = null,
-                 margin: Margin          = null,
-            annotations: Seq[Annotation] = null,
-           plot_bgcolor: Color           = null,
-          paper_bgcolor: Color           = null,
-                   font: Font            = null,
-                 bargap: JDouble         = null,
-            bargroupgap: JDouble         = null,
-              hovermode: HoverMode       = null,
-                boxmode: BoxMode         = null,
-                 useCdn: Boolean         = true,
-          openInBrowser: Boolean         = true,
-      addSuffixIfExists: Boolean         = true
+        path: String = "./plot.html",
+        title: String = null,
+        legend: Legend = null,
+        width: JInt = null,
+        height: JInt = null,
+        showlegend: JBoolean = null,
+        xaxis: Axis = null,
+        yaxis: Axis = null,
+        xaxis1: Axis = null,
+        xaxis2: Axis = null,
+        xaxis3: Axis = null,
+        xaxis4: Axis = null,
+        yaxis1: Axis = null,
+        yaxis2: Axis = null,
+        yaxis3: Axis = null,
+        yaxis4: Axis = null,
+        barmode: BarMode = null,
+        autosize: JBoolean = null,
+        margin: Margin = null,
+        annotations: Seq[Annotation] = null,
+        plot_bgcolor: Color = null,
+        paper_bgcolor: Color = null,
+        font: Font = null,
+        bargap: JDouble = null,
+        bargroupgap: JDouble = null,
+        hovermode: HoverMode = null,
+        boxmode: BoxMode = null,
+        useCdn: Boolean = true,
+        openInBrowser: Boolean = true,
+        addSuffixIfExists: Boolean = true
     ): Unit =
       plot(
         path,
@@ -366,8 +368,8 @@ object Plotly {
       )
 
     def plot(
-      path: String,
-      layout: Layout
+        path: String,
+        layout: Layout
     ): Unit =
       plot(
         path,

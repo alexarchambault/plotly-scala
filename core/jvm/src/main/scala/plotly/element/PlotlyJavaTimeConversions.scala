@@ -14,7 +14,7 @@ trait PlotlyJavaTimeConversions {
       javaLocalDateTime.getDayOfMonth,
       javaLocalDateTime.getHour,
       javaLocalDateTime.getMinute,
-      javaLocalDateTime.getSecond,
+      javaLocalDateTime.getSecond
     )
 
   implicit def fromJavaInstant(javaInstant: Instant): PlotlyLocalDateTime =
@@ -23,8 +23,7 @@ trait PlotlyJavaTimeConversions {
   implicit def fromJavaLocalDate(javaLocalDate: LocalDate): PlotlyLocalDateTime =
     fromJavaLocalDateTime(javaLocalDate.atStartOfDay)
 
-  /**
-    * Implicit conversions in this object convert to `plotly.element.LocalDateTime` by simply dropping timezone/offset
+  /** Implicit conversions in this object convert to `plotly.element.LocalDateTime` by simply dropping timezone/offset
     * information. This can lead to unexpected behaviour, particularly for datasets with varying offsets and timezones.
     * It will generally be safer to convert your data to `java.time.LocalDateTime` in the appropriate timezone/offset,
     * and then use the `PlotlyJavaTimeConversions.fromJavaLocalDateTime` implicit conversion.

@@ -17,49 +17,47 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
 
   sealed abstract class IsWrapper[W]
 
-  implicit def isWrapperEncode[W, L <: HList, T]
-   (implicit
-     ev: IsWrapper[W],
-     gen: Generic.Aux[W, L],
-     isHCons: ops.hlist.IsHCons.Aux[L, T, HNil],
-     underlying: EncodeJson[T]
-   ): EncodeJson[W] =
+  implicit def isWrapperEncode[W, L <: HList, T](implicit
+      ev: IsWrapper[W],
+      gen: Generic.Aux[W, L],
+      isHCons: ops.hlist.IsHCons.Aux[L, T, HNil],
+      underlying: EncodeJson[T]
+  ): EncodeJson[W] =
     EncodeJson { w =>
       val t = isHCons.head(gen.to(w))
       t.asJson
     }
 
-  implicit def isWrapperDecode[W, L <: HList, T]
-   (implicit
-     ev: IsWrapper[W],
-     gen: Generic.Aux[W, L],
-     isHCons: ops.hlist.IsHCons.Aux[L, T, HNil],
-     underlying: DecodeJson[T]
-   ): DecodeJson[W] =
+  implicit def isWrapperDecode[W, L <: HList, T](implicit
+      ev: IsWrapper[W],
+      gen: Generic.Aux[W, L],
+      isHCons: ops.hlist.IsHCons.Aux[L, T, HNil],
+      underlying: DecodeJson[T]
+  ): DecodeJson[W] =
     DecodeJson { c =>
-      c.as[T].map(t =>
-        gen.from((t :: HNil).asInstanceOf[L]) // FIXME
-      )
+      c.as[T]
+        .map(t => gen.from((t :: HNil).asInstanceOf[L]) // FIXME
+        )
     }
 
-  implicit val boxMeanBoolIsWrapper: IsWrapper[BoxMean.Bool] = null
-  implicit val boxPointsBoolIsWrapper: IsWrapper[BoxPoints.Bool] = null
-  implicit val sequenceDoublesIsWrapper: IsWrapper[Sequence.Doubles] = null
+  implicit val boxMeanBoolIsWrapper: IsWrapper[BoxMean.Bool]                     = null
+  implicit val boxPointsBoolIsWrapper: IsWrapper[BoxPoints.Bool]                 = null
+  implicit val sequenceDoublesIsWrapper: IsWrapper[Sequence.Doubles]             = null
   implicit val sequenceNestedDoublesIsWrapper: IsWrapper[Sequence.NestedDoubles] = null
-  implicit val sequenceNestedIntsIsWrapper: IsWrapper[Sequence.NestedInts] = null
-  implicit val sequenceStringsIsWrapper: IsWrapper[Sequence.Strings] = null
-  implicit val sequenceDatetimesIsWrapper: IsWrapper[Sequence.DateTimes] = null
-  implicit val rangeDoublesIsWrapper: IsWrapper[Range.Doubles] = null
-  implicit val rangeDatetimesIsWrapper: IsWrapper[Range.DateTimes] = null
-  implicit val doubleElementIsWrapper: IsWrapper[Element.DoubleElement] = null
-  implicit val stringElementIsWrapper: IsWrapper[Element.StringElement] = null
-  implicit def oneOrSeqOneIsWrapper[T]: IsWrapper[OneOrSeq.One[T]] = null
-  implicit def oneOrSeqSequenceIsWrapper[T]: IsWrapper[OneOrSeq.Sequence[T]] = null
+  implicit val sequenceNestedIntsIsWrapper: IsWrapper[Sequence.NestedInts]       = null
+  implicit val sequenceStringsIsWrapper: IsWrapper[Sequence.Strings]             = null
+  implicit val sequenceDatetimesIsWrapper: IsWrapper[Sequence.DateTimes]         = null
+  implicit val rangeDoublesIsWrapper: IsWrapper[Range.Doubles]                   = null
+  implicit val rangeDatetimesIsWrapper: IsWrapper[Range.DateTimes]               = null
+  implicit val doubleElementIsWrapper: IsWrapper[Element.DoubleElement]          = null
+  implicit val stringElementIsWrapper: IsWrapper[Element.StringElement]          = null
+  implicit def oneOrSeqOneIsWrapper[T]: IsWrapper[OneOrSeq.One[T]]               = null
+  implicit def oneOrSeqSequenceIsWrapper[T]: IsWrapper[OneOrSeq.Sequence[T]]     = null
 
   def flagEncoder[T, F](flags: T => Set[F], label: F => String): EncodeJson[T] =
     EncodeJson { t =>
       val s = flags(t).toSeq match {
-        case Seq() => "none"
+        case Seq()    => "none"
         case nonEmpty => nonEmpty.map(label).mkString("+")
       }
 
@@ -73,12 +71,14 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
           if (s == "none")
             DecodeResult.ok(Set.empty[F])
           else
-            s.split('+').foldLeft[DecodeResult[Set[F]]](DecodeResult.ok(Set.empty[F])) {
-              case (acc, f) =>
-                for {
-                  acc0 <- acc
-                  f0 <- map.get(f).fold[DecodeResult[F]](DecodeResult.fail(s"Unrecognized $type0: $f", c.history))(DecodeResult.ok)
-                } yield acc0 + f0
+            s.split('+').foldLeft[DecodeResult[Set[F]]](DecodeResult.ok(Set.empty[F])) { case (acc, f) =>
+              for {
+                acc0 <- acc
+                f0 <-
+                  map
+                    .get(f)
+                    .fold[DecodeResult[F]](DecodeResult.fail(s"Unrecognized $type0: $f", c.history))(DecodeResult.ok)
+              } yield acc0 + f0
             }
 
         flags.map(build)
@@ -94,63 +94,62 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
 
     def instance[T](f: T => String): IsEnum[T] =
       new IsEnum[T] {
-        def label(t: T) = f(t)
+        def label(t: T): String = f(t)
       }
   }
 
   implicit def isEnumEncoder[T: IsEnum]: EncodeJson[T] =
     EncodeJson.of[String].contramap(IsEnum[T].label)
 
-  implicit def isEnumDecoder[T]
-   (implicit
-     isEnum: IsEnum[T],
-     enum: Enumerate[T],
-     typeable: Typeable[T]
-   ): DecodeJson[T] =
+  implicit def isEnumDecoder[T](implicit
+      isEnum: IsEnum[T],
+      enumerate: Enumerate[T],
+      typeable: Typeable[T]
+  ): DecodeJson[T] =
     DecodeJson {
       val underlying = DecodeJson.of[String]
-      val map = enum().map(e => isEnum.label(e) -> e).toMap
-      val name = typeable.describe // TODO split in words
+      val map        = enumerate().map(e => isEnum.label(e) -> e).toMap
+      val name       = typeable.describe // TODO split in words
 
       c =>
         underlying(c).flatMap { s =>
           map.get(s) match {
-            case None => DecodeResult.fail(s"Unrecognized $name: '$s'", c.history)
+            case None    => DecodeResult.fail(s"Unrecognized $name: '$s'", c.history)
             case Some(m) => DecodeResult.ok(m)
           }
         }
     }
 
-  implicit val anchorIsEnum = IsEnum.instance[Anchor](_.label)
-  implicit val refIsEnum = IsEnum.instance[Ref](_.label)
-  implicit val axisAnchorIsEnum = IsEnum.instance[AxisAnchor](_.label)
-  implicit val axisReferenceIsEnum = IsEnum.instance[AxisReference](_.label)
-  implicit val axisTypeIsEnum = IsEnum.instance[AxisType](_.label)
-  implicit val barModeIsEnum = IsEnum.instance[BarMode](_.label)
-  implicit val boxModeIsEnum = IsEnum.instance[BoxMode](_.label)
-  implicit val dashIsEnum = IsEnum.instance[Dash](_.label)
-  implicit val fillIsEnum = IsEnum.instance[Fill](_.label)
-  implicit val hoverModeIsEnum = IsEnum.instance[HoverMode](_.label)
-  implicit val lineShapeIsEnum = IsEnum.instance[LineShape](_.label)
-  implicit val orientationIsEnum = IsEnum.instance[Orientation](_.label)
-  implicit val traceOrderIsEnum = IsEnum.instance[TraceOrder](_.label)
-  implicit val boxMeanOtherIsEnum = IsEnum.instance[BoxMean.Labeled](_.label)
-  implicit val boxPointsOtherIsEnum = IsEnum.instance[BoxPoints.Labeled](_.label)
-  implicit val textPositionIsEnum = IsEnum.instance[TextPosition](_.label)
+  implicit val anchorIsEnum          = IsEnum.instance[Anchor](_.label)
+  implicit val refIsEnum             = IsEnum.instance[Ref](_.label)
+  implicit val axisAnchorIsEnum      = IsEnum.instance[AxisAnchor](_.label)
+  implicit val axisReferenceIsEnum   = IsEnum.instance[AxisReference](_.label)
+  implicit val axisTypeIsEnum        = IsEnum.instance[AxisType](_.label)
+  implicit val barModeIsEnum         = IsEnum.instance[BarMode](_.label)
+  implicit val boxModeIsEnum         = IsEnum.instance[BoxMode](_.label)
+  implicit val dashIsEnum            = IsEnum.instance[Dash](_.label)
+  implicit val fillIsEnum            = IsEnum.instance[Fill](_.label)
+  implicit val hoverModeIsEnum       = IsEnum.instance[HoverMode](_.label)
+  implicit val lineShapeIsEnum       = IsEnum.instance[LineShape](_.label)
+  implicit val orientationIsEnum     = IsEnum.instance[Orientation](_.label)
+  implicit val traceOrderIsEnum      = IsEnum.instance[TraceOrder](_.label)
+  implicit val boxMeanOtherIsEnum    = IsEnum.instance[BoxMean.Labeled](_.label)
+  implicit val boxPointsOtherIsEnum  = IsEnum.instance[BoxPoints.Labeled](_.label)
+  implicit val textPositionIsEnum    = IsEnum.instance[TextPosition](_.label)
   implicit val barTextPositionIsEnum = IsEnum.instance[BarTextPosition](_.label)
-  implicit val sideIsEnum = IsEnum.instance[Side](_.label)
-  implicit val symbolIsEnum = IsEnum.instance[Symbol](_.label)
-  implicit val ticksIsEnum = IsEnum.instance[Ticks](_.label)
-  implicit val histNormIsEnum = IsEnum.instance[HistNorm](_.label)
-  implicit val sizeModeIsEnum = IsEnum.instance[SizeMode](_.label)
-  implicit val hoverOnIsEnum = IsEnum.instance[HoverOn](_.label)
-  implicit val groupNormIsEnum = IsEnum.instance[GroupNorm](_.label)
-  implicit val histFuncIsEnum = IsEnum.instance[HistFunc](_.label)
-  implicit val tickModeIsEnum = IsEnum.instance[TickMode](_.mode)
-  implicit val patternIsEnum = IsEnum.instance[Pattern](_.label)
-  implicit val rowOrderIsEnum = IsEnum.instance[RowOrder](_.label)
-  implicit val alignmentIsEnum = IsEnum.instance[Alignment](_.label)
-  implicit val colorModelIsEnum = IsEnum.instance[ColorModel](_.label)
+  implicit val sideIsEnum            = IsEnum.instance[Side](_.label)
+  implicit val symbolIsEnum          = IsEnum.instance[Symbol](_.label)
+  implicit val ticksIsEnum           = IsEnum.instance[Ticks](_.label)
+  implicit val histNormIsEnum        = IsEnum.instance[HistNorm](_.label)
+  implicit val sizeModeIsEnum        = IsEnum.instance[SizeMode](_.label)
+  implicit val hoverOnIsEnum         = IsEnum.instance[HoverOn](_.label)
+  implicit val groupNormIsEnum       = IsEnum.instance[GroupNorm](_.label)
+  implicit val histFuncIsEnum        = IsEnum.instance[HistFunc](_.label)
+  implicit val tickModeIsEnum        = IsEnum.instance[TickMode](_.mode)
+  implicit val patternIsEnum         = IsEnum.instance[Pattern](_.label)
+  implicit val rowOrderIsEnum        = IsEnum.instance[RowOrder](_.label)
+  implicit val alignmentIsEnum       = IsEnum.instance[Alignment](_.label)
+  implicit val colorModelIsEnum      = IsEnum.instance[ColorModel](_.label)
 
   def jsonSumDirectCodecFor(name: String): JsonSumCodec = new JsonSumCodec {
     def encodeEmpty: Nothing =
@@ -158,12 +157,12 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
 
     def encodeField(fieldOrObj: Either[Json, (String, Json)]): Json =
       fieldOrObj match {
-        case Left(other) => other
+        case Left(other)         => other
         case Right((_, content)) => content
       }
 
     def decodeEmpty(cursor: HCursor): DecodeResult[Nothing] =
-    // FIXME Sometimes reports the wrong error (in case of two nested sum types)
+      // FIXME Sometimes reports the wrong error (in case of two nested sum types)
       DecodeResult.fail(s"unrecognized $name", cursor.history)
 
     def decodeField[A](name: String, cursor: HCursor, decode: DecodeJson[A]): DecodeResult[Either[ACursor, A]] =
@@ -175,7 +174,7 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
   }
 
   case class JsonProductObjCodecNoEmpty(
-    toJsonName: String => String = identity
+      toJsonName: String => String = identity
   ) extends JsonProductCodec {
 
     private val underlying = JsonProductCodec.adapt(toJsonName)
@@ -194,7 +193,12 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
           cursor.history
         )
 
-    def decodeField[A](name: String, cursor: HCursor, decode: DecodeJson[A], default: Option[A]): DecodeResult[(A, ACursor)] = {
+    def decodeField[A](
+        name: String,
+        cursor: HCursor,
+        decode: DecodeJson[A],
+        default: Option[A]
+    ): DecodeResult[(A, ACursor)] = {
       val c = cursor.downField(toJsonName(name))
 
       def result = c.as(decode).map((_, if (c.succeeded) c.delete else ACursor.ok(cursor)))
@@ -219,18 +223,18 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
   implicit val decodeHoverInfo: DecodeJson[HoverInfo] =
     DecodeJson { c =>
       DecodeJson.of[String].apply(c).flatMap {
-        case "all" => DecodeResult.ok(HoverInfo.All)
+        case "all"  => DecodeResult.ok(HoverInfo.All)
         case "skip" => DecodeResult.ok(HoverInfo.Skip)
         case "none" => DecodeResult.ok(HoverInfo.None)
         case combination =>
           val results = combination.split('+').map {
-            case "x" => Right(HoverInfo.X)
-            case "y" => Right(HoverInfo.Y)
-            case "z" => Right(HoverInfo.Z)
+            case "x"     => Right(HoverInfo.X)
+            case "y"     => Right(HoverInfo.Y)
+            case "z"     => Right(HoverInfo.Z)
             case "color" => Right(HoverInfo.Color)
-            case "text" => Right(HoverInfo.Text)
-            case "name" => Right(HoverInfo.Name)
-            case other => Left(s"Unrecognized hover info element: $other")
+            case "text"  => Right(HoverInfo.Text)
+            case "name"  => Right(HoverInfo.Name)
+            case other   => Left(s"Unrecognized hover info element: $other")
           }
           if (results.exists(_.isLeft))
             DecodeResult.fail(
@@ -241,7 +245,6 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
             DecodeResult.ok(HoverInfo(results.flatMap(_.toSeq).toIndexedSeq: _*))
       }
     }
-
 
   implicit def defaultJsonProductCodecFor[T]: JsonProductCodecFor[T] =
     JsonProductCodecFor(JsonProductObjCodecNoEmpty.default)
@@ -256,9 +259,9 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
           s.stripPrefix("rgba(").stripSuffix(")").split(',').map(_.trim) match {
             case Array(rStr, gStr, bStr, alphaStr) =>
               val res = for {
-                r <- Try(rStr.toInt).toOption
-                g <- Try(gStr.toInt).toOption
-                b <- Try(bStr.toInt).toOption
+                r     <- Try(rStr.toInt).toOption
+                g     <- Try(gStr.toInt).toOption
+                b     <- Try(bStr.toInt).toOption
                 alpha <- Try(alphaStr.toDouble).toOption
               } yield DecodeResult.ok(Color.RGBA(r, g, b, alpha))
 
@@ -279,15 +282,14 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
   implicit val decodeStringColor: DecodeJson[Color.StringColor] =
     DecodeJson {
       val underlying = DecodeJson.of[String]
-      val map = Color.StringColor.colors
-        .toVector
+      val map = Color.StringColor.colors.toVector
         .map(c => c -> Color.StringColor(c))
         .toMap
 
       c =>
         underlying(c).flatMap { s =>
           map.get(s) match {
-            case None => DecodeResult.fail(s"Unrecognized color: '$s'", c.history)
+            case None    => DecodeResult.fail(s"Unrecognized color: '$s'", c.history)
             case Some(m) => DecodeResult.ok(m)
           }
         }
@@ -340,25 +342,21 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
           DecodeResult.fail(s"Unrecognized RGB color: $other", c.history)
       }
 
-      asString
-        .toOption
+      asString.toOption
         .orElse(asInt.toOption)
         .fold(asHexa)(DecodeResult.ok)
     }
 
   private def decodeNum(s: String) = {
 
-    val intOpt = Try(s.toInt)
-      .toOption
+    val intOpt = Try(s.toInt).toOption
 
-    val fromDouble = Try(s.toDouble)
-      .toOption
+    val fromDouble = Try(s.toDouble).toOption
       .map(_.toInt)
 
     def fromPct =
       if (s.endsWith("%"))
-        Try(s.stripSuffix("%").trim.toDouble)
-          .toOption
+        Try(s.stripSuffix("%").trim.toDouble).toOption
           .map(v => (256 * v).toInt)
       else
         None
@@ -457,12 +455,12 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
   implicit val encodeError: EncodeJson[Error] =
     EncodeJson { error =>
       val json = error match {
-        case data: Error.Data => data.asJson
-        case pct: Error.Percent => pct.asJson
+        case data: Error.Data    => data.asJson
+        case pct: Error.Percent  => pct.asJson
         case cst: Error.Constant => cst.asJson
       }
 
-        json.obj.fold(json)(o => Json.jObject(("type" -> error.`type`.asJson) +: o))
+      json.obj.fold(json)(o => Json.jObject(("type" -> error.`type`.asJson) +: o))
     }
 
   implicit val decodeError: DecodeJson[Error] =
@@ -488,15 +486,13 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
   implicit val jsonSumCodecForColor: JsonSumCodecFor[Color] =
     JsonSumCodecFor(jsonSumDirectCodecFor("color"))
 
-
   case class WrappedFont(font: Font)
-  val derivedFontDecoder = MkDecodeJson[Font].decodeJson
+  val derivedFontDecoder      = MkDecodeJson[Font].decodeJson
   lazy val wrappedFontDecoder = DecodeJson.of[WrappedFont].map(_.font)
 
   implicit lazy val decodeFont: DecodeJson[Font] =
-    DecodeJson {
-      c =>
-        wrappedFontDecoder(c).toOption.fold(derivedFontDecoder(c))(DecodeResult.ok)
+    DecodeJson { c =>
+      wrappedFontDecoder(c).toOption.fold(derivedFontDecoder(c))(DecodeResult.ok)
     }
 
   implicit val jsonCodecForTrace = JsonSumCodecFor[Trace](

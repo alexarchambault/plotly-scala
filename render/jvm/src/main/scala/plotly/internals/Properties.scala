@@ -8,19 +8,17 @@ object Properties {
     val p = new JProperties
     try {
       p.load(
-        getClass
-          .getClassLoader
+        getClass.getClassLoader
           .getResourceAsStream("plotly/plotly-scala.properties")
       )
-    }
-    catch  {
+    } catch {
       case _: NullPointerException =>
     }
     p
   }
 
   lazy val plotlyJsVersion = props.getProperty("plotly-js-version")
-  lazy val version = props.getProperty("version")
-  lazy val commitHash = props.getProperty("commit-hash")
+  lazy val version         = props.getProperty("version")
+  lazy val commitHash      = props.getProperty("commit-hash")
 
 }

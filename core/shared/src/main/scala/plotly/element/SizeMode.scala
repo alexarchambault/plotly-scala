@@ -4,5 +4,5 @@ sealed abstract class SizeMode(val label: String) extends Product with Serializa
 
 object SizeMode {
   case object Diameter extends SizeMode("diameter")
-  case object Area extends SizeMode("area")
+  case object Area     extends SizeMode("area")
 }

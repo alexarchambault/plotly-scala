@@ -4,5 +4,5 @@ sealed abstract class GroupNorm(val label: String) extends Product with Serializ
 
 object GroupNorm {
   case object Fraction extends GroupNorm("fraction")
-  case object Percent extends GroupNorm("percent")
+  case object Percent  extends GroupNorm("percent")
 }

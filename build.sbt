@@ -1,4 +1,3 @@
-
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 
@@ -6,20 +5,21 @@ import Settings._
 
 import sbtcrossproject.CrossPlugin.autoImport.crossProject
 
-
-inThisBuild(List(
-  organization := "org.plotly-scala",
-  homepage := Some(url("https://github.com/alexarchambault/plotly-scala")),
-  licenses := Seq("LGPL 3.0" -> url("http://opensource.org/licenses/LGPL-3.0")),
-  developers := List(
-    Developer(
-      "alexarchambault",
-      "Alexandre Archambault",
-      "",
-      url("https://github.com/alexarchambault")
+inThisBuild(
+  List(
+    organization := "org.plotly-scala",
+    homepage     := Some(url("https://github.com/alexarchambault/plotly-scala")),
+    licenses     := Seq("LGPL 3.0" -> url("http://opensource.org/licenses/LGPL-3.0")),
+    developers := List(
+      Developer(
+        "alexarchambault",
+        "Alexandre Archambault",
+        "",
+        url("https://github.com/alexarchambault")
+      )
     )
   )
-))
+)
 
 val previousVersions = Set.empty[String]
 lazy val mimaSettings = Def.settings(
@@ -38,7 +38,7 @@ lazy val core = crossProject(JVMPlatform, JSPlatform)
   )
 
 lazy val coreJvm = core.jvm
-lazy val coreJs = core.js
+lazy val coreJs  = core.js
 
 lazy val `joda-time` = project
   .dependsOn(coreJvm)
@@ -63,7 +63,7 @@ lazy val render = crossProject(JVMPlatform, JSPlatform)
     Mima.renderFilters,
     shadedModules += Deps.argonautShapeless.value.module,
     shadingRules ++= {
-      val shadeUnder = "plotly.internals.shaded"
+      val shadeUnder      = "plotly.internals.shaded"
       val shadeNamespaces = Seq("argonaut", "macrocompat", "shapeless")
       for (ns <- shadeNamespaces)
         yield ShadingRule.moveUnder(ns, shadeUnder),
@@ -89,15 +89,14 @@ lazy val render = crossProject(JVMPlatform, JSPlatform)
 
       val props = Seq(
         "plotly-js-version" -> WebDeps.Versions.plotlyJs,
-        "version" -> ver,
-        "commit-hash" -> Seq("git", "rev-parse", "HEAD").!!.trim
+        "version"           -> ver,
+        "commit-hash"       -> Seq("git", "rev-parse", "HEAD").!!.trim
       )
 
       val b = props
-        .map {
-          case (k, v) =>
-            assert(!v.contains("\n"), s"Invalid ${"\\n"} character in property $k")
-            s"$k=$v"
+        .map { case (k, v) =>
+          assert(!v.contains("\n"), s"Invalid ${"\\n"} character in property $k")
+          s"$k=$v"
         }
         .mkString("\n")
         .getBytes(StandardCharsets.UTF_8)
@@ -125,7 +124,7 @@ lazy val render = crossProject(JVMPlatform, JSPlatform)
   )
 
 lazy val renderJvm = render.jvm
-lazy val renderJs = render.js
+lazy val renderJs  = render.js
 
 lazy val demo = project
   .enablePlugins(JSDependenciesPlugin, ScalaJSPlugin)
@@ -135,7 +134,7 @@ lazy val demo = project
     shared,
     (publish / skip) := true,
     plotlyPrefix,
-    (Test / test) := {},
+    (Test / test)     := {},
     (Test / testOnly) := {},
     libraryDependencies += Deps.scalatags.value,
     jsDependencies ++= Seq(
@@ -185,7 +184,7 @@ lazy val tests = project
     fetchTestData,
     libraryDependencies ++= Seq(
       Deps.scalaTest % "test",
-      Deps.rhino % "test"
+      Deps.rhino     % "test"
     )
   )
 
@@ -199,5 +198,5 @@ lazy val almond = project
   )
 
 crossScalaVersions := Nil
-(publish / skip) := true
+(publish / skip)   := true
 disablePlugins(MimaPlugin)

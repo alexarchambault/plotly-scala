@@ -7,8 +7,8 @@ import plotly.element.Fill
 object BasicOverlaidAreaChart extends NoLayoutDemoChart {
 
   def plotlyDocUrl = "https://plot.ly/javascript/filled-area-plots/#basic-overlaid-area-chart"
-  def id = "basic-overlaid-area-chart"
-  def source = BasicOverlaidAreaChartSource.source
+  def id           = "basic-overlaid-area-chart"
+  def source       = BasicOverlaidAreaChartSource.source
 
   // demo source start
 

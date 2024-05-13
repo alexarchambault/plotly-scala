@@ -3,22 +3,22 @@ package element
 import dataclass.data
 
 sealed abstract class Symbol(label0: String, idx0: Int) extends Product with Serializable {
-  def idx: Int = idx0 + (if (open) 100 else 0)
-  def label: String = label0 + (if (open)  "-open" else "")
+  def idx: Int      = idx0 + (if (open) 100 else 0)
+  def label: String = label0 + (if (open) "-open" else "")
   def open: Boolean
 }
 
 object Symbol {
   sealed abstract class DotSymbol(label0: String, idx0: Int) extends Symbol(label0, idx0) {
-    override def idx: Int = super.idx + (if (dot) 200 else 0)
+    override def idx: Int      = super.idx + (if (dot) 200 else 0)
     override def label: String = super.label + (if (dot) "-dot" else "")
     def dot: Boolean
   }
 
-  @data class  Circle(open: Boolean = false, dot: Boolean = false) extends DotSymbol("circle",  0)
-  @data class  Square(open: Boolean = false, dot: Boolean = false) extends DotSymbol("square",  1)
+  @data class Circle(open: Boolean = false, dot: Boolean = false)  extends DotSymbol("circle", 0)
+  @data class Square(open: Boolean = false, dot: Boolean = false)  extends DotSymbol("square", 1)
   @data class Diamond(open: Boolean = false, dot: Boolean = false) extends DotSymbol("diamond", 2)
-  @data class   Cross(open: Boolean = false, dot: Boolean = false) extends DotSymbol("cross",   3)
+  @data class Cross(open: Boolean = false, dot: Boolean = false)   extends DotSymbol("cross", 3)
 
   /*
   "4" | "x" | "104" | "x-open" | "204" | "x-dot" | "304" | "x-open-dot"
@@ -62,5 +62,5 @@ object Symbol {
   "42" | "line-ns" | "142" | "line-ns-open"
   "43" | "line-ne" | "143" | "line-ne-open"
   "44" | "line-nw" | "144" | "line-nw-open
-  */
+   */
 }

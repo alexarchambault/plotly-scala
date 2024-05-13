@@ -8,13 +8,13 @@ import plotly.layout._
 object CustomizingIndividualBarColors extends DemoChart {
 
   def plotlyDocUrl = ""
-  def id = "customizing-individual-bar-colors"
-  def source = CustomizingIndividualBarColorsSource.source
+  def id           = "customizing-individual-bar-colors"
+  def source       = CustomizingIndividualBarColorsSource.source
 
   // demo source start
 
-  val defaultColor = Color.RGBA(204,204,204,1)
-  val highlightColor = Color.RGBA(222,45,38,0.8)
+  val defaultColor   = Color.RGBA(204, 204, 204, 1)
+  val highlightColor = Color.RGBA(222, 45, 38, 0.8)
 
   val trace1 = Bar(
     Seq("Feature A", "Feature B", "Feature C", "Feature D", "Feature E"),
@@ -22,9 +22,15 @@ object CustomizingIndividualBarColors extends DemoChart {
   )
     .withMarker(
       Marker()
-        .withColor(Seq(
-          defaultColor, highlightColor, defaultColor, defaultColor, defaultColor
-        ))
+        .withColor(
+          Seq(
+            defaultColor,
+            highlightColor,
+            defaultColor,
+            defaultColor,
+            defaultColor
+          )
+        )
     )
 
   val data = Seq(trace1)

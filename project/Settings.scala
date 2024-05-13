@@ -1,4 +1,3 @@
-
 import com.jsuereth.sbtpgp._
 import sbt._
 import sbt.Keys._
@@ -10,7 +9,7 @@ object Settings {
   lazy val generateCustomSources = Seq(
     customSourceGenerators := {
       val dir = target.value
-      val f = dir / "Properties.scala"
+      val f   = dir / "Properties.scala"
       dir.mkdirs()
 
       def gitCommit =
@@ -26,8 +25,7 @@ object Settings {
            |  val commitHash = "$gitCommit"
            |
            |}
-         """
-          .stripMargin
+         """.stripMargin
           .getBytes("UTF-8")
       )
       w.close()
@@ -41,14 +39,12 @@ object Settings {
 
       def process(destDir: File, pathComponents: Seq[String], file: File): Unit = {
         if (file.isDirectory) {
-          val destDir0 = destDir / file.getName
+          val destDir0        = destDir / file.getName
           val pathComponents0 = pathComponents :+ file.getName
           for (f <- file.listFiles())
             process(destDir0, pathComponents0, f)
         } else {
-          val lines = new String(java.nio.file.Files.readAllBytes(file.toPath), "UTF-8")
-            .linesIterator
-            .toVector
+          val lines = new String(java.nio.file.Files.readAllBytes(file.toPath), "UTF-8").linesIterator.toVector
 
           val demoLines = lines
             .dropWhile(!_.contains("demo source start"))
@@ -68,8 +64,7 @@ object Settings {
                  |  val source = $tq${demoLines.mkString("\n")}$tq
                  |
                  |}
-               """
-                .stripMargin
+               """.stripMargin
                 .getBytes("UTF-8")
             )
             w.close()
@@ -86,8 +81,8 @@ object Settings {
     (Compile / sourceGenerators) += customSourceGenerators.taskValue
   )
 
-  private val scala212 = "2.12.17"
-  private val scala213 = "2.13.10"
+  private val scala212 = "2.12.19"
+  private val scala213 = "2.13.14"
 
   private lazy val isAtLeastScala213 = Def.setting {
     import Ordering.Implicits._
@@ -96,7 +91,7 @@ object Settings {
 
   lazy val shared = Def.settings(
     crossScalaVersions := Seq(scala213, scala212),
-    scalaVersion := scala213,
+    scalaVersion       := scala213,
     resolvers += "jitpack" at "https://jitpack.io",
     libraryDependencies ++= {
       if (isAtLeastScala213.value) Nil
@@ -119,17 +114,16 @@ object Settings {
     val b = new ProcessBuilder(cmd: _*)
     b.directory(dir)
     b.inheritIO()
-    val p = b.start()
+    val p       = b.start()
     val retCode = p.waitFor()
     if (retCode != 0)
       sys.error(s"Command ${cmd.mkString(" ")} failed (return code $retCode)")
   }
 
-
   lazy val fetchTestData = {
     (Test / unmanagedResources) ++= {
-      val log = streams.value.log
-      val baseDir = (LocalRootProject / baseDirectory).value
+      val log           = streams.value.log
+      val baseDir       = (LocalRootProject / baseDirectory).value
       val testsPostsDir = baseDir / "plotly-documentation" / "_posts"
       if (!testsPostsDir.exists())
         gitLock.synchronized {

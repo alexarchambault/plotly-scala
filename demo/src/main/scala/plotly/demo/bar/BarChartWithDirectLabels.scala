@@ -8,8 +8,8 @@ import plotly.layout._
 object BarChartWithDirectLabels extends DemoChart {
 
   def plotlyDocUrl = "https://plot.ly/javascript/bar-charts/#bar-chart-with-direct-labels"
-  def id = "bar-chart-with-direct-labels"
-  def source = BarChartWithDirectLabelsSource.source
+  def id           = "bar-chart-with-direct-labels"
+  def source       = BarChartWithDirectLabelsSource.source
 
   // demo source start
 
@@ -32,15 +32,14 @@ object BarChartWithDirectLabels extends DemoChart {
 
   val data = Seq(trace1)
 
-  val annotations = xValue.zip(yValue).map {
-    case (x, y) =>
-      Annotation()
-        .withX(x)
-        .withY(y)
-        .withText(y.toString)
-        .withXanchor(Anchor.Center)
-        .withYanchor(Anchor.Bottom)
-        .withShowarrow(false)
+  val annotations = xValue.zip(yValue).map { case (x, y) =>
+    Annotation()
+      .withX(x)
+      .withY(y)
+      .withText(y.toString)
+      .withXanchor(Anchor.Center)
+      .withYanchor(Anchor.Bottom)
+      .withShowarrow(false)
   }
 
   val layout = Layout()

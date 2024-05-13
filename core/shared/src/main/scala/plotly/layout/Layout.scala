@@ -1,76 +1,76 @@
 package plotly
 package layout
 
-import java.lang.{ Integer => JInt, Double => JDouble, Boolean => JBoolean }
+import java.lang.{Boolean => JBoolean, Double => JDouble, Integer => JInt}
 
 import dataclass.data
 import plotly.element._
 
 @data(optionSetters = true) class Layout(
-          title: Option[String] = None,
-         legend: Option[Legend] = None,
-          width: Option[Int] = None,
-         height: Option[Int] = None,
-     showlegend: Option[Boolean] = None,
-          xaxis: Option[Axis] = None,
-          yaxis: Option[Axis] = None,
-         xaxis1: Option[Axis] = None,
-         xaxis2: Option[Axis] = None,
-         xaxis3: Option[Axis] = None,
-         xaxis4: Option[Axis] = None,
-         yaxis1: Option[Axis] = None,
-         yaxis2: Option[Axis] = None,
-         yaxis3: Option[Axis] = None,
-         yaxis4: Option[Axis] = None,
-        barmode: Option[BarMode] = None,
-       autosize: Option[Boolean] = None,
-         margin: Option[Margin] = None,
+    title: Option[String] = None,
+    legend: Option[Legend] = None,
+    width: Option[Int] = None,
+    height: Option[Int] = None,
+    showlegend: Option[Boolean] = None,
+    xaxis: Option[Axis] = None,
+    yaxis: Option[Axis] = None,
+    xaxis1: Option[Axis] = None,
+    xaxis2: Option[Axis] = None,
+    xaxis3: Option[Axis] = None,
+    xaxis4: Option[Axis] = None,
+    yaxis1: Option[Axis] = None,
+    yaxis2: Option[Axis] = None,
+    yaxis3: Option[Axis] = None,
+    yaxis4: Option[Axis] = None,
+    barmode: Option[BarMode] = None,
+    autosize: Option[Boolean] = None,
+    margin: Option[Margin] = None,
     annotations: Option[Seq[Annotation]] = None,
-   plot_bgcolor: Option[Color] = None,
-  paper_bgcolor: Option[Color] = None,
-           font: Option[Font] = None,
-         bargap: Option[Double] = None,
+    plot_bgcolor: Option[Color] = None,
+    paper_bgcolor: Option[Color] = None,
+    font: Option[Font] = None,
+    bargap: Option[Double] = None,
     bargroupgap: Option[Double] = None,
-      hovermode: Option[HoverMode] = None,
-        boxmode: Option[BoxMode] = None,
-          scene: Option[Scene] = None,
-  @since("0.8.0")
-       dragmode: Option[String] = None,
-         shapes: Option[Seq[Shape]] = None,
-  @since("0.8.2")
-           grid: Option[Grid] = None
+    hovermode: Option[HoverMode] = None,
+    boxmode: Option[BoxMode] = None,
+    scene: Option[Scene] = None,
+    @since("0.8.0")
+    dragmode: Option[String] = None,
+    shapes: Option[Seq[Shape]] = None,
+    @since("0.8.2")
+    grid: Option[Grid] = None
 )
 
 object Layout {
   @deprecated("Use Layout() and chain-call .with* methods on it instead", "0.8.0")
   def apply(
-            title: String          = null,
-           legend: Legend          = null,
-            width: JInt            = null,
-           height: JInt            = null,
-       showlegend: JBoolean        = null,
-            xaxis: Axis            = null,
-            yaxis: Axis            = null,
-           xaxis1: Axis            = null,
-           xaxis2: Axis            = null,
-           xaxis3: Axis            = null,
-           xaxis4: Axis            = null,
-           yaxis1: Axis            = null,
-           yaxis2: Axis            = null,
-           yaxis3: Axis            = null,
-           yaxis4: Axis            = null,
-          barmode: BarMode         = null,
-         autosize: JBoolean        = null,
-           margin: Margin          = null,
+      title: String = null,
+      legend: Legend = null,
+      width: JInt = null,
+      height: JInt = null,
+      showlegend: JBoolean = null,
+      xaxis: Axis = null,
+      yaxis: Axis = null,
+      xaxis1: Axis = null,
+      xaxis2: Axis = null,
+      xaxis3: Axis = null,
+      xaxis4: Axis = null,
+      yaxis1: Axis = null,
+      yaxis2: Axis = null,
+      yaxis3: Axis = null,
+      yaxis4: Axis = null,
+      barmode: BarMode = null,
+      autosize: JBoolean = null,
+      margin: Margin = null,
       annotations: Seq[Annotation] = null,
-     plot_bgcolor: Color           = null,
-    paper_bgcolor: Color           = null,
-             font: Font            = null,
-           bargap: JDouble         = null,
-      bargroupgap: JDouble         = null,
-        hovermode: HoverMode       = null,
-          boxmode: BoxMode         = null,
-            scene: Scene           = null
+      plot_bgcolor: Color = null,
+      paper_bgcolor: Color = null,
+      font: Font = null,
+      bargap: JDouble = null,
+      bargroupgap: JDouble = null,
+      hovermode: HoverMode = null,
+      boxmode: BoxMode = null,
+      scene: Scene = null
   ): Layout =
     new Layout(
       Option(title),

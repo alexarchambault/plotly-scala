@@ -6,8 +6,8 @@ import plotly.demo.NoLayoutDemoChart
 object TimeSeries extends NoLayoutDemoChart {
 
   def plotlyDocUrl = "https://plot.ly/javascript/time-series/#date-strings"
-  def id = "time-series-chart"
-  def source = TimeSeriesSource.source
+  def id           = "time-series-chart"
+  def source       = TimeSeriesSource.source
 
   // demo source start
 
