@@ -27,7 +27,6 @@ jobs:
         SCALA_VERSION: ${{ matrix.SCALA_VERSION }}
 
   publish:
-    needs: test
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
