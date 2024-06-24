@@ -13,6 +13,6 @@ object Deps {
   def rhino             = "org.mozilla"                % "rhino"       % "1.7.15"
   def scalajsDom        = setting("org.scala-js" %%% "scalajs-dom" % "2.8.0")
   def scalatags         = setting("com.lihaoyi" %%% "scalatags" % "0.13.1")
-  def scalaTest         = "org.scalatest"             %% "scalatest"   % "3.2.18"
+  def scalaTest         = "org.scalatest"             %% "scalatest"   % "3.2.19"
 
 }
