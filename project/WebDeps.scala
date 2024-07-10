@@ -3,7 +3,7 @@ import sbt._
 object WebDeps {
 
   object Versions {
-    def plotlyJs = "1.54.1"
+    def plotlyJs = "2.33.0"
   }
 
   def bootstrap = "org.webjars.bower" % "bootstrap" % "3.4.1"
