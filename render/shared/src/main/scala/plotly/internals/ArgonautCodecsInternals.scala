@@ -36,7 +36,8 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
   ): DecodeJson[W] =
     DecodeJson { c =>
       c.as[T]
-        .map(t => gen.from((t :: HNil).asInstanceOf[L]) // FIXME
+        .map(t =>
+          gen.from((t :: HNil).asInstanceOf[L]) // FIXME
         )
     }
 

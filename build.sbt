@@ -66,7 +66,7 @@ lazy val render = crossProject(JVMPlatform, JSPlatform)
       val shadeUnder      = "plotly.internals.shaded"
       val shadeNamespaces = Seq("argonaut", "macrocompat", "shapeless")
       for (ns <- shadeNamespaces)
-        yield ShadingRule.moveUnder(ns, shadeUnder),
+        yield ShadingRule.moveUnder(ns, shadeUnder)
     },
     validNamespaces += "plotly",
     libraryDependencies ++= Seq(
