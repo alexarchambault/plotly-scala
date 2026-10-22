@@ -17,31 +17,29 @@ jobs:
     steps:
     - uses: actions/checkout@v7
     - uses: coursier/cache-action@v8
-    - uses: coursier/setup-action@v3
-      with:
-        jvm: 17
-    - run: |
-        sbtn ++$SCALA_VERSION test
-        sbtn ++$SCALA_VERSION mimaReportBinaryIssues
+    - run: ./mill --no-daemon "__[$SCALA_VERSION].compile" + "__[$SCALA_VERSION].test" + "__[$SCALA_VERSION].mimaReportBinaryIssues"
       env:
         SCALA_VERSION: ${{ matrix.SCALA_VERSION }}
+
+  demo:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+    - uses: coursier/cache-action@v8
+    - run: ./mill --no-daemon demo.fullSite
 
   publish:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v7
-    - uses: coursier/cache-action@v8
-    - uses: coursier/setup-action@v3
       with:
-        jvm: 17
-    - run: .github/scripts/gpg-setup.sh
-      env:
-        PGP_SECRET: ${{ secrets.PUBLISH_SECRET_KEY }}
+        fetch-depth: 0 # the version is computed from git tags
+    - uses: coursier/cache-action@v8
     - name: Release
-      run: sbtn ci-release
+      run: ./mill --no-daemon mill.javalib.SonatypeCentralPublishModule/
       env:
-        PGP_PASSPHRASE: ${{ secrets.PUBLISH_SECRET_KEY_PASSWORD }}
-        PGP_SECRET: ${{ secrets.PUBLISH_SECRET_KEY }}
-        SONATYPE_PASSWORD: ${{ secrets.PUBLISH_PASSWORD }}
-        SONATYPE_USERNAME: ${{ secrets.PUBLISH_USER }}
+        MILL_PGP_PASSPHRASE: ${{ secrets.PUBLISH_SECRET_KEY_PASSWORD }}
+        MILL_PGP_SECRET_BASE64: ${{ secrets.PUBLISH_SECRET_KEY }}
+        MILL_SONATYPE_PASSWORD: ${{ secrets.PUBLISH_PASSWORD }}
+        MILL_SONATYPE_USERNAME: ${{ secrets.PUBLISH_USER }}
