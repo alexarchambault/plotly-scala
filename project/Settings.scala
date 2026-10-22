@@ -98,6 +98,8 @@ object Settings {
       else Seq(compilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full))
     },
     scalacOptions ++= Seq("-deprecation", "-feature"),
+    // keep targeting Java 8, even when building with a more recent JDK
+    scalacOptions ++= Seq("-release", "8"),
     scalacOptions ++= {
       if (isAtLeastScala213.value) Seq("-Ymacro-annotations")
       else Nil

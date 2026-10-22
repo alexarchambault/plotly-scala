@@ -19,7 +19,7 @@ jobs:
     - uses: coursier/cache-action@v8
     - uses: coursier/setup-action@v3
       with:
-        jvm: 8
+        jvm: 17
     - run: |
         sbtn ++$SCALA_VERSION test
         sbtn ++$SCALA_VERSION mimaReportBinaryIssues
@@ -34,7 +34,7 @@ jobs:
     - uses: coursier/cache-action@v8
     - uses: coursier/setup-action@v3
       with:
-        jvm: 8
+        jvm: 17
     - run: .github/scripts/gpg-setup.sh
       env:
         PGP_SECRET: ${{ secrets.PUBLISH_SECRET_KEY }}
