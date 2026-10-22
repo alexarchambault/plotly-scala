@@ -15,7 +15,7 @@ jobs:
       matrix:
         SCALA_VERSION: ["2.12.21", "2.13.18"]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
     - uses: coursier/cache-action@v6
     - uses: coursier/setup-action@v1.3.5
       with:
@@ -30,7 +30,7 @@ jobs:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
     - uses: coursier/cache-action@v6
     - uses: coursier/setup-action@v1.3.5
       with:
