@@ -36,7 +36,8 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
   ): DecodeJson[W] =
     DecodeJson { c =>
       c.as[T]
-        .map(t => gen.from((t :: HNil).asInstanceOf[L]) // FIXME
+        .map(t =>
+          gen.from((t :: HNil).asInstanceOf[L]) // FIXME
         )
     }
 
@@ -74,7 +75,7 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
             s.split('+').foldLeft[DecodeResult[Set[F]]](DecodeResult.ok(Set.empty[F])) { case (acc, f) =>
               for {
                 acc0 <- acc
-                f0 <-
+                f0   <-
                   map
                     .get(f)
                     .fold[DecodeResult[F]](DecodeResult.fail(s"Unrecognized $type0: $f", c.history))(DecodeResult.ok)
@@ -204,7 +205,7 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
       def result = c.as(decode).map((_, if (c.succeeded) c.delete else ACursor.ok(cursor)))
 
       default match {
-        case None => result
+        case None    => result
         case Some(d) =>
           if (c.succeeded)
             result
@@ -223,9 +224,9 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
   implicit val decodeHoverInfo: DecodeJson[HoverInfo] =
     DecodeJson { c =>
       DecodeJson.of[String].apply(c).flatMap {
-        case "all"  => DecodeResult.ok(HoverInfo.All)
-        case "skip" => DecodeResult.ok(HoverInfo.Skip)
-        case "none" => DecodeResult.ok(HoverInfo.None)
+        case "all"       => DecodeResult.ok(HoverInfo.All)
+        case "skip"      => DecodeResult.ok(HoverInfo.Skip)
+        case "none"      => DecodeResult.ok(HoverInfo.None)
         case combination =>
           val results = combination.split('+').map {
             case "x"     => Right(HoverInfo.X)
@@ -282,7 +283,7 @@ object ArgonautCodecsInternals extends ArgonautCodecsExtra {
   implicit val decodeStringColor: DecodeJson[Color.StringColor] =
     DecodeJson {
       val underlying = DecodeJson.of[String]
-      val map = Color.StringColor.colors.toVector
+      val map        = Color.StringColor.colors.toVector
         .map(c => c -> Color.StringColor(c))
         .toMap
 

@@ -10,7 +10,7 @@ inThisBuild(
     organization := "org.plotly-scala",
     homepage     := Some(url("https://github.com/alexarchambault/plotly-scala")),
     licenses     := Seq("LGPL 3.0" -> url("http://opensource.org/licenses/LGPL-3.0")),
-    developers := List(
+    developers   := List(
       Developer(
         "alexarchambault",
         "Alexandre Archambault",
@@ -21,7 +21,7 @@ inThisBuild(
   )
 )
 
-val previousVersions = Set.empty[String]
+val previousVersions  = Set.empty[String]
 lazy val mimaSettings = Def.settings(
   mimaPreviousArtifacts := previousVersions.map(organization.value %% moduleName.value % _)
 )
@@ -66,7 +66,7 @@ lazy val render = crossProject(JVMPlatform, JSPlatform)
       val shadeUnder      = "plotly.internals.shaded"
       val shadeNamespaces = Seq("argonaut", "macrocompat", "shapeless")
       for (ns <- shadeNamespaces)
-        yield ShadingRule.moveUnder(ns, shadeUnder),
+        yield ShadingRule.moveUnder(ns, shadeUnder)
     },
     validNamespaces += "plotly",
     libraryDependencies ++= Seq(
