@@ -1,0 +1,391 @@
+//| mill-version: 1.3.1
+//| mill-jvm-version: 17
+//| # the shapeless-based codec derivations need a large stack when compiled
+//| mill-jvm-opts: ["-Xss8m"]
+//| mvnDeps:
+//| - com.github.lolgab::mill-mima_mill1:0.2.2
+package build
+
+import com.github.lolgab.mill.mima.*
+import mill.*
+import mill.api.BuildCtx
+import mill.javalib.{Assembly, AssemblyModule}
+import mill.javalib.publish.*
+import mill.scalajslib.*
+import mill.scalalib.*
+import mill.util.VcsVersion
+
+import java.nio.charset.StandardCharsets
+import java.util.zip.ZipFile
+
+import scala.jdk.CollectionConverters.*
+
+object Versions {
+  def scala212 = "2.12.21"
+  def scala213 = "2.13.18"
+  def scalaJs  = "1.22.0"
+  def plotlyJs = "1.54.1"
+}
+
+val scalaVersions = Seq(Versions.scala213, Versions.scala212)
+
+object Deps {
+  def almondScalaApi    = mvn"sh.almond::jupyter-api:0.14.5"
+  def argonautShapeless = mvn"com.github.alexarchambault::argonaut-shapeless_6.3::1.3.1"
+  def dataClass         = mvn"io.github.alexarchambault::data-class:0.2.11"
+  def jodaTime          = mvn"joda-time:joda-time:2.15.0"
+  def macroParadise     = mvn"org.scalamacros:::paradise:2.1.1"
+  def rhino             = mvn"org.mozilla:rhino:1.7.15.1"
+  def scalajsDom        = mvn"org.scala-js::scalajs-dom::2.8.1"
+  def scalatags         = mvn"com.lihaoyi::scalatags::0.13.1"
+  def scalaTest         = mvn"org.scalatest::scalatest:3.2.20"
+
+  def scalaReflect(sv: String) = mvn"org.scala-lang:scala-reflect:$sv"
+}
+
+object WebDeps {
+  def bootstrap = mvn"org.webjars.bower:bootstrap:3.4.1"
+  def jquery    = mvn"org.webjars.bower:jquery:3.7.1"
+  def plotlyJs  = mvn"org.webjars.bower:plotly.js:${Versions.plotlyJs}"
+  def prism     = mvn"org.webjars.bower:prism:1.16.0"
+}
+
+def vcsVersion = Task {
+  VcsVersion.vcsState().format(untaggedSuffix = "-SNAPSHOT")
+}
+
+def commitHash = Task.Input {
+  os.proc("git", "rev-parse", "HEAD").call(cwd = BuildCtx.workspaceRoot).out.trim()
+}
+
+trait ScalaSettings extends CrossScalaModule {
+  private def isScala212 = crossScalaVersion.startsWith("2.12.")
+  def scalacOptions      = super.scalacOptions() ++
+    Seq("-deprecation", "-feature") ++
+    // keep targeting Java 8, even when building with a more recent JDK
+    Seq("-release", "8") ++
+    (if (isScala212) Nil else Seq("-Ymacro-annotations"))
+  def scalacPluginMvnDeps = super.scalacPluginMvnDeps() ++
+    (if (isScala212) Seq(Deps.macroParadise) else Nil)
+}
+
+trait Published extends ScalaSettings, PublishModule {
+  def artifactName   = "plotly-" + super.artifactName()
+  def publishVersion = vcsVersion()
+  def pomSettings    = PomSettings(
+    description = artifactName(),
+    organization = "org.plotly-scala",
+    url = "https://github.com/alexarchambault/plotly-scala",
+    licenses = Seq(
+      License(
+        id = "LGPL-3.0",
+        name = "LGPL 3.0",
+        url = "http://opensource.org/licenses/LGPL-3.0",
+        distribution = "repo"
+      )
+    ),
+    versionControl = VersionControl.github("alexarchambault", "plotly-scala"),
+    developers = Seq(
+      Developer("alexarchambault", "Alexandre Archambault", "https://github.com/alexarchambault")
+    )
+  )
+}
+
+trait PublishedJvm extends Published, Mima {
+  def mimaPreviousVersions = Task(Seq.empty[String])
+  // unlike the default, doesn't fail when mimaPreviousVersions is empty
+  def mimaPreviousArtifacts = Task {
+    mimaPreviousVersions().map(v => mvn"${pomSettings().organization}:${artifactId()}:$v")
+  }
+}
+
+trait PublishedJs extends Published, ScalaJSModule {
+  def scalaJSVersion = Versions.scalaJs
+}
+
+// sbt-crossproject-like layout: foo/shared/src/main/scala, foo/jvm/src/main/scala, …
+trait Platform extends CrossSbtPlatformModule {
+  def sourcesRootFolders = Seq(os.sub / "shared", os.sub / platformCrossSuffix)
+}
+
+object core extends Module {
+  object jvm extends Cross[Jvm](scalaVersions)
+  trait Jvm  extends PublishedJvm, Platform {
+    def compileMvnDeps = Seq(Deps.dataClass)
+  }
+
+  object js extends Cross[Js](scalaVersions)
+  trait Js  extends PublishedJs, Platform {
+    def compileMvnDeps = Seq(Deps.dataClass)
+  }
+}
+
+object `joda-time` extends Cross[JodaTime](scalaVersions)
+trait JodaTime     extends PublishedJvm, CrossSbtModule {
+  def moduleDeps = Seq(core.jvm())
+  def mvnDeps    = Seq(Deps.jodaTime)
+}
+
+object render extends Module {
+  object jvm extends Cross[Jvm](scalaVersions)
+  trait Jvm  extends PublishedJvm, Platform {
+    def moduleDeps = Seq(core.jvm())
+    def mvnDeps    = Seq(
+      Deps.argonautShapeless,
+      // depending on that one so that it doesn't get shaded
+      Deps.scalaReflect(scalaVersion()),
+      WebDeps.plotlyJs
+    )
+
+    // argonaut-shapeless and its dependencies are shaded in the published JAR
+    private def shadedNamespaces                    = Seq("argonaut", "macrocompat", "shapeless")
+    private def isShaded(org: String, name: String) =
+      org == "com.github.alexarchambault" && name.startsWith("argonaut-shapeless_6.3")
+
+    def shadedJars = Task {
+      val shaded    = defaultResolver().classpath(Seq(Deps.argonautShapeless))
+      val nonShaded =
+        defaultResolver().classpath(mvnDeps().filterNot(d => isShaded(d.organization, d.name)))
+      val keep = nonShaded.map(_.path).toSet
+      shaded.filterNot(p => keep(p.path))
+    }
+
+    def jar = Task {
+      val dest  = Task.dest / "out.jar"
+      val rules = shadedNamespaces.map { ns =>
+        Assembly.Rule.Relocate(s"$ns.**", s"plotly.internals.shaded.$ns.@1")
+      }
+      Assembly.create(
+        destJar = dest,
+        inputPaths = localClasspath().map(_.path) ++ shadedJars().map(_.path),
+        manifest = manifest(),
+        assemblyRules = Assembly.defaultRules ++ rules,
+        shader = AssemblyModule.jarjarabramsWorker()
+      )
+      val zip     = new ZipFile(dest.toIO)
+      val invalid =
+        try
+          zip
+            .entries()
+            .asScala
+            .map(_.getName)
+            .toVector
+            .filter(p => !p.endsWith("/") && !p.startsWith("plotly/") && p != "META-INF/MANIFEST.MF")
+        finally zip.close()
+      if (invalid.nonEmpty)
+        Task.fail(s"Found ${invalid.length} unexpected entries in $dest:\n${invalid.take(20).mkString("\n")}")
+      PathRef(dest)
+    }
+
+    override def publishXmlDeps = Task.Anon {
+      super.publishXmlDeps().filterNot(d => isShaded(d.artifact.group, d.artifact.id))
+    }
+    override def publishMvnDeps: Task[
+      (
+          Map[coursier.core.Module, String],
+          coursier.core.DependencyManagement.Map
+      ) => Seq[Dependency]
+    ] = Task.Anon {
+      val f = super.publishMvnDeps()
+      (rootDepVersions: Map[coursier.core.Module, String], bomDepMgmt: coursier.core.DependencyManagement.Map) =>
+        f(rootDepVersions, bomDepMgmt).filterNot(d => isShaded(d.artifact.group, d.artifact.id))
+    }
+
+    def mimaBinaryIssueFilters = super.mimaBinaryIssueFilters() ++ Seq(
+      // users shouldn't ever reference those
+      ProblemFilter.exclude[Problem]("plotly.internals.shaded.*")
+    )
+
+    def propertiesResource = Task {
+      val props = Seq(
+        "plotly-js-version" -> Versions.plotlyJs,
+        "version"           -> publishVersion(),
+        "commit-hash"       -> commitHash()
+      )
+      for ((k, v) <- props)
+        assert(!v.contains("\n"), s"Invalid \\n character in property $k")
+      os.write(
+        Task.dest / "plotly/plotly-scala.properties",
+        props.map { case (k, v) => s"$k=$v" }.mkString("\n"),
+        createFolders = true
+      )
+      PathRef(Task.dest)
+    }
+    def resources = Task(super.resources() ++ Seq(propertiesResource()))
+
+    object test extends CrossSbtPlatformTests, TestModule.ScalaTest {
+      def mvnDeps = Seq(Deps.scalaTest)
+    }
+  }
+
+  object js extends Cross[Js](scalaVersions)
+  trait Js  extends PublishedJs, Platform {
+    def moduleDeps = Seq(core.js())
+    def mvnDeps    = Seq(Deps.argonautShapeless, Deps.scalajsDom)
+  }
+}
+
+object almond extends Cross[Almond](scalaVersions)
+trait Almond  extends PublishedJvm, CrossSbtModule {
+  def moduleDeps     = Seq(core.jvm(), render.jvm())
+  def compileMvnDeps = Seq(Deps.almondScalaApi)
+  // for com.github.jupyter:jvm-repr, a dependency of jupyter-api
+  def repositories = super.repositories() ++ Seq("https://jitpack.io")
+}
+
+object tests extends Cross[Tests](scalaVersions)
+trait Tests  extends ScalaSettings, CrossSbtModule {
+  def moduleDeps = Seq(core.jvm(), render.jvm())
+
+  object test extends CrossSbtTests, TestModule.ScalaTest {
+    def mvnDeps = Seq(Deps.scalaTest, Deps.rhino)
+    // the tests read the plotly-documentation submodule, relative to the workspace root
+    def testSandboxWorkingDir = false
+    def forkWorkingDir        = BuildCtx.workspaceRoot
+    def forkArgs              = Task {
+      // ensure the submodule is there before running the tests
+      fetchTestData()
+      super.forkArgs()
+    }
+  }
+}
+
+def fetchTestData = Task.Input {
+  val baseDir       = BuildCtx.workspaceRoot
+  val testsPostsDir = baseDir / "plotly-documentation" / "_posts"
+  if (!os.exists(testsPostsDir)) {
+    Task.log.info("Fetching submodule plotly-documentation (this may take some time)")
+    BuildCtx.withFilesystemCheckerDisabled {
+      os.proc("git", "submodule", "update", "--init", "--recursive", "--", "plotly-documentation")
+        .call(cwd = baseDir, stdout = os.Inherit)
+    }
+    Task.log.info("Successfully fetched submodule plotly-documentation")
+  }
+  ()
+}
+
+object demo extends ScalaJSModule, SbtModule {
+  def scalaVersion   = Versions.scala213
+  def scalaJSVersion = Versions.scalaJs
+  def scalacOptions  = Seq("-deprecation", "-feature", "-Ymacro-annotations")
+  def moduleDeps     = Seq(render.js(Versions.scala213))
+  def mvnDeps        = Seq(Deps.scalatags)
+
+  def demoSources = Task.Sources("src/main/scala/plotly/demo")
+
+  // Generates Properties.scala, and *Source.scala files containing the
+  // source code of the demos (between "demo source start" and "demo source end")
+  def generatedSources = Task {
+    val dest = Task.dest
+    os.write(
+      dest / "plotly/demo/Properties.scala",
+      s"""package plotly.demo
+         |
+         |object Properties {
+         |
+         |  val version = "${vcsVersion()}"
+         |  val commitHash = "${commitHash()}"
+         |
+         |}
+         |""".stripMargin,
+      createFolders = true
+    )
+
+    val tq = "\"\"\""
+    for {
+      root <- demoSources().map(_.path)
+      file <- os.walk(root)
+      if os.isFile(file) && file.ext == "scala"
+    } {
+      val demoLines = os.read
+        .lines(file)
+        .dropWhile(!_.contains("demo source start"))
+        .drop(1)
+        .takeWhile(!_.contains("demo source end"))
+        .map(l => l.replace(tq, tq + " + \"\\\"\\\"\\\"\" + " + tq))
+
+      if (demoLines.nonEmpty) {
+        val pkg  = (Seq("plotly", "demo") ++ (file / os.up).relativeTo(root).segments).mkString(".")
+        val name = file.baseName + "Source"
+        os.write(
+          dest / "plotly" / "demo" / (file / os.up).relativeTo(root) / s"$name.scala",
+          s"""package $pkg
+             |
+             |object $name {
+             |
+             |  val source = $tq${demoLines.mkString("\n")}$tq
+             |
+             |}
+             |""".stripMargin,
+          createFolders = true
+        )
+      }
+    }
+
+    super.generatedSources() ++ Seq(PathRef(dest))
+  }
+
+  def webJars = Task {
+    defaultResolver().classpath(
+      Seq(WebDeps.plotlyJs, WebDeps.jquery, WebDeps.bootstrap, WebDeps.prism).map(_.exclude("*" -> "*"))
+    )
+  }
+  // JS dependencies of the demo, concatenated in this order
+  def jsDependencies = Seq(
+    "plotly.min.js",
+    "jquery.min.js",
+    "bootstrap.min.js",
+    "prism.js",
+    "prism-clike.js",
+    "prism-java.js",
+    "prism-scala.js"
+  )
+  def jsDeps = Task {
+    val dest     = Task.dest / "plotly-demo-jsdeps.js"
+    val contents = jsDependencies.map { name =>
+      val matches = webJars().flatMap { jar =>
+        val zip = new ZipFile(jar.path.toIO)
+        try {
+          zip
+            .entries()
+            .asScala
+            .filter(e => !e.isDirectory && e.getName.endsWith("/" + name))
+            .map(e => new String(zip.getInputStream(e).readAllBytes(), StandardCharsets.UTF_8))
+            .toVector
+        } finally zip.close()
+      }
+      matches match {
+        case Seq(content) => content
+        case other        => Task.fail(s"Expected one $name file in web JARs, found ${other.length}")
+      }
+    }
+    os.write(dest, contents.map(_ + "\n").mkString)
+    PathRef(dest)
+  }
+
+  private def site(report: Task[mill.scalajslib.api.Report]) = Task.Anon {
+    val dest    = Task.dest
+    val linkDir = report().dest.path
+    for (f <- Seq("main.js", "main.js.map") if os.exists(linkDir / f))
+      os.copy(linkDir / f, dest / f)
+    os.copy(jsDeps().path, dest / "plotly-demo-jsdeps.js")
+    for {
+      res  <- resources().map(_.path) if os.exists(res)
+      file <- os.walk(res) if os.isFile(file)
+    } {
+      val content = os
+        .read(file)
+        // former sbt-specific paths
+        .replace("../plotly-demo-jsdeps.js", "plotly-demo-jsdeps.js")
+        .replace("../plotly-demo-fastopt.js", "main.js")
+      os.write(dest / file.relativeTo(res), content, createFolders = true)
+    }
+    PathRef(dest)
+  }
+
+  /** The demo page, built with the fast (non-optimized) Scala.js linker */
+  def fastSite = Task(site(fastLinkJS)())
+
+  /** The demo page, built with the full Scala.js optimizer */
+  def fullSite = Task(site(fullLinkJS)())
+}
