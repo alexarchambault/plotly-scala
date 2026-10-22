@@ -33,7 +33,6 @@ object Deps {
   def almondScalaApi    = mvn"sh.almond::jupyter-api:0.14.5"
   def argonautShapeless = mvn"com.github.alexarchambault::argonaut-shapeless_6.3::1.3.1"
   def dataClass         = mvn"io.github.alexarchambault::data-class:0.2.11"
-  def jodaTime          = mvn"joda-time:joda-time:2.15.0"
   def macroParadise     = mvn"org.scalamacros:::paradise:2.1.1"
   def rhino             = mvn"org.mozilla:rhino:1.9.1"
   def scalajsDom        = mvn"org.scala-js::scalajs-dom::2.8.1"
@@ -125,12 +124,6 @@ object core extends Module {
   trait Js  extends PublishedJs, Platform {
     def compileMvnDeps = Seq(Deps.dataClass)
   }
-}
-
-object `joda-time` extends Cross[JodaTime](scalaVersions)
-trait JodaTime     extends PublishedJvm, CrossSbtModule {
-  def moduleDeps = Seq(core.jvm())
-  def mvnDeps    = Seq(Deps.jodaTime)
 }
 
 object render extends Module {
