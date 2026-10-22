@@ -394,4 +394,13 @@ object demo extends ScalaJSModule, SbtModule {
 
   /** The demo page, built with the full Scala.js optimizer */
   def fullSite = Task(site(fullLinkJS)())
+
+  /** Copies the full demo site to dir (relative to the workspace root), for publishing to GitHub pages */
+  def makeGhPages(@mainargs.arg(positional = true) dir: String = "gh-pages") = Task.Command {
+    val dest = os.Path(dir, BuildCtx.workspaceRoot)
+    if (os.exists(dest))
+      Task.fail(s"Error: $dest already exists.")
+    os.copy(fullSite().path, dest, createFolders = true)
+    Task.log.info(s"Wrote demo site to $dest")
+  }
 }
