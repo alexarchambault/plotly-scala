@@ -240,7 +240,7 @@ class DocumentationTests extends AnyFlatSpec with Matchers {
 
   import DocumentationTests._
 
-  val dir = new File("plotly-documentation/_posts/plotly_js")
+  val dir         = new File("plotly-documentation/_posts/plotly_js")
   val subDirNames = Seq(
     "basic/line_and_scatter",
     "basic/line-plots",
@@ -287,7 +287,7 @@ class DocumentationTests extends AnyFlatSpec with Matchers {
   } {
     s"$subDir" should s"$post" in {
       val rawContent = new String(Files.readAllBytes(post.toPath), "UTF-8")
-      val content = stripFrontMatter(rawContent)
+      val content    = stripFrontMatter(rawContent)
         .replace("<br>", "\\n")
         .replace("</br>", "\\n")
         .replace("(...size)", "(size[0])") // rhino doesn't seem to support the spead (...) operator

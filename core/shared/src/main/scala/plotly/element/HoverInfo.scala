@@ -6,9 +6,9 @@ sealed abstract class HoverInfo extends Product with Serializable {
 
 object HoverInfo {
 
-  def all: HoverInfo  = All
-  def none: HoverInfo = None
-  def skip: HoverInfo = Skip
+  def all: HoverInfo                       = All
+  def none: HoverInfo                      = None
+  def skip: HoverInfo                      = Skip
   def apply(elements: Element*): HoverInfo =
     Combination(elements)
 
