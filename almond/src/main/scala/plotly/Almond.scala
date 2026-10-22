@@ -300,7 +300,7 @@ object Almond {
           .withEditable(Option(editable).map[Boolean](identity))
           .withResponsive(Option(responsive).map[Boolean](identity))
           .withShowEditInChartStudio(Option(showEditInChartStudio).map[Boolean](identity))
-          .withPlotlyServerURL(plotlyServerURL),
+          .withPlotlyServerURL(Option(plotlyServerURL)),
         div
       )
 
