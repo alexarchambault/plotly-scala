@@ -14,7 +14,7 @@ It can be used from [almond](https://github.com/jupyter-scala/jupyter-scala/tree
 
 It runs demos of the plotly.js documentation during its tests, to ensure that it is fine with all their features. That allows it to reliably cover a wide range of the plotly.js features - namely, all the examples of the supported sections of the plotly.js documentation are guaranteed to be fine.
 
-It is published for both scala 2.12 and 2.13.
+It is published for both scala 2.12 and 2.13. On the JVM, it requires Java 11 or later.
 
 ## Table of content
 
@@ -113,7 +113,7 @@ Most high-level Javascript libraries for plotting have well designed APIs, enfor
 
 ## Internals
 
-*plotly-scala* consists in a bunch of definitions, mostly case classes and sealed class hierarchies, closely following the API of plotly.js. It also contains JSON codecs for those, allowing to convert them to JSON that can be passed straightaway to plotly.js.
+*plotly-scala* consists in a bunch of definitions, mostly case classes and sealed class hierarchies, closely following the API of plotly.js. It also contains JSON codecs for those, based on [jsoniter-scala](https://github.com/plokhotnyuk/jsoniter-scala), allowing to convert them to JSON that can be passed straightaway to plotly.js.
 
 Having the ability to convert these classes to JSON, the codecs can also go the other way around: from plotly.js-compatible JSON to plotly-scala Scala classes. This way of going is used by the tests of plotly-scala, to ensure that the examples of the plotly.js documentation, illustrating a wide range of the features of plotly.js, can be represented via the classes of plotly-scala. Namely, the Javascript examples of the documentation of plotly.js are run inside a [Rhino](https://developer.mozilla.org/en-US/docs/Mozilla/Projects/Rhino) VM, with mocks of the plotly API. These mocks allow to keep the Javascript objects passed to the plotly.js API, and convert them to JSON. These JSON objects are then validated against the codecs of plotly-scala, to ensure that all their fields can be decoded by them. If these are fine, this gives a proof that all the features of the examples have a counterpart in plotly-scala.
 

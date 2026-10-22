@@ -4,100 +4,31 @@ package doc
 import java.io.File
 import java.nio.file.Files
 
-import argonaut.ArgonautShapeless._
-import argonaut.{DecodeJson, DecodeResult, Json, Parse}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import plotly.element._
-import shapeless.Witness
 
 object SchemaTests {
 
-  sealed abstract class Attribute extends Product with Serializable
-
-  object Attribute {
-    case class ConstantString(value: String) extends Attribute
-
-    case class Flag(
-        valType: Witness.`"flaglist"`.T,
-        flags: List[String],
-        description: String,
-        role: String
-    ) extends Attribute
-
-    case class Enumerated(
-        valType: Witness.`"enumerated"`.T,
-        description: String,
-        role: String,
-        values: List[String]
-    ) extends Attribute
-
-    case class Other(json: Json) extends Attribute
-
-    implicit val decode: DecodeJson[Attribute] =
-      DecodeJson { c =>
-        val constantString = c.as[String].map[Attribute](ConstantString(_))
-        def flag           = c.as[Flag].map[Attribute](x => x)
-        def enumerated     = c.as[Enumerated].map[Attribute](x => x)
-        def other          = DecodeResult.ok[Attribute](Other(c.focus))
-
-        constantString.toOption
-          .map(DecodeResult.ok)
-          .orElse(flag.toOption.map(DecodeResult.ok))
-          .orElse(enumerated.toOption.map(DecodeResult.ok))
-          .getOrElse(other)
-      }
-  }
-
-  case class Trace(
-      description: Option[String],
-      attributes: Map[String, Attribute]
-  ) {
-    def flagAttribute(name: String): Attribute.Flag =
-      attributes.get(name) match {
-        case None =>
-          throw new NoSuchElementException(s"attribute $name")
-        case Some(f: Attribute.Flag) =>
-          f
-        case Some(nonFlag) =>
-          throw new Exception(s"Attribute $name not a flag ($nonFlag)")
-      }
-
-    def enumeratedAttribute(name: String): Attribute.Enumerated =
-      attributes.get(name) match {
-        case None =>
-          throw new NoSuchElementException(s"attribute $name")
-        case Some(f: Attribute.Enumerated) =>
-          f
-        case Some(nonFlag) =>
-          throw new Exception(s"Attribute $name not a flag ($nonFlag)")
-      }
-  }
-
-  case class Schema(
-      traces: Map[String, Trace]
-  )
-
   val schemaFile = new File("plotly-documentation/_data/plotschema.json")
 
-  lazy val schema: Schema = {
+  lazy val schema: ujson.Value =
+    ujson.read(Files.readAllBytes(schemaFile.toPath))
 
-    val schemaContent = new String(Files.readAllBytes(schemaFile.toPath), "UTF-8")
-
-    val schemaJson = Parse.parse(schemaContent) match {
-      case Left(error) =>
-        throw new Exception(s"Cannot parse schema: $error")
-      case Right(json) => json
-    }
-
-    schemaJson.as[Schema].toEither match {
-      case Left(error) =>
-        println(schemaJson.obj.map(_.fields).getOrElse(Nil).mkString("\n"))
-        throw new Exception(s"Cannot decode schema: $error")
-      case Right(schema) =>
-        schema
-    }
+  private def attribute(trace: String, name: String, valType: String): ujson.Value = {
+    val attr = schema("traces")(trace)("attributes").obj
+      .getOrElse(name, throw new NoSuchElementException(s"attribute $name"))
+    val attrValType = attr.objOpt.flatMap(_.get("valType")).flatMap(_.strOpt)
+    if (!attrValType.contains(valType))
+      throw new Exception(s"Attribute $name not a $valType ($attr)")
+    attr
   }
+
+  def flagAttributeFlags(trace: String, name: String): Seq[String] =
+    attribute(trace, name, "flaglist")("flags").arr.map(_.str).toSeq
+
+  def enumeratedAttributeValues(trace: String, name: String): Seq[String] =
+    attribute(trace, name, "enumerated")("values").arr.map(_.str).toSeq
 
 }
 
@@ -112,10 +43,8 @@ class SchemaTests extends AnyFlatSpec with Matchers {
   }
 
   "Scatter mode flags" should "be exhaustive" in {
-    val fromSchema = SchemaTests.schema
-      .traces("scatter")
-      .flagAttribute("mode")
-      .flags
+    val fromSchema = SchemaTests
+      .flagAttributeFlags("scatter", "mode")
       .toSet
 
     val fromLib = ScatterMode.flags
@@ -126,10 +55,8 @@ class SchemaTests extends AnyFlatSpec with Matchers {
   }
 
   "Text position" should "be exhausitve" in {
-    val fromSchema = SchemaTests.schema
-      .traces("scatter")
-      .enumeratedAttribute("textposition")
-      .values
+    val fromSchema = SchemaTests
+      .enumeratedAttributeValues("scatter", "textposition")
       .toSet
 
     val fromLib = Enumerate[TextPosition]

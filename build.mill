@@ -1,6 +1,6 @@
 //| mill-version: 1.3.1
 //| mill-jvm-version: 17
-//| # the shapeless-based codec derivations need a large stack when compiled
+//| # the jsoniter-scala codec derivations need a large stack when compiled
 //| mill-jvm-opts: ["-Xss8m"]
 //| mvnDeps:
 //| - com.github.lolgab::mill-mima_mill1:0.2.2
@@ -9,7 +9,6 @@ package build
 import com.github.lolgab.mill.mima.*
 import mill.*
 import mill.api.BuildCtx
-import mill.javalib.{Assembly, AssemblyModule}
 import mill.javalib.publish.*
 import mill.scalajslib.*
 import mill.scalalib.*
@@ -23,21 +22,24 @@ import scala.jdk.CollectionConverters.*
 object Versions {
   def scala212 = "2.12.21"
   def scala213 = "2.13.18"
-  def scalaJs  = "1.22.0"
-  def plotlyJs = "1.54.1"
+  def scalaJs       = "1.22.0"
+  def plotlyJs      = "1.54.1"
+  def jsoniterScala = "2.41.2"
 }
 
 val scalaVersions = Seq(Versions.scala213, Versions.scala212)
 
 object Deps {
-  def almondScalaApi    = mvn"sh.almond::jupyter-api:0.14.5"
-  def argonautShapeless = mvn"com.github.alexarchambault::argonaut-shapeless_6.3::1.3.1"
-  def dataClass         = mvn"io.github.alexarchambault::data-class:0.2.11"
-  def macroParadise     = mvn"org.scalamacros:::paradise:2.1.1"
-  def rhino             = mvn"org.mozilla:rhino:1.9.1"
-  def scalajsDom        = mvn"org.scala-js::scalajs-dom::2.8.1"
-  def scalatags         = mvn"com.lihaoyi::scalatags::0.13.1"
-  def scalaTest         = mvn"org.scalatest::scalatest:3.2.20"
+  def almondScalaApi = mvn"sh.almond::jupyter-api:0.14.5"
+  def dataClass      = mvn"io.github.alexarchambault::data-class:0.2.11"
+  def jsoniterCore   = mvn"com.github.plokhotnyuk.jsoniter-scala::jsoniter-scala-core::${Versions.jsoniterScala}"
+  def jsoniterMacros = mvn"com.github.plokhotnyuk.jsoniter-scala::jsoniter-scala-macros::${Versions.jsoniterScala}"
+  def macroParadise  = mvn"org.scalamacros:::paradise:2.1.1"
+  def rhino          = mvn"org.mozilla:rhino:1.9.1"
+  def scalajsDom     = mvn"org.scala-js::scalajs-dom::2.8.1"
+  def scalatags      = mvn"com.lihaoyi::scalatags::0.13.1"
+  def scalaTest      = mvn"org.scalatest::scalatest:3.2.20"
+  def ujson          = mvn"com.lihaoyi::ujson:4.4.3"
 
   def scalaReflect(sv: String) = mvn"org.scala-lang:scala-reflect:$sv"
 }
@@ -68,8 +70,8 @@ trait ScalaSettings extends CrossScalaModule {
   private def isScala212 = crossScalaVersion.startsWith("2.12.")
   def scalacOptions      = super.scalacOptions() ++
     Seq("-deprecation", "-feature") ++
-    // keep targeting Java 8, even when building with a more recent JDK
-    Seq("-release", "8") ++
+    // keep targeting Java 11, even when building with a more recent JDK
+    Seq("-release", "11") ++
     (if (isScala212) Nil else Seq("-Ymacro-annotations"))
   def scalacPluginMvnDeps = super.scalacPluginMvnDeps() ++
     (if (isScala212) Seq(Deps.macroParadise) else Nil)
@@ -117,84 +119,22 @@ trait Platform extends CrossSbtPlatformModule {
 object core extends Module {
   object jvm extends Cross[Jvm](scalaVersions)
   trait Jvm  extends PublishedJvm, Platform {
-    def compileMvnDeps = Seq(Deps.dataClass)
+    // scala-reflect is needed to compile the Enumerate macro
+    def compileMvnDeps = Seq(Deps.dataClass, Deps.scalaReflect(scalaVersion()))
   }
 
   object js extends Cross[Js](scalaVersions)
   trait Js  extends PublishedJs, Platform {
-    def compileMvnDeps = Seq(Deps.dataClass)
+    def compileMvnDeps = Seq(Deps.dataClass, Deps.scalaReflect(scalaVersion()))
   }
 }
 
 object render extends Module {
   object jvm extends Cross[Jvm](scalaVersions)
   trait Jvm  extends PublishedJvm, Platform {
-    def moduleDeps = Seq(core.jvm())
-    def mvnDeps    = Seq(
-      Deps.argonautShapeless,
-      // depending on that one so that it doesn't get shaded
-      Deps.scalaReflect(scalaVersion()),
-      WebDeps.plotlyJs
-    )
-
-    // argonaut-shapeless and its dependencies are shaded in the published JAR
-    private def shadedNamespaces                    = Seq("argonaut", "macrocompat", "shapeless")
-    private def isShaded(org: String, name: String) =
-      org == "com.github.alexarchambault" && name.startsWith("argonaut-shapeless_6.3")
-
-    def shadedJars = Task {
-      val shaded    = defaultResolver().classpath(Seq(Deps.argonautShapeless))
-      val nonShaded =
-        defaultResolver().classpath(mvnDeps().filterNot(d => isShaded(d.organization, d.name)))
-      val keep = nonShaded.map(_.path).toSet
-      shaded.filterNot(p => keep(p.path))
-    }
-
-    def jar = Task {
-      val dest  = Task.dest / "out.jar"
-      val rules = shadedNamespaces.map { ns =>
-        Assembly.Rule.Relocate(s"$ns.**", s"plotly.internals.shaded.$ns.@1")
-      }
-      Assembly.create(
-        destJar = dest,
-        inputPaths = localClasspath().map(_.path) ++ shadedJars().map(_.path),
-        manifest = manifest(),
-        assemblyRules = Assembly.defaultRules ++ rules,
-        shader = AssemblyModule.jarjarabramsWorker()
-      )
-      val zip     = new ZipFile(dest.toIO)
-      val invalid =
-        try
-          zip
-            .entries()
-            .asScala
-            .map(_.getName)
-            .toVector
-            .filter(p => !p.endsWith("/") && !p.startsWith("plotly/") && p != "META-INF/MANIFEST.MF")
-        finally zip.close()
-      if (invalid.nonEmpty)
-        Task.fail(s"Found ${invalid.length} unexpected entries in $dest:\n${invalid.take(20).mkString("\n")}")
-      PathRef(dest)
-    }
-
-    override def publishXmlDeps = Task.Anon {
-      super.publishXmlDeps().filterNot(d => isShaded(d.artifact.group, d.artifact.id))
-    }
-    override def publishMvnDeps: Task[
-      (
-          Map[coursier.core.Module, String],
-          coursier.core.DependencyManagement.Map
-      ) => Seq[Dependency]
-    ] = Task.Anon {
-      val f = super.publishMvnDeps()
-      (rootDepVersions: Map[coursier.core.Module, String], bomDepMgmt: coursier.core.DependencyManagement.Map) =>
-        f(rootDepVersions, bomDepMgmt).filterNot(d => isShaded(d.artifact.group, d.artifact.id))
-    }
-
-    def mimaBinaryIssueFilters = super.mimaBinaryIssueFilters() ++ Seq(
-      // users shouldn't ever reference those
-      ProblemFilter.exclude[Problem]("plotly.internals.shaded.*")
-    )
+    def moduleDeps     = Seq(core.jvm())
+    def mvnDeps        = Seq(Deps.jsoniterCore, WebDeps.plotlyJs)
+    def compileMvnDeps = Seq(Deps.jsoniterMacros)
 
     def propertiesResource = Task {
       val props = Seq(
@@ -220,8 +160,9 @@ object render extends Module {
 
   object js extends Cross[Js](scalaVersions)
   trait Js  extends PublishedJs, Platform {
-    def moduleDeps = Seq(core.js())
-    def mvnDeps    = Seq(Deps.argonautShapeless, Deps.scalajsDom)
+    def moduleDeps     = Seq(core.js())
+    def mvnDeps        = Seq(Deps.jsoniterCore, Deps.scalajsDom)
+    def compileMvnDeps = Seq(Deps.jsoniterMacros)
   }
 }
 
@@ -238,7 +179,7 @@ trait Tests  extends ScalaSettings, CrossSbtModule {
   def moduleDeps = Seq(core.jvm(), render.jvm())
 
   object test extends CrossSbtTests, TestModule.ScalaTest {
-    def mvnDeps = Seq(Deps.scalaTest, Deps.rhino)
+    def mvnDeps = Seq(Deps.scalaTest, Deps.rhino, Deps.ujson)
     // the tests read the plotly-documentation submodule, relative to the workspace root
     def testSandboxWorkingDir = false
     def forkWorkingDir        = BuildCtx.workspaceRoot

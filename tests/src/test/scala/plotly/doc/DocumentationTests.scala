@@ -4,8 +4,7 @@ package doc
 import java.io.{ByteArrayOutputStream, File, InputStream}
 import java.lang.{Double => JDouble}
 import java.nio.file.Files
-import argonaut.Argonaut._
-import argonaut.{Json, Parse}
+import com.github.plokhotnyuk.jsoniter_scala.core.readFromString
 import plotly.layout.Layout
 import org.mozilla.javascript._
 import org.scalatest.flatspec.AnyFlatSpec
@@ -14,6 +13,7 @@ import plotly.element.HoverInfo
 import plotly.element.HoverInfo.{X, Y, Z}
 import plotly.element.ColorModel._
 
+import scala.util.Try
 import scala.util.matching.Regex
 
 object DocumentationTests {
@@ -50,18 +50,12 @@ object DocumentationTests {
 
   def resourceTrace(res: String): Trace = {
     val dataStr = load(res)
-    val result  = dataStr.decodeEither[Trace]
-    result.getOrElse {
-      throw new Exception(s"$res: $result")
-    }
+    Try(readFromString[Trace](dataStr)).fold(err => throw new Exception(res, err), identity)
   }
 
   def resourceLayout(res: String): Layout = {
     val dataStr = load(res)
-    val result  = dataStr.decodeEither[Layout]
-    result.getOrElse {
-      throw new Exception(s"$res: $result")
-    }
+    Try(readFromString[Layout](dataStr)).fold(err => throw new Exception(res, err), identity)
   }
 
   private class Plotly extends plotly.doc.Plotly {
@@ -88,27 +82,23 @@ object DocumentationTests {
     def plot(div: String, data: Object): Unit =
       newPlot(div, data)
 
-    def result(cx: Context, scope: ScriptableObject): (Seq[Json], Option[Json]) = {
+    def result(cx: Context, scope: ScriptableObject): (Seq[ujson.Value], Option[ujson.Value]) = {
       def stringify(obj: Object) =
         NativeJSON.stringify(cx, scope, obj, null, null).toString
 
-      def jsonRepr(obj: Object): Json = {
+      def jsonRepr(obj: Object): ujson.Value = {
         val jsonStr = stringify(obj)
-        Parse
-          .parse(jsonStr)
-          .left
-          .map { err =>
-            throw new Exception(s"Cannot parse JSON: $err\n$jsonStr")
-          }
-          .merge
+        Try(ujson.read(jsonStr)).toEither.left.map { err =>
+          throw new Exception(s"Cannot parse JSON: $err\n$jsonStr", err)
+        }.merge
       }
 
       val data = dataOpt.map(jsonRepr) match {
         case None =>
           throw new NoSuchElementException("data not set")
         case Some(json) =>
-          json.array.getOrElse {
-            throw new Exception(s"data is not a JSON array\n${json.spaces2}")
+          json.arrOpt.map(_.toVector).getOrElse {
+            throw new Exception(s"data is not a JSON array\n${json.render(indent = 2)}")
           }
       }
 
@@ -185,15 +175,15 @@ object DocumentationTests {
         Context.exit()
       }
 
-    val decodeData0 = rawDataElems.map(json => json -> json.as[Trace].toEither)
+    val decodeData0 = rawDataElems.map(json => json -> Try(readFromString[Trace](json.render())).toEither)
 
-    val dataErrors = decodeData0.collect { case (json, Left((err, h))) =>
-      (json, err, h)
+    val dataErrors = decodeData0.collect { case (json, Left(err)) =>
+      (json, err)
     }
 
     if (dataErrors.nonEmpty) {
-      for ((json, err, h) <- dataErrors)
-        Console.err.println(s"Decoding data: $err ($h)\n${json.spaces2}\n")
+      for ((json, err) <- dataErrors)
+        Console.err.println(s"Decoding data: ${err.getMessage}\n${json.render(indent = 2)}\n")
 
       throw new Exception("Error decoding data (see above messages)")
     }
@@ -202,11 +192,11 @@ object DocumentationTests {
       data
     }
 
-    val decodeLayoutOpt = rawLayoutOpt.map(json => json -> json.as[Layout].toEither)
+    val decodeLayoutOpt = rawLayoutOpt.map(json => json -> Try(readFromString[Layout](json.render())).toEither)
 
     val layoutOpt = decodeLayoutOpt.map {
-      case (json, Left((err, h))) =>
-        Console.err.println(s"Decoding layout: $err ($h)\n${json.spaces2}\n")
+      case (json, Left(err)) =>
+        Console.err.println(s"Decoding layout: ${err.getMessage}\n${json.render(indent = 2)}\n")
         throw new Exception("Error decoding layout (see above messages)")
 
       case (_, Right(layout)) => layout
