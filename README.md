@@ -2,10 +2,9 @@
 
 Scala bindings for [plotly.js](https://plot.ly/javascript/)
 
-[![Build Status](https://travis-ci.org/alexarchambault/plotly-scala.svg?branch=master)](https://travis-ci.org/alexarchambault/plotly-scala)
-[![Join the chat at https://gitter.im/alexarchambault/plotly-scala](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/alexarchambault/plotly-scala?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Maven Central](https://img.shields.io/maven-central/v/org.plotly-scala/plotly-render_2.13.svg)](https://maven-badges.herokuapp.com/maven-central/org.plotly-scala/plotly-render_2.13)
-[![ScalaDoc](http://javadoc-badge.appspot.com/org.plotly-scala/plotly-render_2.13.svg?label=scaladoc)](http://javadoc-badge.appspot.com/org.plotly-scala/plotly-render_2.13)
+[![Build Status](https://github.com/alexarchambault/plotly-scala/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/alexarchambault/plotly-scala/actions/workflows/ci.yml?query=branch%3Amain)
+[![Maven Central](https://img.shields.io/maven-central/v/org.plotly-scala/plotly-render_2.13.svg)](https://central.sonatype.com/artifact/org.plotly-scala/plotly-render_2.13)
+[![Scaladoc](https://javadoc.io/badge2/org.plotly-scala/plotly-render_2.13/scaladoc.svg)](https://javadoc.io/doc/org.plotly-scala/plotly-render_2.13)
 
 [Demo](https://alexarchambault.github.io/plotly-scala/)
 
