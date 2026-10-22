@@ -16,8 +16,10 @@ jobs:
         SCALA_VERSION: ["2.12.21", "2.13.18"]
     steps:
     - uses: actions/checkout@v7
+      with:
+        fetch-depth: 2 # selective execution on PRs needs the base commit
     - uses: coursier/cache-action@v8
-    - run: ./mill --no-daemon "__[$SCALA_VERSION].compile" + "__[$SCALA_VERSION].test" + "__[$SCALA_VERSION].mimaReportBinaryIssues"
+    - run: scripts/ci-mill.sh "__[$SCALA_VERSION].{compile,test,mimaReportBinaryIssues}"
       env:
         SCALA_VERSION: ${{ matrix.SCALA_VERSION }}
 
@@ -25,8 +27,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v7
+      with:
+        fetch-depth: 2 # selective execution on PRs needs the base commit
     - uses: coursier/cache-action@v8
-    - run: ./mill --no-daemon demo.fullSite
+    - run: scripts/ci-mill.sh demo.fullSite
 
   publish:
     if: github.event_name == 'push'
