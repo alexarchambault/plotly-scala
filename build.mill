@@ -35,7 +35,7 @@ object Deps {
   def dataClass         = mvn"io.github.alexarchambault::data-class:0.2.11"
   def jodaTime          = mvn"joda-time:joda-time:2.15.0"
   def macroParadise     = mvn"org.scalamacros:::paradise:2.1.1"
-  def rhino             = mvn"org.mozilla:rhino:1.7.15.1"
+  def rhino             = mvn"org.mozilla:rhino:1.9.1"
   def scalajsDom        = mvn"org.scala-js::scalajs-dom::2.8.1"
   def scalatags         = mvn"com.lihaoyi::scalatags::0.13.1"
   def scalaTest         = mvn"org.scalatest::scalatest:3.2.20"
