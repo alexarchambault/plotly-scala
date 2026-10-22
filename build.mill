@@ -50,11 +50,18 @@ object WebDeps {
   def prism     = mvn"org.webjars.bower:prism:1.16.0"
 }
 
-def vcsVersion = Task {
+// vcsVersion and commitHash change with every commit. They're left out of selective
+// execution (selectiveInputs = Nil), so that PRs on CI don't re-run everything depending on them.
+
+def vcsVersion = Task(selectiveInputs = Nil) {
   VcsVersion.vcsState().format(untaggedSuffix = "-SNAPSHOT")
 }
 
-def commitHash = Task.Input {
+def commitHash = Task(selectiveInputs = Nil) {
+  gitHead()
+}
+
+def gitHead = Task.Input {
   os.proc("git", "rev-parse", "HEAD").call(cwd = BuildCtx.workspaceRoot).out.trim()
 }
 
@@ -242,12 +249,20 @@ trait Tests  extends ScalaSettings, CrossSbtModule {
     // the tests read the plotly-documentation submodule, relative to the workspace root
     def testSandboxWorkingDir = false
     def forkWorkingDir        = BuildCtx.workspaceRoot
-    def forkArgs              = Task {
+    // selective execution only looks at the submodule commit, so that selective.prepare
+    // doesn't fetch the submodule
+    def forkArgs = Task(selectiveInputs = Seq(testDataCommit, super.forkArgs)) {
       // ensure the submodule is there before running the tests
       fetchTestData()
       super.forkArgs()
     }
   }
+}
+
+// Submodule commit recorded in the git index, so that selective execution
+// re-runs the tests when it changes
+def testDataCommit = Task.Input {
+  os.proc("git", "rev-parse", ":plotly-documentation").call(cwd = BuildCtx.workspaceRoot).out.trim()
 }
 
 def fetchTestData = Task.Input {
