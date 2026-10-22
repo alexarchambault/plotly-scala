@@ -34,11 +34,11 @@
 
 set -o pipefail
 
-declare -r sbt_release_version="1.4.0"
-declare -r sbt_unreleased_version="1.4.0"
+declare -r sbt_release_version="1.13.0"
+declare -r sbt_unreleased_version="1.13.0"
 
-declare -r latest_213="2.13.3"
-declare -r latest_212="2.12.12"
+declare -r latest_213="2.13.18"
+declare -r latest_212="2.12.21"
 declare -r latest_211="2.11.12"
 declare -r latest_210="2.10.7"
 declare -r latest_29="2.9.3"
@@ -48,14 +48,11 @@ declare -r buildProps="project/build.properties"
 
 declare -r sbt_launch_ivy_release_repo="https://repo.typesafe.com/typesafe/ivy-releases"
 declare -r sbt_launch_ivy_snapshot_repo="https://repo.scala-sbt.org/scalasbt/ivy-snapshots"
-declare -r sbt_launch_mvn_release_repo="https://repo.scala-sbt.org/scalasbt/maven-releases"
+declare -r sbt_launch_mvn_release_repo="https://repo1.maven.org/maven2"
 declare -r sbt_launch_mvn_snapshot_repo="https://repo.scala-sbt.org/scalasbt/maven-snapshots"
 
 declare -r default_jvm_opts_common="-Xms512m -Xss2m -XX:MaxInlineLevel=18"
 declare -r noshare_opts="-Dsbt.global.base=project/.sbtboot -Dsbt.boot.directory=project/.boot -Dsbt.ivy.home=project/.ivy -Dsbt.coursier.home=project/.coursier"
-
-declare -r default_coursier_launcher_version="1.2.22"
-declare coursier_launcher_version="default"
 
 declare sbt_jar sbt_dir sbt_create sbt_version sbt_script sbt_new
 declare sbt_explicit_version
@@ -174,18 +171,6 @@ make_url() {
   esac
 }
 
-make_coursier_url () {
-  local version="$1"
-
-  echo "https://github.com/coursier/sbt-launcher/releases/download/v$version/csbt"
-}
-
-enable_coursier () {
-  if [[ -z "$coursier_launcher_version" ]]; then
-    coursier_launcher_version="$default_coursier_launcher_version"
-  fi
-}
-
 addJava()      {
   vlog "[addJava] arg = '$1'"
   java_args+=("$1")
@@ -231,7 +216,8 @@ getJavaVersion() {
   # but on 9 and 10 it's 9.x.y and 10.x.y.
   if [[ "$str" =~ ^1\.([0-9]+)(\..*)?$ ]]; then
     echo "${BASH_REMATCH[1]}"
-  elif [[ "$str" =~ ^([0-9]+)(\..*)?$ ]]; then
+  # Fixes https://github.com/dwijnand/sbt-extras/issues/326
+  elif [[ "$str" =~ ^([0-9]+)(\..*)?(-ea)?$ ]]; then
     echo "${BASH_REMATCH[1]}"
   elif [[ -n "$str" ]]; then
     echoerr "Can't parse java version from: $str"
@@ -262,11 +248,20 @@ java_version() {
   echo "$version"
 }
 
+is_apple_silicon() { [[ "$(uname -s)" == "Darwin" && "$(uname -m)" == "arm64" ]]; }
+
 # MaxPermSize critical on pre-8 JVMs but incurs noisy warning on 8+
 default_jvm_opts() {
   local -r v="$(java_version)"
-  if [[ $v -ge 10 ]]; then
-    echo "$default_jvm_opts_common -XX:+UnlockExperimentalVMOptions -XX:+UseJVMCICompiler"
+  if [[ $v -ge 17 ]]; then
+    echo "$default_jvm_opts_common"
+  elif [[ $v -ge 10 ]]; then
+    if is_apple_silicon; then
+      # As of Dec 2020, JVM for Apple Silicon (M1) doesn't support JVMCI
+      echo "$default_jvm_opts_common"
+    else
+      echo "$default_jvm_opts_common -XX:+UnlockExperimentalVMOptions -XX:+UseJVMCICompiler"
+    fi
   elif [[ $v -ge 8 ]]; then
     echo "$default_jvm_opts_common"
   else
@@ -311,11 +306,6 @@ jar_file() {
 download_url() {
   local url="$1"
   local jar="$2"
-  local message="$3"
-
-  echoerr "$message"
-  echoerr "  From  $url"
-  echoerr "    To  $jar"
 
   mkdir -p "${jar%/*}" && {
     if command -v curl >/dev/null 2>&1; then
@@ -327,47 +317,29 @@ download_url() {
 }
 
 acquire_sbt_jar() {
-
-  # if none of the options touched coursier_launcher_version, use the coursier
-  # launcher with sbt >= 0.13.8
-  if [[ "$coursier_launcher_version" = "default" ]]; then
-    case "$sbt_version" in
-        0.13.[89] | 0.13.1[0-9] | 1.* ) coursier_launcher_version="$default_coursier_launcher_version" ;;
-        * ) coursier_launcher_version="" ;;
-    esac
-  fi
-
   {
-    if [[ -z "$coursier_launcher_version" ]]; then
-      sbt_jar="$(jar_file "$sbt_version")"
-    else
-      sbt_jar="$(jar_file "coursier_$coursier_launcher_version")"
-    fi
-
+    sbt_jar="$(jar_file "$sbt_version")"
     [[ -r "$sbt_jar" ]]
   } || {
     sbt_jar="$HOME/.ivy2/local/org.scala-sbt/sbt-launch/$sbt_version/jars/sbt-launch.jar"
-    [[ -z "$coursier_launcher_version" && -r "$sbt_jar" ]]
+    [[ -r "$sbt_jar" ]]
   } || {
-    if [[ -z "$coursier_launcher_version" ]]; then
-      sbt_jar="$(jar_file "$sbt_version")"
-      jar_url="$(make_url "$sbt_version")"
+    sbt_jar="$(jar_file "$sbt_version")"
+    jar_url="$(make_url "$sbt_version")"
 
-      download_url "${jar_url}" "${sbt_jar}" \
-        "Downloading sbt launcher for ${sbt_version}:"
+    echoerr "Downloading sbt launcher for ${sbt_version}:"
+    echoerr "  From  ${jar_url}"
+    echoerr "    To  ${sbt_jar}"
 
-      case "${sbt_version}" in
-        0.*)
-          vlog "SBT versions < 1.0 do not have published MD5 checksums, skipping check"
-          echo ""
-          ;;
-        *)   verify_sbt_jar "${sbt_jar}" ;;
-      esac
-    else
-      sbt_jar="$(jar_file "coursier_$coursier_launcher_version")"
-      download_url "$(make_coursier_url "$coursier_launcher_version")" "$sbt_jar" \
-        "Downloading coursier sbt launcher ${coursier_launcher_version}:"
-    fi
+    download_url "${jar_url}" "${sbt_jar}"
+
+    case "${sbt_version}" in
+      0.*)
+        vlog "SBT versions < 1.0 do not have published MD5 checksums, skipping check"
+        echo ""
+        ;;
+      *)   verify_sbt_jar "${sbt_jar}" ;;
+    esac
   }
 }
 
@@ -439,8 +411,6 @@ are not special.
   -batch             Disable interactive mode
   -prompt <expr>     Set the sbt prompt; in expr, 's' is the State and 'e' is Extracted
   -script <file>     Run the specified file as a scala script
-  -coursier          use a coursier-based launcher rather than an official sbt launcher (default)
-  -mainline          use the mainline sbt launcher
 
   # sbt version (default: sbt.version from $buildProps if present, otherwise $sbt_release_version)
   -sbt-version <version>  use the specified version of sbt (default: $sbt_release_version)
@@ -511,7 +481,7 @@ process_args() {
       -trace)       require_arg integer "$1" "$2" && trace_level="$2" && shift 2 ;;
       -debug-inc)   addJava "-Dxsbt.inc.debug=true" && shift ;;
 
-      -no-colors)   addJava "-Dsbt.log.noformat=true" && shift ;;
+      -no-colors)   addJava "-Dsbt.log.noformat=true" && addJava "-Dsbt.color=false" && shift ;;
       -sbt-create)  sbt_create=true && shift ;;
       -sbt-dir)     require_arg path "$1" "$2" && sbt_dir="$2" && shift 2 ;;
       -sbt-boot)    require_arg path "$1" "$2" && addJava "-Dsbt.boot.directory=$2" && shift 2 ;;
@@ -537,10 +507,6 @@ process_args() {
       -212)         setScalaVersion "$latest_212" && shift ;;
       -213)         setScalaVersion "$latest_213" && shift ;;
 
-      -coursier)         enable_coursier && shift ;;
-      -mainline)         coursier_launcher_version="" && shift ;;
-      -coursier-version) require_arg version "$1" "$2" && coursier_launcher_version="$2" && shift 2 ;;
-
       -scala-version) require_arg version "$1" "$2" && setScalaVersion "$2" && shift 2 ;;
       -binary-version) require_arg version "$1" "$2" && setThisBuild scalaBinaryVersion "\"$2\"" && shift 2 ;;
       -scala-home)  require_arg path "$1" "$2" && setThisBuild scalaHome "_root_.scala.Some(file(\"$2\"))" && shift 2 ;;
@@ -553,7 +519,7 @@ process_args() {
       -J*)          addJava "${1:2}" && shift ;;
       -S*)          addScalac "${1:2}" && shift ;;
 
-      new)          sbt_new=true && : ${sbt_explicit_version:=$sbt_release_version} && addResidual "$1" && shift ;;
+      new)          sbt_new=true && : "${sbt_explicit_version:=$sbt_release_version}" && addResidual "$1" && shift ;;
 
       *)            addResidual "$1" && shift ;;
     esac
@@ -689,12 +655,6 @@ fi
 
 # traceLevel is 0.12+
 [[ -n "$trace_level" ]] && setTraceLevel
-
-# options before a -- may be interpreted as options for itself by the
-# coursier-based launcher
-[[ -z "$coursier_launcher_version" ]] || {
-  addJava "-Dcoursier.sbt-launcher.parse-args=true"
-}
 
 execRunner "$java_cmd" \
   "${extra_jvm_opts[@]}" \
