@@ -369,17 +369,8 @@ object demo extends ScalaJSModule, SbtModule {
     for (f <- Seq("main.js", "main.js.map") if os.exists(linkDir / f))
       os.copy(linkDir / f, dest / f)
     os.copy(jsDeps().path, dest / "plotly-demo-jsdeps.js")
-    for {
-      res  <- resources().map(_.path) if os.exists(res)
-      file <- os.walk(res) if os.isFile(file)
-    } {
-      val content = os
-        .read(file)
-        // former sbt-specific paths
-        .replace("../plotly-demo-jsdeps.js", "plotly-demo-jsdeps.js")
-        .replace("../plotly-demo-fastopt.js", "main.js")
-      os.write(dest / file.relativeTo(res), content, createFolders = true)
-    }
+    for (res <- resources().map(_.path) if os.exists(res))
+      os.copy(res, dest, mergeFolders = true)
     PathRef(dest)
   }
 
