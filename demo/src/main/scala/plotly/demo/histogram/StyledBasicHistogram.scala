@@ -13,11 +13,14 @@ object StyledBasicHistogram extends DemoChart {
 
   // demo source start
 
-  private val categoryCount = 50
+  // fixed seed, so that the plot is the same every time
+  val random = new scala.util.Random(42)
 
-  private val indices    = LazyList.from(0).take(categoryCount)
-  private val categories = indices.map(i => s"name-$i for $id")
-  private val values     = indices.map(_ => math.random())
+  val categoryCount = 50
+
+  val indices    = 0 until categoryCount
+  val categories = indices.map(i => s"name-$i")
+  val values     = indices.map(_ => random.nextDouble())
 
   val data = Seq(
     Histogram(values, categories)
@@ -37,7 +40,7 @@ object StyledBasicHistogram extends DemoChart {
   val layout = new Layout()
     .withXaxis(xAxis)
     .withYaxis(yAxis)
-    .withTitle(id)
+    .withTitle("Styled Basic Histogram")
     .withShowlegend(false)
     .withHeight(400)
     .withWidth(600)
