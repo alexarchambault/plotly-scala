@@ -13,21 +13,25 @@ object RoundedBars extends DemoChart {
 
   // demo source start
 
-  val countries = Seq("South Korea", "China", "Canada")
+  val countries = Seq("United States", "China", "Japan", "Australia", "France")
 
-  val data = Seq(
-    "Gold"   -> Seq(24, 10, 9),
-    "Silver" -> Seq(13, 15, 12),
-    "Bronze" -> Seq(11, 8, 12)
-  ).map { case (name, medals) =>
-    Bar(countries, medals).withValues(name = name)
+  // Paris 2024 Olympics medal table, top 5 nations
+  val medals = Seq(
+    ("Gold", "#d4a72c", Seq(40, 40, 20, 18, 16)),
+    ("Silver", "#a7adba", Seq(44, 27, 12, 19, 26)),
+    ("Bronze", "#c0793a", Seq(42, 24, 13, 16, 22))
+  )
+
+  val data = medals.map { case (name, color, counts) =>
+    Bar(countries, counts)
+      .withValues(name = name, marker = Marker().withValues(color = Color.StringColor(color)))
   }
 
   val layout = Layout().withValues(
-    title = "Grouped by Country",
-    xaxis = Axis().withValues(title = "Country"),
+    title = "Paris 2024 Olympics Medals",
     yaxis = Axis().withValues(title = "Medals"),
-    barcornerradius = 15
+    bargap = 0.25,
+    barcornerradius = 8
   )
 
   // demo source end

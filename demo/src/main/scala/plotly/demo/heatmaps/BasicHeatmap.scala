@@ -1,10 +1,11 @@
 package plotly.demo.heatmaps
 
 import plotly._
-import plotly.demo.NoLayoutDemoChart
+import plotly.demo.DemoChart
 import plotly.element._
+import plotly.layout._
 
-object BasicHeatmap extends NoLayoutDemoChart {
+object BasicHeatmap extends DemoChart {
 
   def plotlyDocUrl = "https://plot.ly/javascript/heatmaps/#basic-heatmap"
   def id           = "basic-heatmap"
@@ -12,16 +13,17 @@ object BasicHeatmap extends NoLayoutDemoChart {
 
   // demo source start
 
+  // ripples spreading from the center of a 60×60 grid
+  val z = Seq.tabulate(60, 60) { (i, j) =>
+    val r = math.hypot(i - 30, j - 30)
+    math.cos(r / 2.5) * math.exp(-r / 25)
+  }
+
   val data = Seq(
-    Heatmap().withValues(
-      z = Seq(
-        Seq(1, 20, 30),
-        Seq(20, 1, 60),
-        Seq(30, 60, 1)
-      ),
-      colorscale = ColorScale.NamedScale("Portland")
-    )
+    Heatmap().withValues(z = z, colorscale = ColorScale.NamedScale("Viridis"))
   )
+
+  val layout = Layout().withValues(title = "Ripples")
 
   // demo source end
 

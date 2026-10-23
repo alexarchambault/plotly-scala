@@ -13,15 +13,23 @@ object GroupedBarChart extends DemoChart {
 
   // demo source start
 
-  val trace1 = Bar(Seq("giraffes", "orangutans", "monkeys"), Seq(20, 14, 23))
-    .withValues(name = "SF Zoo")
+  val quarters = Seq("Q1", "Q2", "Q3", "Q4")
 
-  val trace2 = Bar(Seq("giraffes", "orangutans", "monkeys"), Seq(12, 18, 29))
-    .withValues(name = "LA Zoo")
+  // revenue of a fictional company, in thousands of dollars
+  val trace1 = Bar(quarters, Seq(420, 465, 440, 580))
+    .withValues(name = "2024", marker = Marker().withValues(color = Color.StringColor("#b4b9fc")))
+
+  val trace2 = Bar(quarters, Seq(510, 545, 590, 720))
+    .withValues(name = "2025", marker = Marker().withValues(color = Color.StringColor("#636efa")))
 
   val data = Seq(trace1, trace2)
 
-  val layout = Layout().withValues(barmode = BarMode.Group)
+  val layout = Layout().withValues(
+    title = "Quarterly Revenue",
+    yaxis = Axis().withValues(tickprefix = "$", ticksuffix = "K"),
+    barmode = BarMode.Group,
+    bargroupgap = 0.1
+  )
 
   // demo source end
 

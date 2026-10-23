@@ -62,10 +62,8 @@ object Deps {
 }
 
 object WebDeps {
-  def bootstrap = mvn"org.webjars.bower:bootstrap:3.4.1"
-  def jquery    = mvn"org.webjars.bower:jquery:3.7.1"
-  def plotlyJs  = mvn"org.webjars.npm:plotly.js-dist-min:${Versions.plotlyJs}"
-  def prism     = mvn"org.webjars.bower:prism:1.16.0"
+  def plotlyJs = mvn"org.webjars.npm:plotly.js-dist-min:${Versions.plotlyJs}"
+  def prism    = mvn"org.webjars.bower:prism:1.16.0"
 }
 
 // The version after the "v" if HEAD has a "v*" tag, else the latest "v*" tag version,
@@ -322,14 +320,12 @@ object demo extends ScalaJSModule, SbtModule {
 
   def webJars = Task {
     defaultResolver().classpath(
-      Seq(WebDeps.plotlyJs, WebDeps.jquery, WebDeps.bootstrap, WebDeps.prism).map(_.exclude("*" -> "*"))
+      Seq(WebDeps.plotlyJs, WebDeps.prism).map(_.exclude("*" -> "*"))
     )
   }
   // JS dependencies of the demo, concatenated in this order
   def jsDependencies = Seq(
     "plotly.min.js",
-    "jquery.min.js",
-    "bootstrap.min.js",
     "prism.js",
     "prism-clike.js",
     "prism-java.js",

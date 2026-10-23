@@ -13,23 +13,28 @@ object BarChartWithDirectLabels extends DemoChart {
 
   // demo source start
 
-  val xValue = Seq("Product A", "Product B", "Product C")
+  val products = Seq("Product A", "Product B", "Product C", "Product D")
 
-  val yValue = Seq(20, 14, 23)
+  // units sold (fictional)
+  val sales = Seq(320, 245, 190, 125)
 
-  val trace1 = Bar(xValue, yValue)
+  val marketShares = sales.map(s => f"${100.0 * s / sales.sum}%.0f%% share")
+
+  val trace1 = Bar(products, sales)
     .withValues(
-      text = Seq("27% market share", "24% market share", "19% market share"),
+      text = marketShares,
+      textposition = BarTextPosition.Inside,
       marker = Marker().withValues(
-        color = Color.RGB(158, 202, 225),
-        opacity = 0.6,
-        line = Line().withValues(color = Color.RGB(8, 48, 107), width = 1.5)
+        color = Color.RGB(99, 110, 250),
+        opacity = 0.85,
+        line = Line().withValues(color = Color.RGB(46, 54, 160), width = 1.5)
       )
     )
 
   val data = Seq(trace1)
 
-  val annotations = xValue.zip(yValue).map { case (x, y) =>
+  // unit counts, right above each bar
+  val annotations = products.zip(sales).map { case (x, y) =>
     Annotation().withValues(
       x = x,
       y = y,
@@ -40,7 +45,11 @@ object BarChartWithDirectLabels extends DemoChart {
     )
   }
 
-  val layout = Layout().withValues(title = "January 2013 Sales Report", annotations = annotations)
+  val layout = Layout().withValues(
+    title = "January 2025 Sales Report",
+    yaxis = Axis().withValues(title = "Units sold"),
+    annotations = annotations
+  )
 
   // demo source end
 

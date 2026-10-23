@@ -1,32 +1,59 @@
 package plotly.demo.linecharts
 
-import plotly.Scatter
+import plotly._
 import plotly.demo.DemoChart
-import plotly.element.ScatterMode
-import plotly.layout.Layout
+import plotly.element._
+import plotly.layout._
 
 object LineAndScatterPlot extends DemoChart {
 
-  def id = "line-and-scatter-plot"
-
   def plotlyDocUrl = "https://plot.ly/javascript/line-charts/#line-and-scatter-plot"
-
-  def source = LineAndScatterPlotSource.source
+  def id           = "line-and-scatter-plot"
+  def source       = LineAndScatterPlotSource.source
 
   // demo source start
 
-  val trace1 = Scatter(Seq(1, 2, 3, 4), Seq(10, 15, 13, 17))
-    .withValues(mode = ScatterMode(ScatterMode.Markers))
+  val days = (1 to 30).map(_.toDouble)
 
-  val trace2 = Scatter(Seq(2, 3, 4, 5), Seq(16, 5, 11, 9))
-    .withValues(mode = ScatterMode(ScatterMode.Lines))
+  // a noisy, growing signal
+  val signups = {
+    // fixed seed, so that the plot is the same every time
+    val random = new scala.util.Random(7)
+    days.map(day => 40 + 1.5 * day + 6 * random.nextGaussian())
+  }
 
-  val trace3 = Scatter(Seq(1, 2, 3, 4), Seq(12, 9, 15, 12))
-    .withValues(mode = ScatterMode(ScatterMode.Lines, ScatterMode.Markers))
+  // least squares fit of the signal
+  val meanDay    = days.sum / days.length
+  val meanSignup = signups.sum / signups.length
+  val slope      = days.zip(signups).map { case (d, s) => (d - meanDay) * (s - meanSignup) }.sum /
+    days.map(d => (d - meanDay) * (d - meanDay)).sum
+  def fit(day: Double) = meanSignup + slope * (day - meanDay)
 
-  val data = Seq(trace1, trace2, trace3)
+  val forecastDays = (30 to 40).map(_.toDouble)
 
-  val layout = Layout().withValues(title = "Line and Scatter Plot")
+  val data = Seq(
+    Scatter(days, signups).withValues(
+      name = "Daily sign-ups",
+      mode = ScatterMode(ScatterMode.Markers),
+      marker = Marker().withValues(size = 9, color = Color.StringColor("#636efa"), opacity = 0.75)
+    ),
+    Scatter(days, days.map(fit)).withValues(
+      name = "Trend",
+      mode = ScatterMode(ScatterMode.Lines),
+      line = Line().withValues(color = Color.StringColor("#00cc96"), width = 3.0)
+    ),
+    Scatter(forecastDays, forecastDays.map(fit)).withValues(
+      name = "Forecast",
+      mode = ScatterMode(ScatterMode.Lines, ScatterMode.Markers),
+      line = Line().withValues(color = Color.StringColor("#ef553b"), dash = Dash.Dot, width = 2.0)
+    )
+  )
+
+  val layout = Layout().withValues(
+    title = "Daily Sign-ups, Trend and Forecast",
+    xaxis = Axis().withValues(title = "Day"),
+    yaxis = Axis().withValues(title = "Sign-ups")
+  )
 
   // demo source end
 
