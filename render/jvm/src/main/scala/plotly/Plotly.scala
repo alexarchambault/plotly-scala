@@ -8,26 +8,15 @@ import plotly.layout._
 import java.lang.{Boolean => JBoolean, Double => JDouble, Integer => JInt}
 import java.nio.file.Files
 
-import argonaut.Argonaut._
-import argonaut.{Json, PrettyParams}
-import plotly.internals.{BetterPrinter, Properties}
+import com.github.plokhotnyuk.jsoniter_scala.core.writeToString
+import plotly.internals.Properties
 
 import scala.annotation.tailrec
 
 object Plotly {
 
-  private val printer = BetterPrinter(PrettyParams.nospace.copy(dropNullKeys = true))
-
-  def jsonSnippet(data: Seq[Trace], layout: Layout, config: Config): String = {
-
-    val json = Json.obj(
-      "data"   -> data.toList.asJson,
-      "layout" -> layout.asJson,
-      "config" -> config.asJson
-    )
-
-    printer.render(json)
-  }
+  def jsonSnippet(data: Seq[Trace], layout: Layout, config: Config): String =
+    s"""{"data":${writeToString(data)},"layout":${writeToString(layout)},"config":${writeToString(config)}}"""
 
   def jsSnippet(div: String, data: Seq[Trace], layout: Layout, config: Config): String = {
 
@@ -37,7 +26,7 @@ object Plotly {
 
     for ((d, idx) <- data.zipWithIndex) {
       b ++= s"  var data$idx = "
-      b ++= printer.render(d.asJson)
+      b ++= writeToString(d)
       b ++= ";\n"
     }
 
@@ -45,9 +34,9 @@ object Plotly {
     b ++= data.indices.map(idx => s"data$idx").mkString("var data = [", ", ", "];")
     b ++= "\n"
     b ++= "  var layout = "
-    b ++= printer.render(layout.asJson)
+    b ++= writeToString(layout)
     b ++= ";\n var config = "
-    b ++= printer.render(config.asJson)
+    b ++= writeToString(config)
     b ++= ";\n\n  Plotly.plot('"
     b ++= div.replaceAll("'", "\\'")
     b ++= "', data, layout, config);\n"

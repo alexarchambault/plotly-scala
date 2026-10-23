@@ -1,6 +1,6 @@
 package plotly
 
-import argonaut.Json
+import com.github.plokhotnyuk.jsoniter_scala.core.writeToString
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -8,13 +8,13 @@ class FieldTests extends AnyFlatSpec with Matchers {
 
   def traceHasShowlegendField(trace: Trace): Unit = {
 
-    val expectedField = Json.jBool(true)
+    val expectedField = ujson.Bool(true)
 
-    val field = Codecs
-      .argonautEncodeTrace(trace)
+    val field = ujson
+      .read(writeToString(trace)(Codecs.traceCodec))
       .obj
+      .get("showlegend")
       .toList
-      .flatMap(_.toList.filter(_._1 == "showlegend").map(_._2))
 
     assert(field === List(expectedField))
   }

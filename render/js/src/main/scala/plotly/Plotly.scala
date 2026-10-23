@@ -1,10 +1,8 @@
 package plotly
 
-import argonaut.Argonaut._
-import argonaut.{EncodeJson, PrettyParams}
+import com.github.plokhotnyuk.jsoniter_scala.core.{writeToString, JsonValueCodec}
 import plotly.Codecs._
 import plotly.element.Color
-import plotly.internals.BetterPrinter
 import plotly.layout._
 
 import java.lang.{Boolean => JBoolean, Double => JDouble, Integer => JInt}
@@ -14,10 +12,8 @@ import scala.scalajs.js.JSON
 
 object Plotly {
 
-  private val printer = BetterPrinter(PrettyParams.nospace.copy(dropNullKeys = true))
-
-  // Remove empty objects
-  private def stripNulls[J: EncodeJson](value: J): js.Any = JSON.parse(printer.render(value.asJson))
+  // None fields aren't written by the codecs, so the resulting JS objects don't have null fields
+  private def stripNulls[J: JsonValueCodec](value: J): js.Any = JSON.parse(writeToString(value))
 
   trait PlotlyDyn {
     def plotFn: js.Dynamic
