@@ -35,15 +35,42 @@ jobs:
   publish:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
+    # never have two jobs publishing to Sonatype Central at the same time
+    concurrency:
+      group: publish-sonatype-central
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      packages: write
     steps:
     - uses: actions/checkout@v7
       with:
         fetch-depth: 0 # the version is computed from git tags
     - uses: coursier/cache-action@v8
     - name: Release
-      run: ./mill --no-daemon mill.javalib.SonatypeCentralPublishModule/
+      run: |
+        if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+          # --shouldRelease false: the bundle is uploaded and validated on Sonatype Central, but has
+          # to be published manually from https://central.sonatype.com/publishing/deployments
+          ./mill --no-daemon mill.javalib.SonatypeCentralPublishModule/ --bundleName "plotly-scala-${GITHUB_REF#refs/tags/v}" --shouldRelease false
+        else
+          # so that a tag pointing at a commit pushed on main doesn't make us publish a non-snapshot version
+          for tag in $(git tag --points-at HEAD); do
+            git tag -d "$tag"
+          done
+          ./mill --no-daemon mill.javalib.SonatypeCentralPublishModule/
+        fi
       env:
         MILL_PGP_PASSPHRASE: ${{ secrets.PUBLISH_SECRET_KEY_PASSWORD }}
         MILL_PGP_SECRET_BASE64: ${{ secrets.PUBLISH_SECRET_KEY }}
         MILL_SONATYPE_PASSWORD: ${{ secrets.PUBLISH_PASSWORD }}
         MILL_SONATYPE_USERNAME: ${{ secrets.PUBLISH_USER }}
+    - name: Publish to GitHub Packages
+      continue-on-error: true
+      run: |
+        ./mill --no-daemon mill.javalib.MavenPublishModule/publishAll \
+          --releaseUri "https://maven.pkg.github.com/$GITHUB_REPOSITORY" \
+          --snapshotUri "https://maven.pkg.github.com/$GITHUB_REPOSITORY"
+      env:
+        MILL_MAVEN_USERNAME: ${{ github.actor }}
+        MILL_MAVEN_PASSWORD: ${{ secrets.GITHUB_TOKEN }}

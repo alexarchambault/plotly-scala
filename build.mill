@@ -13,7 +13,7 @@ import mill.javalib.{Assembly, AssemblyModule}
 import mill.javalib.publish.*
 import mill.scalajslib.*
 import mill.scalalib.*
-import mill.util.VcsVersion
+import mill.util.Jvm
 
 import java.nio.charset.StandardCharsets
 import java.util.zip.ZipFile
@@ -49,12 +49,29 @@ object WebDeps {
   def prism     = mvn"org.webjars.bower:prism:1.16.0"
 }
 
-// vcsVersion and commitHash change with every commit. They're left out of selective
-// execution (selectiveInputs = Nil), so that PRs on CI don't re-run everything depending on them.
-
-def vcsVersion = Task(selectiveInputs = Nil) {
-  VcsVersion.vcsState().format(untaggedSuffix = "-SNAPSHOT")
+// The version after the "v" if HEAD has a "v*" tag, else the latest "v*" tag version,
+// with its third component bumped, and a "-SNAPSHOT" suffix (v0.8.5 -> 0.8.6-SNAPSHOT)
+def buildVersion = Task.Input {
+  def git(args: String*) =
+    os.proc("git", args).call(cwd = BuildCtx.workspaceRoot, check = false).out.lines()
+  def versionOf(tag: String) = Some(tag.trim).filter(_.startsWith("v")).map(_.stripPrefix("v"))
+  // versionsort.suffix: sort 1.0.0-RC1 before 1.0.0, so that the latter wins if both point at HEAD
+  val headVersion = git("-c", "versionsort.suffix=-", "tag", "--points-at", "HEAD", "--list", "v*", "--sort=-v:refname")
+    .flatMap(versionOf)
+    .headOption
+  headVersion.getOrElse {
+    val latest = git("describe", "--tags", "--abbrev=0", "--match", "v*")
+      .flatMap(versionOf)
+      .headOption
+      .getOrElse("0.0.0")
+    val parts  = latest.split('.').take(3)
+    val bumped = parts.init :+ (parts.last.takeWhile(_.isDigit).toInt + 1).toString
+    bumped.mkString(".") + "-SNAPSHOT"
+  }
 }
+
+// commitHash changes with every commit. It's left out of selective execution
+// (selectiveInputs = Nil), so that PRs on CI don't re-run everything depending on it.
 
 def commitHash = Task(selectiveInputs = Nil) {
   gitHead()
@@ -77,7 +94,7 @@ trait ScalaSettings extends CrossScalaModule {
 
 trait Published extends ScalaSettings, PublishModule {
   def artifactName   = "plotly-" + super.artifactName()
-  def publishVersion = vcsVersion()
+  def publishVersion = buildVersion()
   def pomSettings    = PomSettings(
     description = artifactName(),
     organization = "org.plotly-scala",
@@ -95,6 +112,10 @@ trait Published extends ScalaSettings, PublishModule {
       Developer("alexarchambault", "Alexandre Archambault", "https://github.com/alexarchambault")
     )
   )
+  // publish (almost) empty javadoc JARs, with only a manifest in them
+  def docJar = Task {
+    PathRef(Jvm.createJar(Task.dest / "out.jar", Seq.empty[os.Path]))
+  }
 }
 
 trait PublishedJvm extends Published, Mima {
@@ -291,7 +312,7 @@ object demo extends ScalaJSModule, SbtModule {
          |
          |object Properties {
          |
-         |  val version = "${vcsVersion()}"
+         |  val version = "${buildVersion()}"
          |  val commitHash = "${commitHash()}"
          |
          |}
