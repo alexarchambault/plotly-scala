@@ -12,14 +12,15 @@ object BasicHistogram extends DemoChart {
 
   // demo source start
 
-  // fixed seed, so that the plot is the same every time
-  val random = new scala.util.Random(42)
-
   val categoryCount = 50
 
   val indices    = 0 until categoryCount
   val categories = indices.map(i => s"name-$i")
-  val values     = indices.map(_ => random.nextDouble())
+  val values     = {
+    // fixed seed, so that the plot is the same every time
+    val random = new scala.util.Random(42)
+    indices.map(_ => random.nextDouble())
+  }
 
   val data = Seq(Histogram(values, categories))
 
