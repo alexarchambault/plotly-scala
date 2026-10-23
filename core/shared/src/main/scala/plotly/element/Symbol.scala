@@ -15,10 +15,26 @@ object Symbol {
     def dot: Boolean
   }
 
-  @data final case class Circle(open: Boolean = false, dot: Boolean = false)  extends DotSymbol("circle", 0)
-  @data final case class Square(open: Boolean = false, dot: Boolean = false)  extends DotSymbol("square", 1)
-  @data final case class Diamond(open: Boolean = false, dot: Boolean = false) extends DotSymbol("diamond", 2)
-  @data final case class Cross(open: Boolean = false, dot: Boolean = false)   extends DotSymbol("cross", 3)
+  @data(
+    deprecatedSetters = true,
+    deprecatedSettersMessage = "Use copy instead",
+    deprecatedSettersSince = "0.8.6"
+  ) final case class Circle(open: Boolean = false, dot: Boolean = false) extends DotSymbol("circle", 0)
+  @data(
+    deprecatedSetters = true,
+    deprecatedSettersMessage = "Use copy instead",
+    deprecatedSettersSince = "0.8.6"
+  ) final case class Square(open: Boolean = false, dot: Boolean = false) extends DotSymbol("square", 1)
+  @data(
+    deprecatedSetters = true,
+    deprecatedSettersMessage = "Use copy instead",
+    deprecatedSettersSince = "0.8.6"
+  ) final case class Diamond(open: Boolean = false, dot: Boolean = false) extends DotSymbol("diamond", 2)
+  @data(
+    deprecatedSetters = true,
+    deprecatedSettersMessage = "Use copy instead",
+    deprecatedSettersSince = "0.8.6"
+  ) final case class Cross(open: Boolean = false, dot: Boolean = false) extends DotSymbol("cross", 3)
 
   /*
   "4" | "x" | "104" | "x-open" | "204" | "x-dot" | "304" | "x-open-dot"

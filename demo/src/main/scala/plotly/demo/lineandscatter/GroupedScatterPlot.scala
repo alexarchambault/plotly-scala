@@ -23,16 +23,16 @@ object GroupedScatterPlot extends DemoChart {
     "Bronze" -> Seq(11, 8, 12)
   ).map { case (name, medals) =>
     Scatter(countries, medals)
-      .withName(name)
-      .withMode(ScatterMode(ScatterMode.Markers))
+      .copy(name = Some(name), mode = Some(ScatterMode(ScatterMode.Markers)))
   }
 
-  val layout = Layout()
-    .withTitle("Grouped by Country")
-    .withXaxis(Axis().withTitle("Country"))
-    .withYaxis(Axis().withTitle("Medals"))
-    .withScattermode(ScatterLayoutMode.Group)
-    .withScattergap(0.7)
+  val layout = Layout().copy(
+    title = Some("Grouped by Country"),
+    xaxis = Some(Axis().copy(title = Some("Country"))),
+    yaxis = Some(Axis().copy(title = Some("Medals"))),
+    scattermode = Some(ScatterLayoutMode.Group),
+    scattergap = Some(0.7)
+  )
 
   // demo source end
 

@@ -13,8 +13,8 @@ object CustomColorScaleHeatmap extends NoLayoutDemoChart {
   // demo source start
 
   val data = Seq(
-    Heatmap()
-      .withZ(
+    Heatmap().copy(
+      z = Some(
         Seq(
           Seq(10.0, 10.625, 12.5, 15.625, 20.0),
           Seq(5.625, 6.25, 8.125, 11.25, 15.625),
@@ -22,8 +22,8 @@ object CustomColorScaleHeatmap extends NoLayoutDemoChart {
           Seq(0.625, 1.25, 3.125, 6.25, 10.625),
           Seq(0.0, 0.625, 2.5, 5.625, 10.0)
         )
-      )
-      .withColorscale(
+      ),
+      colorscale = Some(
         ColorScale.CustomScale(
           Seq(
             (0, Color.RGB(166, 206, 227)),
@@ -35,6 +35,7 @@ object CustomColorScaleHeatmap extends NoLayoutDemoChart {
           )
         )
       )
+    )
   )
 
   // demo source end

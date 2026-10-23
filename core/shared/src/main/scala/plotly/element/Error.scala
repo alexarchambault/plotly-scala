@@ -9,7 +9,10 @@ object Error {
   @data(
     optionSetters = true,
     nullOptionBuilderMethodName = "from",
-    nullOptionCopyMethodName = "withValues"
+    nullOptionCopyMethodName = "withValues",
+    deprecatedSetters = true,
+    deprecatedSettersMessage = "Use copy instead",
+    deprecatedSettersSince = "0.8.6"
   ) final case class Data(
       array: Seq[Double],
       @since
@@ -21,7 +24,10 @@ object Error {
   @data(
     optionSetters = true,
     nullOptionBuilderMethodName = "from",
-    nullOptionCopyMethodName = "withValues"
+    nullOptionCopyMethodName = "withValues",
+    deprecatedSetters = true,
+    deprecatedSettersMessage = "Use copy instead",
+    deprecatedSettersSince = "0.8.6"
   ) final case class Percent(
       value: Double,
       @since
@@ -33,7 +39,10 @@ object Error {
   @data(
     optionSetters = true,
     nullOptionBuilderMethodName = "from",
-    nullOptionCopyMethodName = "withValues"
+    nullOptionCopyMethodName = "withValues",
+    deprecatedSetters = true,
+    deprecatedSettersMessage = "Use copy instead",
+    deprecatedSettersSince = "0.8.6"
   ) final case class Constant(
       value: Double,
       color: Option[String] = None,

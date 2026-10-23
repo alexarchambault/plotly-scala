@@ -13,15 +13,16 @@ object BasicHeatmap extends NoLayoutDemoChart {
   // demo source start
 
   val data = Seq(
-    Heatmap()
-      .withZ(
+    Heatmap().copy(
+      z = Some(
         Seq(
           Seq(1, 20, 30),
           Seq(20, 1, 60),
           Seq(30, 60, 1)
         )
-      )
-      .withColorscale(ColorScale.NamedScale("Portland"))
+      ),
+      colorscale = Some(ColorScale.NamedScale("Portland"))
+    )
   )
 
   // demo source end

@@ -7,7 +7,10 @@ import plotly.element._
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues"
+  nullOptionCopyMethodName = "withValues",
+  deprecatedSetters = true,
+  deprecatedSettersMessage = "Use copy instead",
+  deprecatedSettersSince = "0.8.6"
 ) final case class Annotation(
     xref: Option[Ref] = None,
     yref: Option[Ref] = None,

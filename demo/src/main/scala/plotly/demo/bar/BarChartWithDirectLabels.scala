@@ -18,33 +18,33 @@ object BarChartWithDirectLabels extends DemoChart {
   val yValue = Seq(20, 14, 23)
 
   val trace1 = Bar(xValue, yValue)
-    .withText(Seq("27% market share", "24% market share", "19% market share"))
-    .withMarker(
-      Marker()
-        .withColor(Color.RGB(158, 202, 225))
-        .withOpacity(0.6)
-        .withLine(
-          Line()
-            .withColor(Color.RGB(8, 48, 107))
-            .withWidth(1.5)
+    .copy(
+      text = Some(Seq("27% market share", "24% market share", "19% market share")),
+      marker = Some(
+        Marker().copy(
+          color = Some(Color.RGB(158, 202, 225)),
+          opacity = Some(0.6),
+          line = Some(
+            Line().copy(color = Some(Color.RGB(8, 48, 107)), width = Some(1.5))
+          )
         )
+      )
     )
 
   val data = Seq(trace1)
 
   val annotations = xValue.zip(yValue).map { case (x, y) =>
-    Annotation()
-      .withX(x)
-      .withY(y)
-      .withText(y.toString)
-      .withXanchor(Anchor.Center)
-      .withYanchor(Anchor.Bottom)
-      .withShowarrow(false)
+    Annotation().copy(
+      x = Some(x),
+      y = Some(y),
+      text = Some(y.toString),
+      xanchor = Some(Anchor.Center),
+      yanchor = Some(Anchor.Bottom),
+      showarrow = Some(false)
+    )
   }
 
-  val layout = Layout()
-    .withTitle("January 2013 Sales Report")
-    .withAnnotations(annotations)
+  val layout = Layout().copy(title = Some("January 2013 Sales Report"), annotations = Some(annotations))
 
   // demo source end
 

@@ -25,26 +25,24 @@ object StyledBasicHistogram extends DemoChart {
 
   val data = Seq(
     Histogram(values, categories)
-      .withMarker(new Marker().withColor(Color.StringColor("#004A72")))
-      .withHovertext(categories.map(c => s"$c with hover text"))
+      .copy(
+        marker = Some(new Marker().copy(color = Some(Color.StringColor("#004A72")))),
+        hovertext = Some(categories.map(c => s"$c with hover text"))
+      )
   )
 
-  val xAxis = new Axis()
-    .withRange((0d, 2d))
-    .withRangeslider(RangeSlider())
+  val xAxis = new Axis().copy(range = Some((0d, 2d)), rangeslider = Some(RangeSlider()))
 
-  val yAxis = new Axis()
-    .withTitle("Count")
-    .withFixedrange(true)
-    .withTickformat(".1f")
+  val yAxis = new Axis().copy(title = Some("Count"), fixedrange = Some(true), tickformat = Some(".1f"))
 
-  val layout = new Layout()
-    .withXaxis(xAxis)
-    .withYaxis(yAxis)
-    .withTitle("Styled Basic Histogram")
-    .withShowlegend(false)
-    .withHeight(400)
-    .withWidth(600)
+  val layout = new Layout().copy(
+    xaxis = Some(xAxis),
+    yaxis = Some(yAxis),
+    title = Some("Styled Basic Histogram"),
+    showlegend = Some(false),
+    height = Some(400),
+    width = Some(600)
+  )
 
   // demo source end
 }

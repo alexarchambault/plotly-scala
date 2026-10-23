@@ -20,23 +20,25 @@ object CustomizingIndividualBarColors extends DemoChart {
     Seq("Feature A", "Feature B", "Feature C", "Feature D", "Feature E"),
     Seq(20, 14, 23, 25, 22)
   )
-    .withMarker(
-      Marker()
-        .withColor(
-          Seq(
-            defaultColor,
-            highlightColor,
-            defaultColor,
-            defaultColor,
-            defaultColor
+    .copy(marker =
+      Some(
+        Marker().copy(color =
+          Some(
+            Seq(
+              defaultColor,
+              highlightColor,
+              defaultColor,
+              defaultColor,
+              defaultColor
+            )
           )
         )
+      )
     )
 
   val data = Seq(trace1)
 
-  val layout = Layout()
-    .withTitle("Least Used Feature")
+  val layout = Layout().copy(title = Some("Least Used Feature"))
 
   // demo source end
 

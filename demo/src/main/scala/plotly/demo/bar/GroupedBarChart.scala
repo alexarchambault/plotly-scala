@@ -14,15 +14,14 @@ object GroupedBarChart extends DemoChart {
   // demo source start
 
   val trace1 = Bar(Seq("giraffes", "orangutans", "monkeys"), Seq(20, 14, 23))
-    .withName("SF Zoo")
+    .copy(name = Some("SF Zoo"))
 
   val trace2 = Bar(Seq("giraffes", "orangutans", "monkeys"), Seq(12, 18, 29))
-    .withName("LA Zoo")
+    .copy(name = Some("LA Zoo"))
 
   val data = Seq(trace1, trace2)
 
-  val layout = Layout()
-    .withBarmode(BarMode.Group)
+  val layout = Layout().copy(barmode = Some(BarMode.Group))
 
   // demo source end
 

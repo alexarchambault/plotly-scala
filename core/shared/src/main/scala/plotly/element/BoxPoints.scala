@@ -6,7 +6,11 @@ import dataclass.data
 sealed abstract class BoxPoints extends Product with Serializable
 
 object BoxPoints {
-  @data final case class Bool(value: Boolean)      extends BoxPoints
+  @data(
+    deprecatedSetters = true,
+    deprecatedSettersMessage = "Use copy instead",
+    deprecatedSettersSince = "0.8.6"
+  ) final case class Bool(value: Boolean)          extends BoxPoints
   sealed abstract class Labeled(val label: String) extends BoxPoints
 
   val False = Bool(false)

@@ -30,76 +30,82 @@ object WaterfallBarChart extends DemoChart {
   // Base
 
   val trace1 = Bar(xData, Seq(0, 430, 0, 570, 370, 370, 0))
-    .withMarker(
-      Marker()
-        .withColor(Color.RGBA(1, 1, 1, 0.0))
+    .copy(marker =
+      Some(
+        Marker().copy(color = Some(Color.RGBA(1, 1, 1, 0.0)))
+      )
     )
 
   // Revenue
 
   val trace2 = Bar(xData, Seq(430, 260, 690, 0, 0, 0, 0))
-    .withMarker(
-      Marker()
-        .withColor(Color.RGBA(55, 128, 191, 0.7))
-        .withLine(
-          Line()
-            .withColor(Color.RGBA(55, 128, 191, 1.0))
-            .withWidth(2.0)
+    .copy(marker =
+      Some(
+        Marker().copy(
+          color = Some(Color.RGBA(55, 128, 191, 0.7)),
+          line = Some(
+            Line().copy(color = Some(Color.RGBA(55, 128, 191, 1.0)), width = Some(2.0))
+          )
         )
+      )
     )
 
   // Cost
 
   val trace3 = Bar(xData, Seq(0, 0, 0, 120, 200, 320, 0))
-    .withMarker(
-      Marker()
-        .withColor(Color.RGBA(219, 64, 82, 0.7))
-        .withLine(
-          Line()
-            .withColor(Color.RGBA(219, 64, 82, 1.0))
-            .withWidth(2.0)
+    .copy(marker =
+      Some(
+        Marker().copy(
+          color = Some(Color.RGBA(219, 64, 82, 0.7)),
+          line = Some(
+            Line().copy(color = Some(Color.RGBA(219, 64, 82, 1.0)), width = Some(2.0))
+          )
         )
+      )
     )
 
   // Profit
 
   val trace4 = Bar(xData, Seq(0, 0, 0, 0, 0, 0, 370))
-    .withMarker(
-      Marker()
-        .withColor(Color.RGBA(50, 171, 96, 0.7))
-        .withLine(
-          Line()
-            .withColor(Color.RGBA(50, 171, 96, 1.0))
-            .withWidth(2.0)
+    .copy(marker =
+      Some(
+        Marker().copy(
+          color = Some(Color.RGBA(50, 171, 96, 0.7)),
+          line = Some(
+            Line().copy(color = Some(Color.RGBA(50, 171, 96, 1.0)), width = Some(2.0))
+          )
         )
+      )
     )
 
   val data = Seq(trace1, trace2, trace3, trace4)
 
   val annotations = xData.zip(yData).zip(textList).map { case ((x, y), text) =>
-    Annotation()
-      .withX(x)
-      .withY(y)
-      .withText(text)
-      .withFont(
+    Annotation().copy(
+      x = Some(x),
+      y = Some(y),
+      text = Some(text),
+      font = Some(
         Font(
           family = "Arial",
           size = 14,
           color = Color.RGBA(245, 246, 249, 1)
         )
-      )
-      .withShowarrow(false)
+      ),
+      showarrow = Some(false)
+    )
   }
 
-  val layout = Layout()
-    .withTitle("Annual Profit 2015")
-    .withBarmode(BarMode.Stack)
-    .withPaper_bgcolor(Color.RGBA(245, 246, 249, 1))
-    .withPlot_bgcolor(Color.RGBA(245, 246, 249, 1))
-    .withWidth(600)
-    .withHeight(400)
-    .withShowlegend(false)
-    .withAnnotations(annotations)
+  val layout = Layout().copy(
+    title = Some("Annual Profit 2015"),
+    barmode = Some(BarMode.Stack),
+    paper_bgcolor = Some(Color.RGBA(245, 246, 249, 1)),
+    plot_bgcolor = Some(Color.RGBA(245, 246, 249, 1)),
+    width = Some(600),
+    height = Some(400),
+    showlegend = Some(false),
+    annotations = Some(annotations)
+  )
 
   // demo source end
 

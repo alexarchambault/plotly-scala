@@ -6,7 +6,10 @@ import plotly.element.{Color, Line}
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues"
+  nullOptionCopyMethodName = "withValues",
+  deprecatedSetters = true,
+  deprecatedSettersMessage = "Use copy instead",
+  deprecatedSettersSince = "0.8.6"
 ) final case class Shape(
     `type`: Option[String] = None,
     xref: Option[String] = None,

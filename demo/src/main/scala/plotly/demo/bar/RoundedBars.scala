@@ -20,14 +20,15 @@ object RoundedBars extends DemoChart {
     "Silver" -> Seq(13, 15, 12),
     "Bronze" -> Seq(11, 8, 12)
   ).map { case (name, medals) =>
-    Bar(countries, medals).withName(name)
+    Bar(countries, medals).copy(name = Some(name))
   }
 
-  val layout = Layout()
-    .withTitle("Grouped by Country")
-    .withXaxis(Axis().withTitle("Country"))
-    .withYaxis(Axis().withTitle("Medals"))
-    .withBarcornerradius(15)
+  val layout = Layout().copy(
+    title = Some("Grouped by Country"),
+    xaxis = Some(Axis().copy(title = Some("Country"))),
+    yaxis = Some(Axis().copy(title = Some("Medals"))),
+    barcornerradius = Some(15)
+  )
 
   // demo source end
 

@@ -13,16 +13,17 @@ object CategoricalAxisHeatmap extends NoLayoutDemoChart {
   // demo source start
 
   val data = Seq(
-    Heatmap()
-      .withZ(
+    Heatmap().copy(
+      z = Some(
         Seq(
           Seq(1, null.asInstanceOf[Int], 30, 50, 1),
           Seq(20, 1, 60, 80, 30),
           Seq(30, 60, 1, -10, 20)
         )
-      )
-      .withX(Seq("Monday", "Tuesday", "Wednesday", "Thursday", "Friday"))
-      .withY(Seq("Morning", "Afternoon", "Evening"))
+      ),
+      x = Some(Seq("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")),
+      y = Some(Seq("Morning", "Afternoon", "Evening"))
+    )
   )
 
   // demo source end
