@@ -8,7 +8,7 @@ Scala bindings for [plotly.js](https://plot.ly/javascript/)
 
 [Demo](https://alexarchambault.github.io/plotly-scala/)
 
-*plotly-scala* is a Scala library able to output JSON that can be passed to [plotly.js](https://plot.ly/javascript/). Its classes closely follow the API of plotly.js, so that one can use plotly-scala by following the [documentation](https://plot.ly/javascript/) of plotly.js. These classes can be converted to JSON, that can be fed directly to plotly.js.
+*plotly-scala* is a Scala library able to output JSON that can be passed to [plotly.js](https://plot.ly/javascript/) (it currently targets plotly.js 2.x). Its classes closely follow the API of plotly.js, so that one can use plotly-scala by following the [documentation](https://plot.ly/javascript/) of plotly.js. These classes can be converted to JSON, that can be fed directly to plotly.js.
 
 It can be used from [almond](https://github.com/jupyter-scala/jupyter-scala/tree/develop), from scala-js, or from a Scala REPL like [Ammonite](https://github.com/lihaoyi/Ammonite), to plot things straightaway in the browser.
 
@@ -140,10 +140,10 @@ Some of these are illustrated in the [demo](https://alexarchambault.github.io/pl
 ## Adding support for extra plotly.js features
 
 The following workflow can be followed to add support for extra sections of the plotly.js documentation:
-- find the corresponding directory in the [source](https://github.com/alexarchambault/plotly-documentation/tree/eae136bb920c7542654a5e13cff04a0de175a08d/) of the plotly.js documentation. These directories can also be found in the sources of plotly-scala, under `plotly-documentation/_posts/plotly_js`, if its repository has been cloned with the `--recursive` option,
+- find the corresponding directory in the [source](https://github.com/plotly/graphing-library-docs/tree/6e36d5a9c955e810be1e27420b97640774c5653a/_posts/plotly_js) of the plotly.js documentation. These directories can also be found in the sources of plotly-scala, under `plotly-documentation/_posts/plotly_js`, if its repository has been cloned with the `--recursive` option,
 - enabling testing of the corresponding documentation section examples in the `DocumentationTests` class, around [this line](https://github.com/alexarchambault/plotly-scala/blob/master/tests/src/test/scala/plotly/doc/DocumentationTests.scala#L224),
 - running the tests with `./mill -w "tests[2.13.18].test"`,
-- fixing the possible Javascript typos in the plotly-documentation submodule in the plotly-scala sources, so that the enabled JS snippets run fine with Rhino from the tests, then committing these fixes, either to [https://github.com/alexarchambault/plotly-documentation](`alexarchambault/plotly-documentation`) or [https://github.com/plotly/documentation](`plotly/documentation`),
+- fixing the possible Javascript typos in the plotly-documentation submodule in the plotly-scala sources, so that the enabled JS snippets run fine with Rhino from the tests, then committing these fixes to [`plotly/graphing-library-docs`](https://github.com/plotly/graphing-library-docs),
 - add the required fields / class definitions, and possibly codecs, to have the added tests pass.
 
 ## About

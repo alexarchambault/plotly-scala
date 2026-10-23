@@ -12,16 +12,20 @@ object BasicHistogram extends DemoChart {
 
   // demo source start
 
-  private val categoryCount = 50
+  val categoryCount = 50
 
-  private val indices    = LazyList.from(0).take(categoryCount)
-  private val categories = indices.map(i => s"name-$i")
-  private val values     = indices.map(_ => math.random())
+  val indices    = 0 until categoryCount
+  val categories = indices.map(i => s"name-$i")
+  val values     = {
+    // fixed seed, so that the plot is the same every time
+    val random = new scala.util.Random(42)
+    indices.map(_ => random.nextDouble())
+  }
 
   val data = Seq(Histogram(values, categories))
 
   val layout = new Layout()
-    .withTitle(id)
+    .withTitle("Basic Histogram")
     .withShowlegend(false)
     .withHeight(400)
     .withWidth(600)
