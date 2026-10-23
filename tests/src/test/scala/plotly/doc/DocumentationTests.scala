@@ -280,6 +280,7 @@ class DocumentationTests extends munit.FunSuite {
         .replace("</br>", "\\n")
         .replace("(...size)", "(size[0])") // rhino doesn't seem to support the spead (...) operator
         .replace("desired_maximum_marker_size**2", "desired_maximum_marker_size*desired_maximum_marker_size")
+        // plotly.js 1 exposed d3 as Plotly.d3, the examples for plotly.js 2 load d3 separately
         .replace(
           """function linspace(a,b,n) {
   return Plotly.d3.range(n).map(function(i){return a+i*(b-a)/(n-1);});
@@ -287,9 +288,16 @@ class DocumentationTests extends munit.FunSuite {
 """,
           ""
         )
+        .replace(
+          """function linspace(a,b,n) {
+  return d3.range(n).map(function(i){return a+i*(b-a)/(n-1);});
+}
+""",
+          ""
+        )
 
-      if (content.contains("Plotly.d3.csv"))
-        println(s"Ignoring $post (Plotly.d3.csv not implemented)")
+      if (content.contains("d3.csv"))
+        println(s"Ignoring $post (d3.csv not implemented)")
       else {
 
         val lines = content.linesIterator.toVector

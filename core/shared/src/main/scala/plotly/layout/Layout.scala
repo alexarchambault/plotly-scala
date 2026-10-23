@@ -38,7 +38,12 @@ import plotly.element._
     dragmode: Option[String] = None,
     shapes: Option[Seq[Shape]] = None,
     @since("0.8.2")
-    grid: Option[Grid] = None
+    grid: Option[Grid] = None,
+    @since("0.8.6")
+    scattermode: Option[ScatterLayoutMode] = None,
+    scattergap: Option[Double] = None,
+    // in pixels (plotly.js also accepts a percentage of the bar width, like "25%")
+    barcornerradius: Option[Double] = None
 )
 
 object Layout {

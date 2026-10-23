@@ -37,7 +37,7 @@ object Plotly {
     b ++= writeToString(layout)
     b ++= ";\n var config = "
     b ++= writeToString(config)
-    b ++= ";\n\n  Plotly.plot('"
+    b ++= ";\n\n  Plotly.newPlot('"
     b ++= div.replaceAll("'", "\\'")
     b ++= "', data, layout, config);\n"
 
@@ -67,7 +67,7 @@ object Plotly {
     var is: InputStream = null
     try {
       is = getClass.getClassLoader.getResourceAsStream(
-        s"META-INF/resources/webjars/plotly.js/$plotlyVersion/dist/plotly.min.js"
+        s"META-INF/resources/webjars/plotly.js-dist-min/$plotlyVersion/plotly.min.js"
       )
       if (is == null)
         throw new Exception(s"plotly.min.js resource not found")

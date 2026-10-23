@@ -23,7 +23,7 @@ object Versions {
   def scala212 = "2.12.21"
   def scala213 = "2.13.18"
   def scalaJs       = "1.22.0"
-  def plotlyJs      = "1.54.1"
+  def plotlyJs      = "2.35.3"
   def jsoniterScala = "2.41.2"
 }
 
@@ -47,7 +47,7 @@ object Deps {
 object WebDeps {
   def bootstrap = mvn"org.webjars.bower:bootstrap:3.4.1"
   def jquery    = mvn"org.webjars.bower:jquery:3.7.1"
-  def plotlyJs  = mvn"org.webjars.bower:plotly.js:${Versions.plotlyJs}"
+  def plotlyJs  = mvn"org.webjars.npm:plotly.js-dist-min:${Versions.plotlyJs}"
   def prism     = mvn"org.webjars.bower:prism:1.16.0"
 }
 

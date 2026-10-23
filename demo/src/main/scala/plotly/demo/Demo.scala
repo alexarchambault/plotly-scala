@@ -1,5 +1,6 @@
 package plotly.demo
 
+import scala.scalajs.js
 import scala.scalajs.js.annotation.{JSExport, JSExportTopLevel}
 
 import plotly.Plotly
@@ -16,14 +17,16 @@ import scalatags.JsDom.all.{area => _, _}
       linecharts.LineAndScatterPlot
     ),
     "Scatter Plots" -> Seq(
-      lineandscatter.CategoricalDotPlot
+      lineandscatter.CategoricalDotPlot,
+      lineandscatter.GroupedScatterPlot
     ),
     "Bar Charts" -> Seq(
       bar.BasicBarChart,
       bar.GroupedBarChart,
       bar.BarChartWithDirectLabels,
       bar.CustomizingIndividualBarColors,
-      bar.WaterfallBarChart
+      bar.WaterfallBarChart,
+      bar.RoundedBars
     ),
     "Horizontal Bar Charts" -> Seq(
       horizontalbarcharts.BasicHorizontalBarChart,
@@ -84,6 +87,7 @@ import scalatags.JsDom.all.{area => _, _}
     val toc = div(
       style := "margin-bottom: 5em;",
       a(href := "https://github.com/alexarchambault/plotly-scala", h2("Sources")),
+      p(s"plotly-scala ${Properties.version}, plotly.js ${js.Dynamic.global.Plotly.version}"),
       h2("Examples"),
       div(
         style := "margin-left: 3em;",
@@ -128,7 +132,7 @@ import scalatags.JsDom.all.{area => _, _}
                       unindent(demo.source) +
                       s"""
                          |
-                         |Plotly.plot("div-id", data${if (demo.layout == null) "" else ", layout"})""".stripMargin
+                         |Plotly.newPlot("div-id", data${if (demo.layout == null) "" else ", layout"})""".stripMargin
                   )
                 )
               ),
@@ -140,9 +144,9 @@ import scalatags.JsDom.all.{area => _, _}
         mainDiv.appendChild(elem.render)
 
         if (demo.layout == null)
-          Plotly.plot(divId, demo.data)
+          Plotly.newPlot(divId, demo.data)
         else
-          Plotly.plot(divId, demo.data, demo.layout)
+          Plotly.newPlot(divId, demo.data, demo.layout)
       }
     }
   }

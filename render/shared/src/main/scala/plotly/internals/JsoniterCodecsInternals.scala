@@ -163,6 +163,9 @@ object JsoniterCodecsInternals {
   implicit val alignmentCodec: JsonValueCodec[Alignment]             = enumCodec[Alignment](_.label)
   implicit val colorModelCodec: JsonValueCodec[ColorModel]           = enumCodec[ColorModel](_.label)
 
+  implicit val scatterLayoutModeCodec: JsonValueCodec[ScatterLayoutMode] =
+    enumCodec[ScatterLayoutMode](_.label)
+
   private val boxMeanLabeledCodec   = enumCodec[BoxMean.Labeled](_.label)
   private val boxPointsLabeledCodec = enumCodec[BoxPoints.Labeled](_.label)
 
