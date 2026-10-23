@@ -7,8 +7,6 @@ import java.nio.file.Files
 import com.github.plokhotnyuk.jsoniter_scala.core.readFromString
 import plotly.layout.Layout
 import org.mozilla.javascript._
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
 import plotly.element.HoverInfo
 import plotly.element.HoverInfo.{X, Y, Z}
 import plotly.element.ColorModel._
@@ -226,7 +224,7 @@ object DocumentationTests {
 
 }
 
-class DocumentationTests extends AnyFlatSpec with Matchers {
+class DocumentationTests extends munit.FunSuite {
 
   import DocumentationTests._
 
@@ -275,7 +273,7 @@ class DocumentationTests extends AnyFlatSpec with Matchers {
     post   <- subDir.listFiles().sorted
     if !post.getName.startsWith(".")
   } {
-    s"$subDir" should s"$post" in {
+    test(post.getPath) {
       val rawContent = new String(Files.readAllBytes(post.toPath), "UTF-8")
       val content    = stripFrontMatter(rawContent)
         .replace("<br>", "\\n")
@@ -304,7 +302,7 @@ class DocumentationTests extends AnyFlatSpec with Matchers {
     }
   }
 
-  it should "demo Image Trace" in {
+  test("Image Trace demo") {
     val js =
       """
         |var data = [
@@ -328,7 +326,8 @@ class DocumentationTests extends AnyFlatSpec with Matchers {
         |Plotly.newPlot('myDiv', data, layout);
         |""".stripMargin
     val (data, maybeLayout) = plotlyDemoElements(js)
-    maybeLayout should ===(
+    assertEquals(
+      maybeLayout,
       Some(
         Layout()
           .withWidth(400)
@@ -349,7 +348,7 @@ class DocumentationTests extends AnyFlatSpec with Matchers {
           .withHoverinfo(HoverInfo(X, Y, Z, HoverInfo.Color))
           .withColormodel(RGB)
 
-        image should ===(expected)
+        assertEquals(image, expected)
       case None =>
         fail("data must contain an image trace")
     }

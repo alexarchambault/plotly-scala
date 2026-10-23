@@ -1,20 +1,18 @@
 package plotly
 
-import org.scalatest.flatspec.AnyFlatSpec
-
 import scala.collection.mutable.ArrayBuffer
 
-class SequenceTests extends AnyFlatSpec {
+class SequenceTests extends munit.FunSuite {
 
-  "The implicit sequence conversion" should "convert a List to a Sequence" in {
-    assert((List(1, 2, 3): Sequence) === Sequence.Doubles(List(1d, 2d, 3d)))
+  test("The implicit sequence conversion should convert a List to a Sequence") {
+    assertEquals(List(1, 2, 3): Sequence, Sequence.Doubles(List(1d, 2d, 3d)))
   }
 
-  it should "convert a mutable ArrayBuffer to a Sequence" in {
-    assert((ArrayBuffer(1, 2, 3): Sequence) === Sequence.Doubles(List(1d, 2d, 3d)))
+  test("The implicit sequence conversion should convert a mutable ArrayBuffer to a Sequence") {
+    assertEquals(ArrayBuffer(1, 2, 3): Sequence, Sequence.Doubles(List(1d, 2d, 3d)))
   }
 
-  it should "convert a nested mutable ArrayBuffer to a Sequence" in {
+  test("The implicit sequence conversion should convert a nested mutable ArrayBuffer to a Sequence") {
     val mutableNestedDoubles: ArrayBuffer[ArrayBuffer[Double]] = ArrayBuffer(
       ArrayBuffer(1d, 2d),
       ArrayBuffer(3d, 4d)
@@ -25,7 +23,7 @@ class SequenceTests extends AnyFlatSpec {
       List(3d, 4d)
     )
 
-    assert((mutableNestedDoubles: Sequence) === Sequence.NestedDoubles(nestedDoublesList))
+    assertEquals(mutableNestedDoubles: Sequence, Sequence.NestedDoubles(nestedDoublesList))
   }
 
 }
