@@ -1,12 +1,10 @@
 package plotly
 
 import com.github.plokhotnyuk.jsoniter_scala.core.writeToString
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
 
-class FieldTests extends AnyFlatSpec with Matchers {
+class FieldTests extends munit.FunSuite {
 
-  def traceHasShowlegendField(trace: Trace): Unit = {
+  def traceHasShowlegendField(trace: Trace)(implicit loc: munit.Location): Unit = {
 
     val expectedField = ujson.Bool(true)
 
@@ -16,10 +14,10 @@ class FieldTests extends AnyFlatSpec with Matchers {
       .get("showlegend")
       .toList
 
-    assert(field === List(expectedField))
+    assertEquals(field, List(expectedField))
   }
 
-  "Bar" should "have a showlegend field" in {
+  test("Bar should have a showlegend field") {
 
     val bar = Bar(1 to 10, 1 to 10)
       .withShowlegend(true)
@@ -27,7 +25,7 @@ class FieldTests extends AnyFlatSpec with Matchers {
     traceHasShowlegendField(bar)
   }
 
-  "Box" should "have a showlegend field" in {
+  test("Box should have a showlegend field") {
 
     val box = Box(1 to 10)
       .withShowlegend(true)
@@ -35,7 +33,7 @@ class FieldTests extends AnyFlatSpec with Matchers {
     traceHasShowlegendField(box)
   }
 
-  "Histogram" should "have a showlegend field" in {
+  test("Histogram should have a showlegend field") {
 
     val histogram = Histogram(1 to 10)
       .withShowlegend(true)
@@ -43,7 +41,7 @@ class FieldTests extends AnyFlatSpec with Matchers {
     traceHasShowlegendField(histogram)
   }
 
-  "Scatter" should "have a showlegend field" in {
+  test("Scatter should have a showlegend field") {
 
     val scatter = Scatter(1 to 10)
       .withShowlegend(true)

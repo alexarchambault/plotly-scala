@@ -4,8 +4,6 @@ package doc
 import java.io.File
 import java.nio.file.Files
 
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
 import plotly.element._
 
 object SchemaTests {
@@ -32,9 +30,9 @@ object SchemaTests {
 
 }
 
-class SchemaTests extends AnyFlatSpec with Matchers {
+class SchemaTests extends munit.FunSuite {
 
-  private def compareValues(fromSchema: Set[String], fromLib: Set[String]): Unit = {
+  private def compareValues(fromSchema: Set[String], fromLib: Set[String])(implicit loc: munit.Location): Unit = {
     val onlySchema = (fromSchema -- fromLib).toVector.sorted
     val onlyLib    = (fromLib -- fromSchema).toVector.sorted
 
@@ -42,7 +40,7 @@ class SchemaTests extends AnyFlatSpec with Matchers {
     assert(onlyLib.isEmpty, s"Only in lib: ${onlyLib.mkString(", ")}")
   }
 
-  "Scatter mode flags" should "be exhaustive" in {
+  test("Scatter mode flags should be exhaustive") {
     val fromSchema = SchemaTests
       .flagAttributeFlags("scatter", "mode")
       .toSet
@@ -54,7 +52,7 @@ class SchemaTests extends AnyFlatSpec with Matchers {
     compareValues(fromSchema, fromLib)
   }
 
-  "Text position" should "be exhausitve" in {
+  test("Text position should be exhaustive") {
     val fromSchema = SchemaTests
       .enumeratedAttributeValues("scatter", "textposition")
       .toSet
