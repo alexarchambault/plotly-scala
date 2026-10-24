@@ -20,11 +20,11 @@ import java.util.zip.ZipFile
 import scala.jdk.CollectionConverters.*
 
 object Versions {
-  def scala212 = "2.12.21"
-  def scala213 = "2.13.18"
+  def scala212      = "2.12.21"
+  def scala213      = "2.13.18"
   def scalaJs       = "1.22.0"
   def plotlyJs      = "2.35.3"
-  def jsoniterScala = "2.41.2"
+  def jsoniterScala = "2.41.7"
 }
 
 val scalaVersions = Seq(Versions.scala213, Versions.scala212)
