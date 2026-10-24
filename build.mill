@@ -20,10 +20,10 @@ import java.util.zip.ZipFile
 import scala.jdk.CollectionConverters.*
 
 object Versions {
-  def scala212 = "2.12.21"
-  def scala213 = "2.13.18"
+  def scala212      = "2.12.21"
+  def scala213      = "2.13.18"
   def scalaJs       = "1.22.0"
-  def plotlyJs      = "2.35.3"
+  def plotlyJs      = "4.1.0"
   def jsoniterScala = "2.41.2"
 }
 
