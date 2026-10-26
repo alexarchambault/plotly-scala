@@ -3,3 +3,5 @@ target/
 .idea/
 .vscode/
 out/
+/notebooks/
+/jupyter/.venv/

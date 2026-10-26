@@ -1,0 +1,12 @@
+{
+  "services": {
+    "jupyter": {
+      "command": "set -o pipefail; eval \"$(./mill show dev.jupyterCmd --ip=0.0.0.0 --base-address={external_https_proxy_url} --port={bind_port} --no-browser --IdentityProvider.token= --ServerApp.password= | jq -r .)\"",
+      "proxy": true
+    },
+    "demo": {
+      "command": "set -o pipefail; eval \"$(./mill show dev.demoCmd --host=0.0.0.0 --port={bind_port} | jq -r .)\"",
+      "proxy": "root"
+    }
+  }
+}
