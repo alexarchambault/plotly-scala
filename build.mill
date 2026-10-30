@@ -24,7 +24,7 @@ object Versions {
   def scala213      = "2.13.18"
   def scalaJs       = "1.22.0"
   def plotlyJs      = "2.35.3"
-  def jsoniterScala = "2.41.7"
+  def jsoniterScala = "2.42.2"
 }
 
 val scalaVersions = Seq(Versions.scala213, Versions.scala212)
