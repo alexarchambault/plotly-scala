@@ -18,7 +18,7 @@ jobs:
     - uses: actions/checkout@v7
       with:
         fetch-depth: 2 # selective execution on PRs needs the base commit
-    - uses: coursier/cache-action@v8
+    - uses: coursier/cache-action@v9
     - run: scripts/ci-mill.sh "__[$SCALA_VERSION].{compile,test,mimaReportBinaryIssues}"
       env:
         SCALA_VERSION: ${{ matrix.SCALA_VERSION }}
@@ -29,7 +29,7 @@ jobs:
     - uses: actions/checkout@v7
       with:
         fetch-depth: 2 # selective execution on PRs needs the base commit
-    - uses: coursier/cache-action@v8
+    - uses: coursier/cache-action@v9
     - run: scripts/ci-mill.sh demo.fullSite
 
   publish:
@@ -46,7 +46,7 @@ jobs:
     - uses: actions/checkout@v7
       with:
         fetch-depth: 0 # the version is computed from git tags
-    - uses: coursier/cache-action@v8
+    - uses: coursier/cache-action@v9
     - name: Release
       run: |
         if [[ "$GITHUB_REF" == refs/tags/* ]]; then
