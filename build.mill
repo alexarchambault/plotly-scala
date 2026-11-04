@@ -31,7 +31,7 @@ val scalaVersions = Seq(Versions.scala213, Versions.scala212)
 
 object Deps {
   def almondScalaApi = mvn"sh.almond::jupyter-api:0.14.5"
-  def dataClass      = mvn"io.github.alexarchambault::data-class:0.2.11"
+  def dataClass      = mvn"io.github.alexarchambault::data-class:0.3.0"
   def jsoniterCore   = mvn"com.github.plokhotnyuk.jsoniter-scala::jsoniter-scala-core::${Versions.jsoniterScala}"
   def jsoniterMacros = mvn"com.github.plokhotnyuk.jsoniter-scala::jsoniter-scala-macros::${Versions.jsoniterScala}"
   def macroParadise  = mvn"org.scalamacros:::paradise:2.1.1"
