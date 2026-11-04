@@ -4,6 +4,7 @@ import java.io.{ByteArrayOutputStream, File, InputStream}
 
 import plotly.Codecs._
 import plotly.element.Color
+import plotly.internals.DeprecatedLayout
 import plotly.layout._
 import java.lang.{Boolean => JBoolean, Double => JDouble, Integer => JInt}
 import java.nio.file.Files
@@ -225,7 +226,7 @@ object Plotly {
     ): Unit =
       plot(
         path,
-        Layout(
+        DeprecatedLayout(
           title,
           legend,
           width,
@@ -251,7 +252,8 @@ object Plotly {
           bargap,
           bargroupgap,
           hovermode,
-          boxmode
+          boxmode,
+          null // scene
         ),
         useCdn,
         openInBrowser,
@@ -323,7 +325,7 @@ object Plotly {
     ): Unit =
       plot(
         path,
-        Layout(
+        DeprecatedLayout(
           title,
           legend,
           width,
@@ -349,7 +351,8 @@ object Plotly {
           bargap,
           bargroupgap,
           hovermode,
-          boxmode
+          boxmode,
+          null // scene
         ),
         useCdn,
         openInBrowser,

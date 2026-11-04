@@ -15,10 +15,18 @@ object Symbol {
     def dot: Boolean
   }
 
-  @data class Circle(open: Boolean = false, dot: Boolean = false)  extends DotSymbol("circle", 0)
-  @data class Square(open: Boolean = false, dot: Boolean = false)  extends DotSymbol("square", 1)
-  @data class Diamond(open: Boolean = false, dot: Boolean = false) extends DotSymbol("diamond", 2)
-  @data class Cross(open: Boolean = false, dot: Boolean = false)   extends DotSymbol("cross", 3)
+  @data final case class Circle(open: Boolean = false, dot: Boolean = false)
+      extends DotSymbol("circle", 0)
+      with SymbolCircleSetters
+  @data final case class Square(open: Boolean = false, dot: Boolean = false)
+      extends DotSymbol("square", 1)
+      with SymbolSquareSetters
+  @data final case class Diamond(open: Boolean = false, dot: Boolean = false)
+      extends DotSymbol("diamond", 2)
+      with SymbolDiamondSetters
+  @data final case class Cross(open: Boolean = false, dot: Boolean = false)
+      extends DotSymbol("cross", 3)
+      with SymbolCrossSetters
 
   /*
   "4" | "x" | "104" | "x-open" | "204" | "x-dot" | "304" | "x-open-dot"

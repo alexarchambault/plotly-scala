@@ -2,4 +2,4 @@ package plotly.element
 
 import dataclass.data
 
-@data class Cumulative(enabled: Boolean)
+@data final case class Cumulative(enabled: Boolean) extends CumulativeSetters

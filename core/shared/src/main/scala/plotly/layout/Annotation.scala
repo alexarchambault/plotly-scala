@@ -1,12 +1,10 @@
 package plotly
 package layout
 
-import java.lang.{Boolean => JBoolean, Double => JDouble}
-
-import dataclass.data
+import dataclass.{data, since}
 import plotly.element._
 
-@data(optionSetters = true) class Annotation(
+@data(optionSetters = true) final case class Annotation(
     xref: Option[Ref] = None,
     yref: Option[Ref] = None,
     x: Option[Element] = None,
@@ -19,30 +17,6 @@ import plotly.element._
     @since("0.8.0")
     ax: Option[Double] = None,
     ay: Option[Double] = None
-)
+) extends AnnotationSetters
 
-object Annotation {
-  @deprecated("Use Annotation() and chain-call .with* methods on it instead", "0.8.0")
-  def apply(
-      xref: Ref = null,
-      yref: Ref = null,
-      x: Element = null,
-      y: Element = null,
-      xanchor: Anchor = null,
-      yanchor: Anchor = null,
-      text: Element = null,
-      font: Font = null,
-      showarrow: JBoolean = null
-  ): Annotation =
-    Annotation(
-      Option(xref),
-      Option(yref),
-      Option(x),
-      Option(y),
-      Option(xanchor),
-      Option(yanchor),
-      Option(text),
-      Option(font),
-      Option(showarrow).map(v => v: Boolean)
-    )
-}
+object Annotation extends AnnotationDeprecatedApply
