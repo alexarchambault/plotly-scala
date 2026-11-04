@@ -4,6 +4,8 @@
 //| mill-jvm-opts: ["-Xss8m"]
 //| mvnDeps:
 //| - com.github.lolgab::mill-mima_mill1:0.2.2
+//| # to parse the sources the with* setters of @data classes are generated from, on Scala 3
+//| - org.scalameta::scalameta:4.17.4
 package build
 
 import com.github.lolgab.mill.mima.*
@@ -22,16 +24,23 @@ import scala.jdk.CollectionConverters.*
 object Versions {
   def scala212      = "2.12.21"
   def scala213      = "2.13.18"
+  // the Scala 3 LTS, so that the library can be used from any later Scala 3 version
+  def scala3        = "3.3.9"
   def scalaJs       = "1.22.0"
   def plotlyJs      = "2.35.3"
+  def dataClass     = "0.3.0"
   def jsoniterScala = "2.42.2"
 }
 
-val scalaVersions = Seq(Versions.scala213, Versions.scala212)
+val scalaVersions = Seq(Versions.scala213, Versions.scala212, Versions.scala3)
 
 object Deps {
   def almondScalaApi = mvn"sh.almond::jupyter-api:0.14.5"
-  def dataClass      = mvn"io.github.alexarchambault::data-class:0.3.0"
+  def dataClass      = mvn"io.github.alexarchambault::data-class:${Versions.dataClass}"
+  // the JVM artifact, on Scala.js too: on Scala 3, only its annotations are needed, at compile time
+  def dataClass3 = mvn"io.github.alexarchambault:data-class_3:${Versions.dataClass}"
+  // compiler plugins are published for specific Scala versions
+  def dataClassPlugin = mvn"io.github.alexarchambault:::data-class-plugin:${Versions.dataClass}"
   def jsoniterCore   = mvn"com.github.plokhotnyuk.jsoniter-scala::jsoniter-scala-core::${Versions.jsoniterScala}"
   def jsoniterMacros = mvn"com.github.plokhotnyuk.jsoniter-scala::jsoniter-scala-macros::${Versions.jsoniterScala}"
   def macroParadise  = mvn"org.scalamacros:::paradise:2.1.1"
@@ -83,15 +92,20 @@ def gitHead = Task.Input {
   os.proc("git", "rev-parse", "HEAD").call(cwd = BuildCtx.workspaceRoot).out.trim()
 }
 
-trait ScalaSettings extends CrossScalaModule {
-  private def isScala212 = crossScalaVersion.startsWith("2.12.")
-  def scalacOptions      = super.scalacOptions() ++
+// CrossScalaVersionRanges: scala-2.13+ source directories, for both Scala 2.13 and Scala 3
+trait ScalaSettings extends CrossScalaModule, CrossScalaVersionRanges {
+  protected def isScala212 = crossScalaVersion.startsWith("2.12.")
+  protected def isScala3   = crossScalaVersion.startsWith("3.")
+  def scalacOptions        = super.scalacOptions() ++
     Seq("-deprecation", "-feature") ++
     // keep targeting Java 11, even when building with a more recent JDK
     Seq("-release", "11") ++
-    (if (isScala212) Nil else Seq("-Ymacro-annotations"))
+    // On Scala 2, data-class expands the @data / @since annotations itself (macro annotations).
+    // On Scala 3, the data-class compiler plugin generates the binary-compatible overloads of
+    // @since parameters, and makes compilation fail if it's not enabled.
+    (if (isScala212) Nil else if (isScala3) Seq("-Xplugin-require:data-class") else Seq("-Ymacro-annotations"))
   def scalacPluginMvnDeps = super.scalacPluginMvnDeps() ++
-    (if (isScala212) Seq(Deps.macroParadise) else Nil)
+    (if (isScala212) Seq(Deps.macroParadise) else if (isScala3) Seq(Deps.dataClassPlugin) else Nil)
 }
 
 trait Published extends ScalaSettings, PublishModule {
@@ -138,16 +152,130 @@ trait Platform extends CrossSbtPlatformModule {
 }
 
 object core extends Module {
-  object jvm extends Cross[Jvm](scalaVersions)
-  trait Jvm  extends PublishedJvm, Platform {
-    // scala-reflect is needed to compile the Enumerate macro
-    def compileMvnDeps = Seq(Deps.dataClass, Deps.scalaReflect(scalaVersion()))
+  trait Core extends ScalaSettings {
+    def compileMvnDeps =
+      if (isScala3) Seq(Deps.dataClass3)
+      // scala-reflect is needed to compile the Enumerate macro
+      else Seq(Deps.dataClass, Deps.scalaReflect(scalaVersion()))
+
+    // The @data macro generates with* setters on Scala 2, but the data-class compiler plugin
+    // doesn't on Scala 3. So each @data class Foo extends a FooSetters trait, generated here, that
+    // has these setters on Scala 3, and is empty on Scala 2.
+    def dataSetters = Task {
+      DataSetters.generate(sources().map(_.path), Task.dest, withSetters = isScala3)
+      PathRef(Task.dest)
+    }
+    def generatedSources = super.generatedSources() ++ Seq(dataSetters())
   }
 
+  object jvm extends Cross[Jvm](scalaVersions)
+  trait Jvm  extends PublishedJvm, Platform, Core
+
   object js extends Cross[Js](scalaVersions)
-  trait Js  extends PublishedJs, Platform {
-    def compileMvnDeps = Seq(Deps.dataClass, Deps.scalaReflect(scalaVersion()))
+  trait Js  extends PublishedJs, Platform, Core
+}
+
+/** Generates the FooSetters traits that the @data classes Foo extend (see core.Core.dataSetters) */
+object DataSetters {
+  import scala.meta.*
+
+  private def fail(tree: Tree, msg: String): Nothing = {
+    val path = tree.pos.input match {
+      case f: Input.VirtualFile => f.path
+      case other                => other.toString
+    }
+    sys.error(s"$path:${tree.pos.startLine + 1}: $msg")
   }
+
+  private def dataAnnotation(cls: Defn.Class): Option[Mod.Annot] =
+    cls.mods.collectFirst {
+      case annot @ Mod.Annot(init) if init.tpe.syntax == "data" || init.tpe.syntax == "dataclass.data" =>
+        annot
+    }
+
+  // Package clauses, and imports at the top of each package, of the source containing tree
+  private def packagesAndImports(tree: Tree): (Seq[String], Seq[String]) = {
+    val pkgs = Iterator.iterate(tree.parent)(_.flatMap(_.parent)).takeWhile(_.nonEmpty).flatten.collect {
+      case pkg: Pkg => pkg
+    }.toSeq.reverse
+    (pkgs.map(_.ref.syntax), pkgs.flatMap(_.body.stats.collect { case i: Import => i.syntax }))
+  }
+
+  private def owners(tree: Tree): Seq[String] =
+    Iterator.iterate(tree.parent)(_.flatMap(_.parent)).takeWhile(_.nonEmpty).flatten.collect {
+      case obj: Defn.Object => obj.name.value
+      case cls: Defn.Class  => fail(cls, "@data classes nested in classes are not supported")
+      case t: Defn.Trait    => fail(t, "@data classes nested in traits are not supported")
+    }.toSeq.reverse
+
+  private def setters(cls: Defn.Class, qualifiedName: String): Seq[String] = {
+    val annot = dataAnnotation(cls).get
+    val args  = annot.init.argClauses.flatMap(_.values).map {
+      case Term.Assign(Term.Name(name), Lit.Boolean(value)) => name -> value
+      case other                                            => fail(other, s"Unsupported @data argument: $other")
+    }.toMap
+    for (name <- args.keySet -- Set("optionSetters", "setters"))
+      fail(annot, s"@data argument $name is not supported by the Scala 3 setter generation")
+    if (cls.tparamClause.values.nonEmpty)
+      fail(cls, "@data classes with type parameters are not supported by the Scala 3 setter generation")
+    val paramss = cls.ctor.paramClauses.toSeq
+    if (paramss.length > 1)
+      fail(cls, "@data classes with several parameter lists are not supported by the Scala 3 setter generation")
+    if (args.getOrElse("setters", true))
+      for {
+        param <- paramss.flatMap(_.values)
+        name     = param.name.syntax
+        setter   = "with" + param.name.value.capitalize
+        tpe      = param.decltpe.getOrElse(fail(param, "Parameter type expected"))
+        optional = tpe match {
+          case Type.Apply.After_4_6_0(Type.Name("Option"), Type.ArgClause(List(wrapped)))
+              if args.getOrElse("optionSetters", false) =>
+            Seq(s"  def $setter($name: ${wrapped.syntax}): $qualifiedName = copy($name = _root_.scala.Some($name))")
+          case _ => Nil
+        }
+        setter <- s"  def $setter($name: ${tpe.syntax}): $qualifiedName = copy($name = $name)" +: optional
+      } yield setter
+    else Nil
+  }
+
+  def generate(sourceRoots: Seq[os.Path], dest: os.Path, withSetters: Boolean): Unit =
+    for {
+      root <- sourceRoots
+      if os.isDir(root)
+      file <- os.walk(root)
+      if os.isFile(file) && file.ext == "scala"
+      content = os.read(file)
+      if content.contains("@data")
+    } {
+      val input   = Input.VirtualFile(file.relativeTo(BuildCtx.workspaceRoot).toString, content)
+      val source  = dialects.Scala213(input).parse[Source].get
+      val classes = source.collect { case cls: Defn.Class if dataAnnotation(cls).nonEmpty => cls }
+      if (classes.nonEmpty) {
+        val (pkgs, imports) = packagesAndImports(classes.head)
+        val traits          = classes.map { cls =>
+          val owners0       = owners(cls)
+          val qualifiedName = (owners0 :+ cls.name.value).mkString(".")
+          val traitName     = owners0.mkString + cls.name.value + "Setters"
+          if (!cls.templ.inits.exists(_.tpe.syntax == traitName))
+            fail(cls, s"@data class ${cls.name.value} should extend $traitName, which holds its setters on Scala 3")
+          val access        = pkgs.headOption.fold("private")(p => s"private[${p.split('.').head}]")
+          if (withSetters) {
+            val ownerImport = if (owners0.isEmpty) Nil else Seq(s"  import ${owners0.mkString(".")}._")
+            (Seq(s"$access trait $traitName { self: $qualifiedName =>") ++ ownerImport ++
+              setters(cls, qualifiedName) ++ Seq("}")).mkString("\n")
+          } else
+            s"$access trait $traitName"
+        }
+        val header = pkgs.map("package " + _) ++ Seq("") ++
+          (if (withSetters && imports.nonEmpty) imports ++ Seq("") else Nil)
+        os.write(
+          dest / pkgs.flatMap(_.split('.')) / s"${file.baseName}Setters.scala",
+          (Seq("// Generated by DataSetters in build.mill, don't edit", "") ++ header ++ traits)
+            .mkString("", "\n", "\n"),
+          createFolders = true
+        )
+      }
+    }
 }
 
 object render extends Module {

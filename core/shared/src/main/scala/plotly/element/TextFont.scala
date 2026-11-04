@@ -3,4 +3,4 @@ package element
 
 import dataclass.data
 
-@data class TextFont(family: String)
+@data final case class TextFont(family: String) extends TextFontSetters

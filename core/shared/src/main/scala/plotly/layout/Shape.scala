@@ -3,7 +3,7 @@ package plotly.layout
 import dataclass.data
 import plotly.element.{Color, Line}
 
-@data(optionSetters = true) class Shape(
+@data(optionSetters = true) final case class Shape(
     `type`: Option[String] = None,
     xref: Option[String] = None,
     yref: Option[String] = None,
@@ -14,4 +14,4 @@ import plotly.element.{Color, Line}
     fillcolor: Option[Color] = None,
     opacity: Option[Double] = None,
     line: Option[Line] = None
-)
+) extends ShapeSetters

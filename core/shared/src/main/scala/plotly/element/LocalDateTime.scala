@@ -4,14 +4,14 @@ import dataclass.data
 
 import scala.util.Try
 
-@data class LocalDateTime(
+@data final case class LocalDateTime(
     year: Int,
     month: Int,
     dayOfMonth: Int,
     hour: Int,
     minute: Int,
     second: Int
-) {
+) extends LocalDateTimeSetters {
   override def toString: String =
     f"$year-$month%02d-$dayOfMonth%02d $hour%02d:$minute%02d:$second%02d"
 }

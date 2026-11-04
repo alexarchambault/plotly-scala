@@ -6,6 +6,7 @@ import almond.interpreter.api.{DisplayData, OutputHandler}
 
 import scala.util.Random
 import plotly.element._
+import plotly.internals.DeprecatedLayout
 import plotly.layout._
 
 object Almond {
@@ -149,7 +150,7 @@ object Almond {
         publish: OutputHandler
     ): String =
       plot(
-        Layout(
+        DeprecatedLayout(
           title,
           legend,
           width,
@@ -175,7 +176,8 @@ object Almond {
           bargap,
           bargroupgap,
           hovermode,
-          boxmode
+          boxmode,
+          null // scene
         ),
         Config()
           .withEditable(Option(editable).map[Boolean](identity))
@@ -259,7 +261,7 @@ object Almond {
         publish: OutputHandler
     ): String =
       plot(
-        Layout(
+        DeprecatedLayout(
           title,
           legend,
           width,
@@ -285,7 +287,8 @@ object Almond {
           bargap,
           bargroupgap,
           hovermode,
-          boxmode
+          boxmode,
+          null // scene
         ),
         Config()
           .withEditable(Option(editable).map[Boolean](identity))

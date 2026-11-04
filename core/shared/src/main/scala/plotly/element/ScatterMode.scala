@@ -3,7 +3,7 @@ package element
 
 import dataclass.data
 
-@data class ScatterMode(flags: Set[ScatterMode.Flag])
+@data final case class ScatterMode(flags: Set[ScatterMode.Flag]) extends ScatterModeSetters
 
 object ScatterMode {
   def apply(flags: Flag*): ScatterMode =
