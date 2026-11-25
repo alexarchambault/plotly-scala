@@ -1,8 +1,6 @@
 package plotly
 package layout
 
-import java.lang.{Boolean => JBoolean, Double => JDouble, Integer => JInt}
-
 import dataclass.data
 import plotly.element._
 
@@ -45,65 +43,3 @@ import plotly.element._
     // in pixels (plotly.js also accepts a percentage of the bar width, like "25%")
     barcornerradius: Option[Double] = None
 )
-
-object Layout {
-  @deprecated("Use Layout() and chain-call .with* methods on it instead", "0.8.0")
-  def apply(
-      title: String = null,
-      legend: Legend = null,
-      width: JInt = null,
-      height: JInt = null,
-      showlegend: JBoolean = null,
-      xaxis: Axis = null,
-      yaxis: Axis = null,
-      xaxis1: Axis = null,
-      xaxis2: Axis = null,
-      xaxis3: Axis = null,
-      xaxis4: Axis = null,
-      yaxis1: Axis = null,
-      yaxis2: Axis = null,
-      yaxis3: Axis = null,
-      yaxis4: Axis = null,
-      barmode: BarMode = null,
-      autosize: JBoolean = null,
-      margin: Margin = null,
-      annotations: Seq[Annotation] = null,
-      plot_bgcolor: Color = null,
-      paper_bgcolor: Color = null,
-      font: Font = null,
-      bargap: JDouble = null,
-      bargroupgap: JDouble = null,
-      hovermode: HoverMode = null,
-      boxmode: BoxMode = null,
-      scene: Scene = null
-  ): Layout =
-    new Layout(
-      Option(title),
-      Option(legend),
-      Option(width).map(x => x),
-      Option(height).map(x => x),
-      Option(showlegend).map(x => x),
-      Option(xaxis),
-      Option(yaxis),
-      Option(xaxis1),
-      Option(xaxis2),
-      Option(xaxis3),
-      Option(xaxis4),
-      Option(yaxis1),
-      Option(yaxis2),
-      Option(yaxis3),
-      Option(yaxis4),
-      Option(barmode),
-      Option(autosize).map(x => x),
-      Option(margin),
-      Option(annotations),
-      Option(plot_bgcolor),
-      Option(paper_bgcolor),
-      Option(font),
-      Option(bargap).map(x => x),
-      Option(bargroupgap).map(x => x),
-      Option(hovermode),
-      Option(boxmode),
-      Option(scene)
-    )
-}
