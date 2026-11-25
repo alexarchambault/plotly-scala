@@ -99,11 +99,9 @@ val valuesA = labels.map(_ => util.Random.nextGaussian())
 val valuesB = labels.map(_ => 0.5 + util.Random.nextGaussian())
 
 Seq(
-  Bar(labels, valuesA, name = "A"),
-  Bar(labels, valuesB, name = "B")
-).plot(
-  title = "Level"
-)
+  Bar(labels, valuesA).withName("A"),
+  Bar(labels, valuesB).withName("B")
+).plot("plot.html", Layout().withTitle("Level"))
 ```
 
 

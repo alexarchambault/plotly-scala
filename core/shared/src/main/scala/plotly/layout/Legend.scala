@@ -1,8 +1,6 @@
 package plotly
 package layout
 
-import java.lang.{Double => JDouble}
-
 import dataclass._
 import plotly.element._
 
@@ -19,31 +17,3 @@ import plotly.element._
     @since
     orientation: Option[Orientation] = None
 )
-
-object Legend {
-  @deprecated("Use Legend() and chain-call .with* methods on it instead", "0.8.0")
-  def apply(
-      x: JDouble = null,
-      y: JDouble = null,
-      traceorder: TraceOrder = null,
-      yref: Ref = null,
-      font: Font = null,
-      bordercolor: Color = null,
-      bgcolor: Color = null,
-      xanchor: Anchor = null,
-      yanchor: Anchor = null,
-      orientation: Orientation = null
-  ): Legend =
-    Legend(
-      Option(x).map(v => v: Double),
-      Option(y).map(v => v: Double),
-      Option(traceorder),
-      Option(yref),
-      Option(font),
-      Option(bordercolor),
-      Option(bgcolor),
-      Option(xanchor),
-      Option(yanchor),
-      Option(orientation)
-    )
-}
