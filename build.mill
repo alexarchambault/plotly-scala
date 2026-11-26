@@ -413,6 +413,7 @@ object dev extends Module {
 
   /** Installs almond kernels, one per Scala version of [[scalaVersions]], and prints the command
     * running JupyterLab with them, with `COURSIER_REPOSITORIES` pointing at [[localRepo]].
+    * JupyterLab is run from `notebooks`, where the notebooks of `demo/notebooks` are linked.
     *
     * Accepts `--base-address=…`, the external address JupyterLab is accessed from, like
     * `https://host/some/path/`, when it's run behind a proxy. Other arguments are passed to
@@ -734,6 +735,25 @@ object DevTools {
     dir
   }
 
+  /** Links the notebooks of `demo/notebooks` from `notebooks`, the root directory of JupyterLab, so
+    * that they're shown at the root of its file tree (`notebooks` itself is ignored by git, it holds
+    * the notebooks users create). Saving them from JupyterLab writes to the files under
+    * `demo/notebooks`. Files already in `notebooks` are left alone.
+    */
+  private def linkDemoNotebooks(workspace: os.Path): Unit = {
+    val demoDir = workspace / "demo" / "notebooks"
+    if (os.isDir(demoDir))
+      for (nb <- os.list(demoDir) if nb.ext == "ipynb") {
+        val link = workspace / "notebooks" / nb.last
+        if (!os.exists(link, followLinks = false))
+          try os.symlink(link, nb.relativeTo(link / os.up))
+          catch {
+            // symlinks may need specific permissions on Windows
+            case _: java.io.IOException => os.copy(nb, link)
+          }
+      }
+  }
+
   /** Installs almond kernels under `jupyterDir`, one per Scala version of [[scalaVersions]], and
     * returns the command running JupyterLab with them, from the uv-managed environment of
     * `jupyter/pyproject.toml`.
@@ -791,6 +811,7 @@ object DevTools {
       Seq(localRepo.toNIO.toUri.toASCIIString.stripSuffix("/"), "ivy2Local", "central")
     val (baseAddressOpt, args0) = extractOption(args, "--base-address")
     os.makeDir.all(workspace / "notebooks")
+    linkDemoNotebooks(workspace)
     val rootRedirectEnv = baseAddressOpt.flatMap(baseAddressPath).map { _ =>
       val dir = writeRootRedirectExtension(jupyterDir / "python")
       "PYTHONPATH" -> (dir.toString +: sys.env.get("PYTHONPATH").toSeq)
