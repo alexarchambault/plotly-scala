@@ -11,6 +11,35 @@ object Almond {
     @volatile var initialized = false
   }
 
+  /** Whether RequireJS is available, like in the classic Jupyter Notebook. It isn't in JupyterLab
+    * or in Jupyter Notebook >= 7, where plotly.js gets loaded via a script element instead.
+    */
+  private val hasRequireJs = "typeof require === 'function' && typeof require.config === 'function'"
+
+  /** JavaScript calling `plot` with the Plotly object, once plotly.js is loaded. Without RequireJS,
+    * this loads plotly.js from the CDN if [[init]] didn't load it already (if the page got reloaded
+    * since, for example).
+    */
+  private def withPlotly(plot: String): String =
+    s"""if ($hasRequireJs)
+       |  require(['plotly'], $plot);
+       |else {
+       |  if (!window.plotlyScalaPlotly)
+       |    window.plotlyScalaPlotly = window.Plotly ?
+       |      Promise.resolve(window.Plotly) :
+       |      new Promise(function (resolve, reject) {
+       |        var script = document.createElement('script');
+       |        script.src = 'https://cdn.plot.ly/plotly-${Plotly.plotlyVersion}.min.js';
+       |        script.onload = function () { resolve(window.Plotly); };
+       |        script.onerror = function (e) {
+       |          window.plotlyScalaPlotly = undefined;
+       |          reject(e);
+       |        };
+       |        document.head.appendChild(script);
+       |      });
+       |  window.plotlyScalaPlotly.then($plot);
+       |}""".stripMargin
+
   def init(offline: Boolean = false)(implicit publish: OutputHandler): Unit = {
 
     // offline mode like in plotly-python
@@ -29,13 +58,29 @@ object Almond {
            |});
         """.stripMargin
 
+    // offline, without RequireJS, plotly.js defines window.Plotly itself
+    val noRequireInit =
+      if (offline)
+        s"""(function () {
+           |  ${Plotly.plotlyMinJs}
+           |})();
+           |window.plotlyScalaPlotly = Promise.resolve(window.Plotly);
+        """.stripMargin
+      else
+        withPlotly("function () {}")
+
     val html = s"""
       <script type="text/javascript">
-        $requireInit
+        if ($hasRequireJs) {
+          $requireInit
 
-        require(['plotly'], function(Plotly) {
-          window.Plotly = Plotly;
-        });
+          require(['plotly'], function(Plotly) {
+            window.Plotly = Plotly;
+          });
+        }
+        else {
+          $noRequireInit
+        }
       </script>
     """
 
@@ -63,11 +108,11 @@ object Almond {
     val baseJs = Plotly.jsSnippet(div0, data, layout, config)
     val json   = Plotly.jsonSnippet(data, layout, config)
 
-    val js =
-      s"""require(['plotly'], function(Plotly) {
+    val js = withPlotly(
+      s"""function(Plotly) {
          |  $baseJs
-         |});
-      """.stripMargin
+         |}""".stripMargin
+    )
 
     val data0 = DisplayData()
       .add(
