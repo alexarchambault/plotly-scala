@@ -165,6 +165,14 @@ class SchemaTests extends munit.FunSuite {
     )
   }
 
+  test("Dash styles should include the named ones") {
+    // plotly.js also accepts dash lengths, like "5px,10px,2px,2px", as dash styles
+    compareValues(
+      SchemaTests.schema("traces")("scatter")("attributes")("line")("dash")("values").arr.map(_.str).toSet,
+      Enumerate[Dash].apply().map(_.label).toSet
+    )
+  }
+
   test("Text position should be exhaustive") {
     val fromSchema = SchemaTests
       .enumeratedAttributeValues("scatter", "textposition")
