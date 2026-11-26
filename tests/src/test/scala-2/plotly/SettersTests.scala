@@ -22,6 +22,7 @@ class SettersTests extends munit.FunSuite {
     classOf[Surface]                -> true,
     classOf[Heatmap]                -> true,
     classOf[Candlestick]            -> true,
+    classOf[Pie]                    -> true,
     classOf[Config]                 -> true,
     classOf[Annotation]             -> true,
     classOf[Axis]                   -> true,
@@ -41,6 +42,7 @@ class SettersTests extends munit.FunSuite {
     classOf[HoverLabelFont]         -> true,
     classOf[Line]                   -> true,
     classOf[Marker]                 -> true,
+    classOf[Domain]                 -> true,
     classOf[AxisAnchor.Reference]   -> false,
     classOf[Bins]                   -> false,
     classOf[BoxMean.Bool]           -> false,
@@ -58,17 +60,23 @@ class SettersTests extends munit.FunSuite {
     classOf[Symbol.Cross]           -> false,
     classOf[Symbol.Diamond]         -> false,
     classOf[Symbol.Square]          -> false,
-    classOf[TextFont]               -> false
+    classOf[TextFont]               -> false,
+    classOf[TextInfo]               -> false
   )
 
   for ((cls, optionSetters) <- classes)
     test(s"${cls.getName} has setters for all its fields") {
       val fields = cls.getDeclaredFields.toSeq.filter(f => !Modifier.isStatic(f.getModifiers))
       // On the classes with option setters, withValues (their nullOptionCopyMethodName), and the
-      // methods of the default values of its parameters, aren't setters
-      val setters = cls.getMethods.toSeq
+      // methods of the default values of its parameters, aren't setters. The setters of a values
+      // field (pie traces have one) are also named withValues, and take a single parameter.
+      val hasValuesField = fields.exists(_.getName == "values")
+      val setters        = cls.getMethods.toSeq
         .filter(_.getName.startsWith("with"))
-        .filter(m => !optionSetters || m.getName.takeWhile(_ != '$') != "withValues")
+        .filter { m =>
+          !optionSetters || m.getName.takeWhile(_ != '$') != "withValues" ||
+          (hasValuesField && m.getName == "withValues" && m.getParameterCount == 1)
+        }
         .groupBy(_.getName)
       assert(fields.nonEmpty)
       for (field <- fields) {

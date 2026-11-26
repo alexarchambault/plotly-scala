@@ -134,34 +134,38 @@ object JsoniterCodecsInternals {
     stringCodec(label)((s, in) => map.getOrElse(s, in.decodeError(s"Unrecognized $name: '$s'")))
   }
 
-  implicit val anchorCodec: JsonValueCodec[Anchor]                   = enumCodec[Anchor](_.label)
-  implicit val refCodec: JsonValueCodec[Ref]                         = enumCodec[Ref](_.label)
-  implicit val axisAnchorCodec: JsonValueCodec[AxisAnchor]           = enumCodec[AxisAnchor](_.label)
-  implicit val axisReferenceCodec: JsonValueCodec[AxisReference]     = enumCodec[AxisReference](_.label)
-  implicit val axisTypeCodec: JsonValueCodec[AxisType]               = enumCodec[AxisType](_.label)
-  implicit val barModeCodec: JsonValueCodec[BarMode]                 = enumCodec[BarMode](_.label)
-  implicit val boxModeCodec: JsonValueCodec[BoxMode]                 = enumCodec[BoxMode](_.label)
-  implicit val dashCodec: JsonValueCodec[Dash]                       = enumCodec[Dash](_.label)
-  implicit val fillCodec: JsonValueCodec[Fill]                       = enumCodec[Fill](_.label)
-  implicit val hoverModeCodec: JsonValueCodec[HoverMode]             = enumCodec[HoverMode](_.label)
-  implicit val lineShapeCodec: JsonValueCodec[LineShape]             = enumCodec[LineShape](_.label)
-  implicit val orientationCodec: JsonValueCodec[Orientation]         = enumCodec[Orientation](_.label)
-  implicit val traceOrderCodec: JsonValueCodec[TraceOrder]           = enumCodec[TraceOrder](_.label)
-  implicit val textPositionCodec: JsonValueCodec[TextPosition]       = enumCodec[TextPosition](_.label)
-  implicit val barTextPositionCodec: JsonValueCodec[BarTextPosition] = enumCodec[BarTextPosition](_.label)
-  implicit val sideCodec: JsonValueCodec[Side]                       = enumCodec[Side](_.label)
-  implicit val symbolCodec: JsonValueCodec[Symbol]                   = enumCodec[Symbol](_.label)
-  implicit val ticksCodec: JsonValueCodec[Ticks]                     = enumCodec[Ticks](_.label)
-  implicit val histNormCodec: JsonValueCodec[HistNorm]               = enumCodec[HistNorm](_.label)
-  implicit val sizeModeCodec: JsonValueCodec[SizeMode]               = enumCodec[SizeMode](_.label)
-  implicit val hoverOnCodec: JsonValueCodec[HoverOn]                 = enumCodec[HoverOn](_.label)
-  implicit val groupNormCodec: JsonValueCodec[GroupNorm]             = enumCodec[GroupNorm](_.label)
-  implicit val histFuncCodec: JsonValueCodec[HistFunc]               = enumCodec[HistFunc](_.label)
-  implicit val tickModeCodec: JsonValueCodec[TickMode]               = enumCodec[TickMode](_.mode)
-  implicit val patternCodec: JsonValueCodec[Pattern]                 = enumCodec[Pattern](_.label)
-  implicit val rowOrderCodec: JsonValueCodec[RowOrder]               = enumCodec[RowOrder](_.label)
-  implicit val alignmentCodec: JsonValueCodec[Alignment]             = enumCodec[Alignment](_.label)
-  implicit val colorModelCodec: JsonValueCodec[ColorModel]           = enumCodec[ColorModel](_.label)
+  implicit val anchorCodec: JsonValueCodec[Anchor]                       = enumCodec[Anchor](_.label)
+  implicit val refCodec: JsonValueCodec[Ref]                             = enumCodec[Ref](_.label)
+  implicit val axisAnchorCodec: JsonValueCodec[AxisAnchor]               = enumCodec[AxisAnchor](_.label)
+  implicit val axisReferenceCodec: JsonValueCodec[AxisReference]         = enumCodec[AxisReference](_.label)
+  implicit val axisTypeCodec: JsonValueCodec[AxisType]                   = enumCodec[AxisType](_.label)
+  implicit val barModeCodec: JsonValueCodec[BarMode]                     = enumCodec[BarMode](_.label)
+  implicit val boxModeCodec: JsonValueCodec[BoxMode]                     = enumCodec[BoxMode](_.label)
+  implicit val dashCodec: JsonValueCodec[Dash]                           = enumCodec[Dash](_.label)
+  implicit val fillCodec: JsonValueCodec[Fill]                           = enumCodec[Fill](_.label)
+  implicit val hoverModeCodec: JsonValueCodec[HoverMode]                 = enumCodec[HoverMode](_.label)
+  implicit val lineShapeCodec: JsonValueCodec[LineShape]                 = enumCodec[LineShape](_.label)
+  implicit val orientationCodec: JsonValueCodec[Orientation]             = enumCodec[Orientation](_.label)
+  implicit val traceOrderCodec: JsonValueCodec[TraceOrder]               = enumCodec[TraceOrder](_.label)
+  implicit val textPositionCodec: JsonValueCodec[TextPosition]           = enumCodec[TextPosition](_.label)
+  implicit val barTextPositionCodec: JsonValueCodec[BarTextPosition]     = enumCodec[BarTextPosition](_.label)
+  implicit val sideCodec: JsonValueCodec[Side]                           = enumCodec[Side](_.label)
+  implicit val symbolCodec: JsonValueCodec[Symbol]                       = enumCodec[Symbol](_.label)
+  implicit val ticksCodec: JsonValueCodec[Ticks]                         = enumCodec[Ticks](_.label)
+  implicit val histNormCodec: JsonValueCodec[HistNorm]                   = enumCodec[HistNorm](_.label)
+  implicit val sizeModeCodec: JsonValueCodec[SizeMode]                   = enumCodec[SizeMode](_.label)
+  implicit val hoverOnCodec: JsonValueCodec[HoverOn]                     = enumCodec[HoverOn](_.label)
+  implicit val groupNormCodec: JsonValueCodec[GroupNorm]                 = enumCodec[GroupNorm](_.label)
+  implicit val histFuncCodec: JsonValueCodec[HistFunc]                   = enumCodec[HistFunc](_.label)
+  implicit val tickModeCodec: JsonValueCodec[TickMode]                   = enumCodec[TickMode](_.mode)
+  implicit val patternCodec: JsonValueCodec[Pattern]                     = enumCodec[Pattern](_.label)
+  implicit val rowOrderCodec: JsonValueCodec[RowOrder]                   = enumCodec[RowOrder](_.label)
+  implicit val alignmentCodec: JsonValueCodec[Alignment]                 = enumCodec[Alignment](_.label)
+  implicit val colorModelCodec: JsonValueCodec[ColorModel]               = enumCodec[ColorModel](_.label)
+  implicit val rotationDirectionCodec: JsonValueCodec[RotationDirection] =
+    enumCodec[RotationDirection](_.label)
+  implicit val insideTextOrientationCodec: JsonValueCodec[InsideTextOrientation] =
+    enumCodec[InsideTextOrientation](_.label)
 
   implicit val scatterLayoutModeCodec: JsonValueCodec[ScatterLayoutMode] =
     enumCodec[ScatterLayoutMode](_.label)
@@ -216,6 +220,9 @@ object JsoniterCodecsInternals {
 
   implicit val scatterModeCodec: JsonValueCodec[ScatterMode] =
     flagCodec[ScatterMode, ScatterMode.Flag]("scatter mode", _.flags, _.label, ScatterMode.flagMap, ScatterMode(_))
+
+  implicit val textInfoCodec: JsonValueCodec[TextInfo] =
+    flagCodec[TextInfo, TextInfo.Flag]("text info", _.flags, _.label, TextInfo.flagMap, TextInfo(_))
 
   implicit val localDateTimeCodec: JsonValueCodec[LocalDateTime] =
     stringCodec[LocalDateTime](_.toString) { (s, in) =>

@@ -1,7 +1,7 @@
 package plotly
 package element
 
-import dataclass.data
+import dataclass.{data, since}
 
 @data(
   optionSetters = true,
@@ -19,5 +19,8 @@ import dataclass.data
     outliercolor: Option[Color] = None,
     sizeref: Option[Double] = None,
     sizemode: Option[SizeMode] = None,
-    width: Option[OneOrSeq[Int]] = None
+    width: Option[OneOrSeq[Int]] = None,
+    // the colors of the sectors of pie-like and hierarchical traces
+    @since("0.8.6")
+    colors: Option[Seq[Color]] = None
 )

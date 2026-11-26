@@ -102,6 +102,15 @@ import scalatags.JsDom.tags2
         histogram.BasicHistogram,
         histogram.StyledBasicHistogram
       )
+    ),
+    Category(
+      "Pie Charts",
+      Icons.pie,
+      ("#b6e880", "#00cc96"),
+      Seq(
+        pie.BasicPieChart,
+        pie.DonutChart
+      )
     )
   )
 

@@ -4,6 +4,7 @@ import scala.language.implicitConversions
 
 import dataclass._
 import plotly.element._
+import plotly.layout.Font
 
 sealed abstract class Trace extends Product with Serializable
 
@@ -237,3 +238,44 @@ object Heatmap {
     xaxis: Option[AxisReference] = None,
     yaxis: Option[AxisReference] = None
 ) extends Trace
+
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues",
+  deprecatedSetters = true,
+  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersSince = "0.8.6"
+) final case class Pie(
+    values: Option[Sequence] = None,
+    labels: Option[Sequence] = None,
+    name: Option[String] = None,
+    text: Option[OneOrSeq[String]] = None,
+    hovertext: Option[OneOrSeq[String]] = None,
+    hole: Option[Double] = None,
+    pull: Option[OneOrSeq[Double]] = None,
+    rotation: Option[Double] = None,
+    direction: Option[RotationDirection] = None,
+    sort: Option[Boolean] = None,
+    marker: Option[Marker] = None,
+    textinfo: Option[TextInfo] = None,
+    textposition: Option[BarTextPosition] = None,
+    textfont: Option[Font] = None,
+    insidetextfont: Option[Font] = None,
+    outsidetextfont: Option[Font] = None,
+    insidetextorientation: Option[InsideTextOrientation] = None,
+    texttemplate: Option[OneOrSeq[String]] = None,
+    hoverinfo: Option[HoverInfo] = None,
+    hovertemplate: Option[OneOrSeq[String]] = None,
+    domain: Option[Domain] = None,
+    automargin: Option[Boolean] = None,
+    showlegend: Option[Boolean] = None,
+    legendgroup: Option[String] = None,
+    opacity: Option[Double] = None,
+    scalegroup: Option[String] = None
+) extends Trace
+
+object Pie {
+  def apply(values: Sequence, labels: Sequence): Pie =
+    Pie().copy(values = Some(values), labels = Some(labels))
+}

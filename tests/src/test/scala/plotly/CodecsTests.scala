@@ -83,6 +83,27 @@ class CodecsTests extends munit.FunSuite {
     assertEquals(readFromString[Trace](json), bar)
   }
 
+  test("Trace codec should round-trip pie traces") {
+    val pie = Pie(Seq(19.0, 26.0, 55.0), Seq("Residential", "Non-Residential", "Utility")).withValues(
+      hole = 0.4,
+      textinfo = TextInfo(TextInfo.Label, TextInfo.Percent),
+      hoverinfo = HoverInfo(HoverInfo.Label, HoverInfo.Percent, HoverInfo.Name),
+      insidetextorientation = InsideTextOrientation.Radial,
+      direction = RotationDirection.CounterClockwise,
+      domain = Domain().withValues(x = (0.0, 0.5), row = 1),
+      marker = Marker().withValues(colors = Seq[Color](Color.RGB(1, 2, 3), Color.StringColor("red")))
+    )
+    roundTrip(pie)
+    assertEquals(ujson.read(writeToString[Trace](pie)).obj.get("type"), Some(ujson.Str("pie")))
+  }
+
+  test("Trace codec should read and write empty text infos as none") {
+    val pie  = Pie(Seq(1.0), Seq("a")).withValues(textinfo = TextInfo())
+    val json = writeToString[Trace](pie)
+    assertEquals(ujson.read(json).obj.get("textinfo"), Some(ujson.Str("none")))
+    assertEquals(readFromString[Trace](json), pie)
+  }
+
   test("Trace codec should reject unknown enum values") {
     assert(Try(readFromString[Trace]("""{"y": [1], "textposition": "nowhere"}""")).isFailure)
   }

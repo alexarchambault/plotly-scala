@@ -234,7 +234,7 @@ class DocumentationTests extends munit.FunSuite {
     "basic/line-plots",
     "basic/bar",
     "basic/horizontal-bar",
-    // TODO? Pie charts
+    "basic/pie",
     "financial/time-series",
     "financial/candlestick-charts",
 //    "financial/ohlc",
@@ -268,10 +268,16 @@ class DocumentationTests extends munit.FunSuite {
 
   val subDirs = subDirNames.map(new File(dir, _))
 
+  // posts that can't be run or decoded, for reasons unrelated to plotly-scala
+  val ignoredPosts = Map(
+    "basic/pie/2020-01-14-inside-text-orientation.html" -> "its layout is an array rather than an object"
+  )
+
   for {
     subDir <- subDirs
     post   <- subDir.listFiles().sorted
     if !post.getName.startsWith(".")
+    ignoreReason = ignoredPosts.get(dir.toPath.relativize(post.toPath).toString)
   } {
     test(post.getPath) {
       val rawContent = new String(Files.readAllBytes(post.toPath), "UTF-8")
@@ -296,7 +302,9 @@ class DocumentationTests extends munit.FunSuite {
           ""
         )
 
-      if (content.contains("d3.csv"))
+      if (ignoreReason.nonEmpty)
+        println(s"Ignoring $post (${ignoreReason.get})")
+      else if (content.contains("d3.csv"))
         println(s"Ignoring $post (d3.csv not implemented)")
       else {
 

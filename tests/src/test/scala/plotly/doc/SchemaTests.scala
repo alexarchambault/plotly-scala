@@ -63,6 +63,7 @@ class SchemaTests extends munit.FunSuite {
     "heatmap",
     "histogram",
     "image",
+    "pie",
     "scatter",
     "surface"
   )
@@ -75,6 +76,30 @@ class SchemaTests extends munit.FunSuite {
     val fromLib = HoverInfo.elements.map(_.label).toSet
     val missing = (fromSchema -- fromLib).toVector.sorted
     assert(missing.isEmpty, s"Missing in lib: ${missing.mkString(", ")}")
+  }
+
+  test("Text info flags should include the textinfo flags of all trace types") {
+    val fromSchema = traceTypes
+      .flatMap(SchemaTests.traceAttributes(_).get("textinfo"))
+      .flatMap(_("flags").arr.map(_.str))
+      .toSet
+    val fromLib = TextInfo.flags.map(_.label).toSet
+    val missing = (fromSchema -- fromLib).toVector.sorted
+    assert(missing.isEmpty, s"Missing in lib: ${missing.mkString(", ")}")
+  }
+
+  test("Inside text orientation should be exhaustive") {
+    compareValues(
+      SchemaTests.enumeratedAttributeValues("pie", "insidetextorientation").toSet,
+      Enumerate[InsideTextOrientation].apply().map(_.label).toSet
+    )
+  }
+
+  test("Rotation direction should be exhaustive") {
+    compareValues(
+      SchemaTests.enumeratedAttributeValues("pie", "direction").toSet,
+      Enumerate[RotationDirection].apply().map(_.label).toSet
+    )
   }
 
   test("Text position should be exhaustive") {
