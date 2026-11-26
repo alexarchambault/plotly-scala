@@ -213,6 +213,22 @@ class CodecsTests extends munit.FunSuite {
     assertEquals(ujson.read(writeToString[Trace](ohlc)).obj.get("type"), Some(ujson.Str("ohlc")))
   }
 
+  test("Trace codec should round-trip scatter3d traces") {
+    val scatter3d = Scatter3d(Seq(1.0, 2.0), Seq(3.0, 4.0), Seq(5.0, 6.0)).withValues(
+      mode = ScatterMode(ScatterMode.Lines, ScatterMode.Markers),
+      marker = Marker().withValues(
+        color = Seq[Color](Color.Number(5.0), Color.Number(6.0)),
+        colorscale = ColorScale.NamedScale("Viridis"),
+        cmin = 0.0,
+        colorbar = ColorBar().withValues(title = "z")
+      ),
+      line = Line().withValues(colorscale = ColorScale.NamedScale("Greens"), width = 4.0),
+      scene = "scene2"
+    )
+    roundTrip(scatter3d)
+    assertEquals(ujson.read(writeToString[Trace](scatter3d)).obj.get("type"), Some(ujson.Str("scatter3d")))
+  }
+
   test("Trace codec should reject unknown enum values") {
     assert(Try(readFromString[Trace]("""{"y": [1], "textposition": "nowhere"}""")).isFailure)
   }

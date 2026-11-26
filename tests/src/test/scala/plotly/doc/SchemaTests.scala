@@ -74,6 +74,7 @@ class SchemaTests extends munit.FunSuite {
     "ohlc",
     "pie",
     "scatter",
+    "scatter3d",
     "surface",
     "violin",
     "waterfall"

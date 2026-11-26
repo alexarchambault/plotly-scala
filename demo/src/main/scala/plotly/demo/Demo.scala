@@ -141,6 +141,15 @@ import scalatags.JsDom.tags2
       )
     ),
     Category(
+      "3D Charts",
+      Icons.threeD,
+      ("#19d3f3", "#636efa"),
+      Seq(
+        threed.ClusteredScatterPlot,
+        threed.ConicalHelixLinePlot
+      )
+    ),
+    Category(
       "Contour Plots",
       Icons.contour,
       ("#636efa", "#00cc96"),

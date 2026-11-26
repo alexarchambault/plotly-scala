@@ -641,6 +641,40 @@ object Ohlc {
     Ohlc().copy(x = Some(x), open = Some(open), high = Some(high), low = Some(low), close = Some(close))
 }
 
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues",
+  deprecatedSetters = true,
+  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersSince = "0.8.6"
+) final case class Scatter3d(
+    x: Option[Sequence] = None,
+    y: Option[Sequence] = None,
+    z: Option[Sequence] = None,
+    mode: Option[ScatterMode] = None,
+    name: Option[String] = None,
+    text: Option[OneOrSeq[String]] = None,
+    textposition: Option[TextPosition] = None,
+    textfont: Option[Font] = None,
+    hovertext: Option[OneOrSeq[String]] = None,
+    hoverinfo: Option[HoverInfo] = None,
+    hovertemplate: Option[OneOrSeq[String]] = None,
+    marker: Option[Marker] = None,
+    line: Option[Line] = None,
+    connectgaps: Option[Boolean] = None,
+    opacity: Option[Double] = None,
+    showlegend: Option[Boolean] = None,
+    legendgroup: Option[String] = None,
+    // the 3D scene the trace is drawn in, like "scene" (the default) or "scene2"
+    scene: Option[String] = None
+) extends Trace
+
+object Scatter3d {
+  def apply(x: Sequence, y: Sequence, z: Sequence): Scatter3d =
+    Scatter3d().copy(x = Some(x), y = Some(y), z = Some(z))
+}
+
 object Pie {
   def apply(values: Sequence, labels: Sequence): Pie =
     Pie().copy(values = Some(values), labels = Some(labels))

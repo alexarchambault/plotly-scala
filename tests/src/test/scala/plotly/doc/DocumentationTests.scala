@@ -266,7 +266,9 @@ class DocumentationTests extends munit.FunSuite {
     "scientific/log",
     // TODO Financial charts
     // TODO Maps
-    "3d/3d-surface"
+    "3d/3d-surface",
+    "3d/3d-scatter",
+    "3d/3d-line"
   )
 
   val subDirs = subDirNames.map(new File(dir, _))
@@ -280,7 +282,9 @@ class DocumentationTests extends munit.FunSuite {
     "financial/funnel/2019-06-27-multi-funnelarea.html"   -> "its layout has showlegend: 'true', a string",
     "financial/funnel/2019-06-27-stacked-funnel.html"     -> "its layout has showlegend: 'True', a string",
     "financial/funnel/2019-06-27-funnelarea.html"         ->
-      "its shapes have numbers as x0 and x1, that plotly-scala's Shape only accepts as strings"
+      "its shapes have numbers as x0 and x1, that plotly-scala's Shape only accepts as strings",
+    "3d/3d-line/2015-04-09-simple-3d-line+markers.html" ->
+      "its marker size isn't an integer, that plotly-scala's Marker only accepts"
   )
 
   for {
