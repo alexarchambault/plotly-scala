@@ -237,7 +237,7 @@ class DocumentationTests extends munit.FunSuite {
     "basic/pie",
     "financial/time-series",
     "financial/candlestick-charts",
-//    "financial/ohlc",
+    "financial/ohlc",
     "financial/waterfall",
     "financial/funnel",
     "basic/bubble",

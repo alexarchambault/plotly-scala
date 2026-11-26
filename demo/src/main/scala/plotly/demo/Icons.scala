@@ -69,6 +69,10 @@ object Icons {
     }.mkString
   )
 
+  val financial = stroked(
+    """<path d="M6 4v16M3 8h3M6 15h3M13 2v14M10 13h3M13 5h3M20 7v14M17 18h3M20 10h3"/>"""
+  )
+
   val waterfall = filled(
     """<rect x="2" y="12" width="4" height="9" rx="0.8"/><rect x="7" y="7" width="4" height="5" rx="0.8" opacity="0.8"/>""" +
       """<rect x="12" y="4" width="4" height="3" rx="0.8" opacity="0.6"/><rect x="17" y="4" width="4" height="17" rx="0.8"/>"""

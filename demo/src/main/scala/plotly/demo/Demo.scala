@@ -78,6 +78,14 @@ import scalatags.JsDom.tags2
       )
     ),
     Category(
+      "Financial Charts",
+      Icons.financial,
+      ("#00cc96", "#ef553b"),
+      Seq(
+        financial.OhlcChart
+      )
+    ),
+    Category(
       "Time Series",
       Icons.timeSeries,
       ("#19d3f3", "#7fe6f8"),

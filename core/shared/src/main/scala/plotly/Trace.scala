@@ -603,6 +603,44 @@ object FunnelArea {
     FunnelArea().copy(values = Some(values), labels = Some(labels))
 }
 
+/** Open-high-low-close charts: one vertical line per period, from its low to its high, with ticks for
+  * its open (on the left) and its close (on the right)
+  */
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues",
+  deprecatedSetters = true,
+  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersSince = "0.8.6"
+) final case class Ohlc(
+    x: Option[Sequence] = None,
+    open: Option[Sequence] = None,
+    high: Option[Sequence] = None,
+    low: Option[Sequence] = None,
+    close: Option[Sequence] = None,
+    name: Option[String] = None,
+    text: Option[OneOrSeq[String]] = None,
+    hovertext: Option[OneOrSeq[String]] = None,
+    hoverinfo: Option[HoverInfo] = None,
+    hovertemplate: Option[OneOrSeq[String]] = None,
+    line: Option[Line] = None,
+    increasing: Option[DirectionStyle] = None,
+    decreasing: Option[DirectionStyle] = None,
+    // the width of the open and close ticks, relative to the minimal interval between x values
+    tickwidth: Option[Double] = None,
+    opacity: Option[Double] = None,
+    showlegend: Option[Boolean] = None,
+    legendgroup: Option[String] = None,
+    xaxis: Option[AxisReference] = None,
+    yaxis: Option[AxisReference] = None
+) extends Trace
+
+object Ohlc {
+  def apply(x: Sequence, open: Sequence, high: Sequence, low: Sequence, close: Sequence): Ohlc =
+    Ohlc().copy(x = Some(x), open = Some(open), high = Some(high), low = Some(low), close = Some(close))
+}
+
 object Pie {
   def apply(values: Sequence, labels: Sequence): Pie =
     Pie().copy(values = Some(values), labels = Some(labels))

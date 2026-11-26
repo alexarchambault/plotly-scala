@@ -29,6 +29,8 @@ class SettersTests extends munit.FunSuite {
     classOf[Violin]                 -> true,
     classOf[Waterfall]              -> true,
     classOf[Funnel]                 -> true,
+    classOf[Ohlc]                   -> true,
+    classOf[DirectionStyle]         -> true,
     classOf[FunnelArea]             -> true,
     classOf[Connector]              -> true,
     classOf[BarStyle]               -> true,

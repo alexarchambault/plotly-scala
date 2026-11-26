@@ -203,6 +203,16 @@ class CodecsTests extends munit.FunSuite {
     assertEquals(ujson.read(writeToString[Trace](funnelArea)).obj.get("type"), Some(ujson.Str("funnelarea")))
   }
 
+  test("Trace codec should round-trip ohlc traces") {
+    val ohlc =
+      Ohlc(Seq("2025-01-02", "2025-01-03"), Seq(1.0, 2.0), Seq(3.0, 4.0), Seq(0.5, 1.5), Seq(2.0, 1.8)).withValues(
+        increasing = DirectionStyle().withValues(line = Line().withValues(color = Color.StringColor("green"))),
+        tickwidth = 0.2
+      )
+    roundTrip(ohlc)
+    assertEquals(ujson.read(writeToString[Trace](ohlc)).obj.get("type"), Some(ujson.Str("ohlc")))
+  }
+
   test("Trace codec should reject unknown enum values") {
     assert(Try(readFromString[Trace]("""{"y": [1], "textposition": "nowhere"}""")).isFailure)
   }
