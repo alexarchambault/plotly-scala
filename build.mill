@@ -32,7 +32,10 @@ object Versions {
   def jsoniterScala = "2.43.0"
 
   // Used by the dev.* commands
-  def almond   = "0.15.0" // almond version of the dev.jupyterCmd kernels
+  // almond version of the dev.jupyterCmd kernels: a snapshot, for the new notebook coursier logger
+  // (--use-notebook-coursier-logger), that doesn't show failed downloads (like those of the
+  // sources JARs that don't exist), coming after 0.15.0
+  def almond   = "0.15.1-SNAPSHOT"
   def coursier = "2.1.26" // cs launcher installing these kernels
   def uv       = "0.12.18"
   def devJvm   = "21" // JVM these kernels run on
@@ -517,6 +520,9 @@ object DevTools {
     }
   }
 
+  /** The Maven Central snapshot repository, where the snapshots of [[Versions.almond]] are */
+  private def mavenSnapshots = "https://central.sonatype.com/repository/maven-snapshots"
+
   /** A `uv` launcher, downloaded if needed */
   def uv: os.Path = {
     val target =
@@ -618,6 +624,8 @@ object DevTools {
         "launch",
         "--use-bootstrap",
         s"almond:${Versions.almond}",
+        "-r",
+        mavenSnapshots,
         "--scala",
         sv,
         "--",
