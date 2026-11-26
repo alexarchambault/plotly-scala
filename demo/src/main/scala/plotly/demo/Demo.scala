@@ -106,6 +106,15 @@ import scalatags.JsDom.tags2
       )
     ),
     Category(
+      "Violin Plots",
+      Icons.violin,
+      ("#ab63fa", "#ff6692"),
+      Seq(
+        violin.BasicViolinPlot,
+        violin.SplitViolinPlot
+      )
+    ),
+    Category(
       "Contour Plots",
       Icons.contour,
       ("#636efa", "#00cc96"),

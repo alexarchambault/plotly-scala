@@ -148,6 +148,19 @@ class CodecsTests extends munit.FunSuite {
     assertEquals(readFromString[Trace]("""{"type": "box", "y": [1, 2], "boxpoints": "Outliers"}"""), box)
   }
 
+  test("Trace codec should round-trip violin traces") {
+    val violin = Violin(Seq(1.0, 2.0, 3.0)).withValues(
+      side = ViolinSide.Positive,
+      points = BoxPoints.False,
+      box = ViolinBox().withValues(visible = true, width = 0.2),
+      meanline = MeanLine().withValues(visible = true),
+      spanmode = SpanMode.Hard,
+      scalemode = ViolinScaleMode.Count
+    )
+    roundTrip(violin)
+    assertEquals(ujson.read(writeToString[Trace](violin)).obj.get("type"), Some(ujson.Str("violin")))
+  }
+
   test("Trace codec should reject unknown enum values") {
     assert(Try(readFromString[Trace]("""{"y": [1], "textposition": "nowhere"}""")).isFailure)
   }

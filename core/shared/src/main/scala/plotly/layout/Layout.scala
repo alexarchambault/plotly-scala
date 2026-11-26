@@ -51,5 +51,8 @@ import plotly.element._
     barcornerradius: Option[Double] = None,
     // default colors of the sectors of pie traces
     piecolorway: Option[Seq[Color]] = None,
-    hiddenlabels: Option[Seq[String]] = None
+    hiddenlabels: Option[Seq[String]] = None,
+    violinmode: Option[BoxMode] = None,
+    violingap: Option[Double] = None,
+    violingroupgap: Option[Double] = None
 )

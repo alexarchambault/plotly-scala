@@ -69,6 +69,10 @@ object Icons {
     }.mkString
   )
 
+  val violin = filled(
+    """<path d="M12 2c1 3 4 5 4 9s-3 5-3 7 1 3-1 4c-2-1-1-2-1-4s-3-3-3-7 3-6 4-9z"/>"""
+  )
+
   val contour = stroked(
     """<ellipse cx="12" cy="12" rx="10" ry="8"/><ellipse cx="12.5" cy="12" rx="6.5" ry="5"/>""" +
       """<ellipse cx="13" cy="12" rx="3" ry="2.2"/>"""

@@ -164,6 +164,9 @@ object JsoniterCodecsInternals {
   implicit val colorModelCodec: JsonValueCodec[ColorModel]               = enumCodec[ColorModel](_.label)
   implicit val sizeUnitCodec: JsonValueCodec[SizeUnit]                   = enumCodec[SizeUnit](_.label)
   implicit val contourColoringCodec: JsonValueCodec[ContourColoring]     = enumCodec[ContourColoring](_.label)
+  implicit val violinSideCodec: JsonValueCodec[ViolinSide]               = enumCodec[ViolinSide](_.label)
+  implicit val spanModeCodec: JsonValueCodec[SpanMode]                   = enumCodec[SpanMode](_.label)
+  implicit val violinScaleModeCodec: JsonValueCodec[ViolinScaleMode]     = enumCodec[ViolinScaleMode](_.label)
   implicit val rotationDirectionCodec: JsonValueCodec[RotationDirection] =
     enumCodec[RotationDirection](_.label)
   implicit val insideTextOrientationCodec: JsonValueCodec[InsideTextOrientation] =

@@ -430,6 +430,55 @@ object Histogram2dContour {
     Histogram2dContour().copy(x = Some(x), y = Some(y))
 }
 
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues",
+  deprecatedSetters = true,
+  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersSince = "0.8.6"
+) final case class Violin(
+    y: Option[Sequence] = None,
+    x: Option[Sequence] = None,
+    x0: Option[Element] = None,
+    y0: Option[Element] = None,
+    name: Option[String] = None,
+    orientation: Option[Orientation] = None,
+    side: Option[ViolinSide] = None,
+    bandwidth: Option[Double] = None,
+    span: Option[Seq[Double]] = None,
+    spanmode: Option[SpanMode] = None,
+    scalegroup: Option[String] = None,
+    scalemode: Option[ViolinScaleMode] = None,
+    width: Option[Double] = None,
+    points: Option[BoxPoints] = None,
+    jitter: Option[Double] = None,
+    pointpos: Option[Double] = None,
+    box: Option[ViolinBox] = None,
+    meanline: Option[MeanLine] = None,
+    marker: Option[Marker] = None,
+    line: Option[Line] = None,
+    fillcolor: Option[Color] = None,
+    opacity: Option[Double] = None,
+    text: Option[OneOrSeq[String]] = None,
+    hoverinfo: Option[HoverInfo] = None,
+    hovertemplate: Option[OneOrSeq[String]] = None,
+    showlegend: Option[Boolean] = None,
+    legendgroup: Option[String] = None,
+    offsetgroup: Option[String] = None,
+    alignmentgroup: Option[String] = None,
+    xaxis: Option[AxisReference] = None,
+    yaxis: Option[AxisReference] = None
+) extends Trace
+
+object Violin {
+  def apply(y: Sequence): Violin =
+    Violin().copy(y = Some(y))
+
+  def apply(y: Sequence, x: Sequence): Violin =
+    Violin().copy(y = Some(y), x = Some(x))
+}
+
 object Pie {
   def apply(values: Sequence, labels: Sequence): Pie =
     Pie().copy(values = Some(values), labels = Some(labels))

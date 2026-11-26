@@ -71,7 +71,8 @@ class SchemaTests extends munit.FunSuite {
     "image",
     "pie",
     "scatter",
-    "surface"
+    "surface",
+    "violin"
   )
 
   test("Hover info elements should include the hoverinfo flags of all trace types") {
@@ -141,6 +142,25 @@ class SchemaTests extends munit.FunSuite {
   test("Box mode should be exhaustive") {
     compareValues(
       SchemaTests.schema("traces")("box")("layoutAttributes")("boxmode")("values").arr.map(_.str).toSet,
+      Enumerate[plotly.layout.BoxMode].apply().map(_.label).toSet
+    )
+  }
+
+  test("Violin enums should be exhaustive") {
+    compareValues(
+      SchemaTests.enumeratedAttributeValues("violin", "side").toSet,
+      Enumerate[ViolinSide].apply().map(_.label).toSet
+    )
+    compareValues(
+      SchemaTests.enumeratedAttributeValues("violin", "spanmode").toSet,
+      Enumerate[SpanMode].apply().map(_.label).toSet
+    )
+    compareValues(
+      SchemaTests.enumeratedAttributeValues("violin", "scalemode").toSet,
+      Enumerate[ViolinScaleMode].apply().map(_.label).toSet
+    )
+    compareValues(
+      SchemaTests.schema("traces")("violin")("layoutAttributes")("violinmode")("values").arr.map(_.str).toSet,
       Enumerate[plotly.layout.BoxMode].apply().map(_.label).toSet
     )
   }
