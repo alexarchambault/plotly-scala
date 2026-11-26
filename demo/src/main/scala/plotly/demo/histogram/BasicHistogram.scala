@@ -1,8 +1,9 @@
 package plotly.demo.histogram
 
-import plotly.Histogram
+import plotly._
 import plotly.demo.DemoChart
-import plotly.layout.Layout
+import plotly.element._
+import plotly.layout._
 
 object BasicHistogram extends DemoChart {
 
@@ -12,23 +13,20 @@ object BasicHistogram extends DemoChart {
 
   // demo source start
 
-  val categoryCount = 50
-
-  val indices    = 0 until categoryCount
-  val categories = indices.map(i => s"name-$i")
-  val values     = {
+  // simulated heights of 2,000 adults, in cm
+  val heights = {
     // fixed seed, so that the plot is the same every time
     val random = new scala.util.Random(42)
-    indices.map(_ => random.nextDouble())
+    Seq.fill(2000)(170 + 9 * random.nextGaussian())
   }
 
-  val data = Seq(Histogram(values, categories))
+  val data = Seq(Histogram(heights))
 
-  val layout = new Layout()
-    .withTitle("Basic Histogram")
-    .withShowlegend(false)
-    .withHeight(400)
-    .withWidth(600)
+  val layout = new Layout().withValues(
+    title = "Heights of 2,000 Adults (simulated)",
+    xaxis = new Axis().withValues(title = "Height (cm)"),
+    yaxis = new Axis().withValues(title = "Count")
+  )
 
   // demo source end
 

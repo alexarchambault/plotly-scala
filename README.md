@@ -30,7 +30,7 @@ It is published for scala 2.12, 2.13, and 3 (built with the Scala 3 LTS, so that
 Add the `org.plotly-scala::plotly-almond:0.8.1` dependency to the notebook. (Latest version: [![Maven Central](https://img.shields.io/maven-central/v/org.plotly-scala/plotly-render_2.13.svg)](https://maven-badges.herokuapp.com/maven-central/org.plotly-scala/plotly-render_2.13))
 Then initialize plotly-scala, and use it, like
 ```scala
-import $ivy.`org.plotly-scala::plotly-almond:0.8.1`
+//> using dep org.plotly-scala::plotly-almond:0.8.1
 
 import plotly._
 import plotly.element._
@@ -45,6 +45,8 @@ val (x, y) = Seq(
 
 Bar(x, y).plot()
 ```
+(`//> using` directives need almond 0.14.0 or later. With earlier versions, load the dependency with
+``import $ivy.`org.plotly-scala::plotly-almond:0.8.1` `` instead.)
 
 #### JupyterLab
 If you're using [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/), you have to install [jupyterlab-plotly](https://plotly.com/python/getting-started/#jupyterlab-support-python-35) to enable support for rendering Plotly charts:
@@ -72,22 +74,23 @@ val y1 = x.map(d => 2.0 * d + util.Random.nextGaussian())
 val y2 = x.map(math.exp)
 
 val plot = Seq(
-  Scatter(x, y1).withName("Approx twice"),
-  Scatter(x, y2).withName("Exp")
+  Scatter(x, y1).withValues(name = "Approx twice"),
+  Scatter(x, y2).withValues(name = "Exp")
 )
 ```
 and plot them with
 
 ```scala
-val lay = Layout().withTitle("Curves")
+val lay = Layout().withValues(title = "Curves")
 plot.plot("plot", lay)  // attaches to div element with id 'plot'
 ```
 
-The `with*` setters (`withName`, `withTitle`, …) are only available on Scala 2. On Scala 3, use `copy` or named arguments instead, like
+`withValues`, available on Scala 2 and Scala 3, returns a copy of a trace or layout element with the fields passed to it updated, and the other ones left unchanged. Unlike `copy`, it takes the values of optional fields as is, without wrapping them in `Some(…)`, and several fields can be set at once, like
 ```scala
-Scatter(x, y1).copy(name = Some("Approx twice"))
-Layout(title = Some("Curves"))
+Layout().withValues(title = "Curves", width = 600, height = 400)
 ```
+
+The `with*` setters (`withName`, `withTitle`, …) are deprecated, and only available on Scala 2. Use `withValues` instead. The few classes with no `withValues` method (colors, `Bins`, …) can be updated with `copy`.
 
 
 ### From Ammonite
@@ -105,9 +108,9 @@ val valuesA = labels.map(_ => util.Random.nextGaussian())
 val valuesB = labels.map(_ => 0.5 + util.Random.nextGaussian())
 
 Seq(
-  Bar(labels, valuesA).withName("A"),
-  Bar(labels, valuesB).withName("B")
-).plot("plot.html", Layout().withTitle("Level"))
+  Bar(labels, valuesA).withValues(name = "A"),
+  Bar(labels, valuesB).withValues(name = "B")
+).plot("plot.html", Layout().withValues(title = "Level"))
 ```
 
 
@@ -158,7 +161,7 @@ The classes of plotly-scala are defined with the `@data` annotation of [data-cla
     b: Option[String] = None
 )
 ```
-When adding fields to an existing class, put them at the end, with default values, and annotate the first one added in a given version with `@since`, so that binary compatibility is maintained. On Scala 2, data-class generates the binary-compatible overloads and the `with*` setters (`withA`, `withB`) of these classes. On Scala 3, the data-class compiler plugin generates the binary-compatible overloads, but no setters. So code shared by Scala 2 and Scala 3 (in `src/main/scala`, or in the tests) shouldn't use the `with*` setters, but `copy` or named arguments.
+When adding fields to an existing class, put them at the end, with default values, and annotate the first one added in a given version with `@since`, so that binary compatibility is maintained. On Scala 2, data-class generates the binary-compatible overloads and the deprecated `with*` setters (`withA`, `withB`) of these classes. On Scala 3, the data-class compiler plugin generates the binary-compatible overloads, but no setters. On both, the classes with `nullOptionCopyMethodName = "withValues"` in their `@data` annotation also get a `withValues` method. So code shared by Scala 2 and Scala 3 (in `src/main/scala`, or in the tests) shouldn't use the `with*` setters, but `withValues`, or `copy` on the classes that don't have it.
 
 ## About
 

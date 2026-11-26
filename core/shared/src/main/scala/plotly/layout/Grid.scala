@@ -5,7 +5,10 @@ import dataclass.data
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues"
+  nullOptionCopyMethodName = "withValues",
+  deprecatedSetters = true,
+  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersSince = "0.8.6"
 ) final case class Grid(
     rows: Option[Int] = None,
     columns: Option[Int] = None,

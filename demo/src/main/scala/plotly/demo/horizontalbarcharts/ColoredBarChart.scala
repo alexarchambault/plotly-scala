@@ -1,9 +1,9 @@
 package plotly.demo.horizontalbarcharts
 
-import plotly.Bar
+import plotly._
 import plotly.demo.DemoChart
-import plotly.element.{Color, Marker, Orientation}
-import plotly.layout.{BarMode, Layout}
+import plotly.element._
+import plotly.layout._
 
 object ColoredBarChart extends DemoChart {
 
@@ -13,29 +13,33 @@ object ColoredBarChart extends DemoChart {
 
   // demo source start
 
-  val trace1 = Bar(Seq(20, 14, 23), Seq("giraffes", "orangutans", "monkeys"))
-    .withName("SF Zoo")
-    .withOrientation(Orientation.Horizontal)
-    .withMarker(
-      Marker()
-        .withColor(Color.RGBA(55, 128, 191, 0.6))
-        .withWidth(1)
-    )
+  val teams = Seq("Platform", "Mobile", "Web", "Data")
 
-  val trace2 = Bar(Seq(12, 18, 29), Seq("giraffes", "orangutans", "monkeys"))
-    .withName("LA Zoo")
-    .withOrientation(Orientation.Horizontal)
-    .withMarker(
-      Marker()
-        .withColor(Color.RGBA(255, 153, 51, 0.6))
-        .withWidth(1)
-    )
+  // hours per week (fictional)
+  val activities = Seq(
+    ("Coding", "#636efa", Seq(18, 15, 17, 12)),
+    ("Code review", "#00cc96", Seq(6, 5, 7, 4)),
+    ("Meetings", "#ffa15a", Seq(8, 11, 9, 13)),
+    ("Support", "#ef553b", Seq(4, 5, 3, 7))
+  )
 
-  val data = Seq(trace1, trace2)
+  val data = activities.map { case (name, color, hours) =>
+    Bar(hours, teams)
+      .withValues(
+        name = name,
+        orientation = Orientation.Horizontal,
+        marker = Marker().withValues(
+          color = Color.StringColor(color),
+          line = Line().withValues(color = Color.StringColor("white"), width = 1.0)
+        )
+      )
+  }
 
-  val layout = Layout()
-    .withTitle("Colored Bar Chart")
-    .withBarmode(BarMode.Stack)
+  val layout = Layout().withValues(
+    title = "How Each Team Spends Its Week",
+    xaxis = Axis().withValues(title = "Hours"),
+    barmode = BarMode.Stack
+  )
 
   // demo source end
 

@@ -1,9 +1,9 @@
 package plotly.demo.bar
 
-import plotly.Bar
+import plotly._
 import plotly.demo.DemoChart
-import plotly.element.{Color, Line, Marker}
-import plotly.layout.{Annotation, BarMode, Font, Layout}
+import plotly.element._
+import plotly.layout._
 
 object WaterfallBarChart extends DemoChart {
 
@@ -13,93 +13,43 @@ object WaterfallBarChart extends DemoChart {
 
   // demo source start
 
-  val xData = Seq(
-    "Product Revenue",
-    "Services Revenue",
-    "Total Revenue",
-    "Fixed Costs",
-    "Variable Costs",
-    "Total Costs",
-    "Total"
+  // in thousands of dollars: revenue is positive, costs are negative
+  val steps = Seq(
+    "Products"       -> 430,
+    "Services"       -> 260,
+    "Fixed costs"    -> -120,
+    "Variable costs" -> -200
   )
 
-  val yData = Seq(400, 660, 660, 590, 400, 400, 340)
+  // running total after each step, and the resulting profit
+  val totals = steps.map(_._2).scanLeft(0)(_ + _)
+  val profit = totals.last
 
-  val textList = Seq("$430K", "$260K", "$690K", "$-120K", "$-200K", "$-320K", "$370K")
+  val revenueColor = Color.RGBA(0, 204, 150, 0.8)
+  val costColor    = Color.RGBA(239, 85, 59, 0.8)
+  val profitColor  = Color.RGBA(99, 110, 250, 0.9)
 
-  // Base
+  def amount(value: Int) =
+    (if (value < 0) "-$" else "+$") + math.abs(value) + "K"
 
-  val trace1 = Bar(xData, Seq(0, 430, 0, 570, 370, 370, 0))
-    .withMarker(
-      Marker()
-        .withColor(Color.RGBA(1, 1, 1, 0.0))
-    )
-
-  // Revenue
-
-  val trace2 = Bar(xData, Seq(430, 260, 690, 0, 0, 0, 0))
-    .withMarker(
-      Marker()
-        .withColor(Color.RGBA(55, 128, 191, 0.7))
-        .withLine(
-          Line()
-            .withColor(Color.RGBA(55, 128, 191, 1.0))
-            .withWidth(2.0)
-        )
-    )
-
-  // Cost
-
-  val trace3 = Bar(xData, Seq(0, 0, 0, 120, 200, 320, 0))
-    .withMarker(
-      Marker()
-        .withColor(Color.RGBA(219, 64, 82, 0.7))
-        .withLine(
-          Line()
-            .withColor(Color.RGBA(219, 64, 82, 1.0))
-            .withWidth(2.0)
-        )
-    )
-
-  // Profit
-
-  val trace4 = Bar(xData, Seq(0, 0, 0, 0, 0, 0, 370))
-    .withMarker(
-      Marker()
-        .withColor(Color.RGBA(50, 171, 96, 0.7))
-        .withLine(
-          Line()
-            .withColor(Color.RGBA(50, 171, 96, 1.0))
-            .withWidth(2.0)
-        )
-    )
-
-  val data = Seq(trace1, trace2, trace3, trace4)
-
-  val annotations = xData.zip(yData).zip(textList).map { case ((x, y), text) =>
-    Annotation()
-      .withX(x)
-      .withY(y)
-      .withText(text)
-      .withFont(
-        Font(
-          family = "Arial",
-          size = 14,
-          color = Color.RGBA(245, 246, 249, 1)
-        )
+  // each bar floats between the running totals before and after its step
+  val trace1 = Bar(steps.map(_._1) :+ "Profit", steps.map(s => math.abs(s._2)) :+ profit)
+    .withValues(
+      base = totals.zip(totals.tail).map { case (before, after) => math.min(before, after).toDouble } :+ 0.0,
+      text = steps.map(s => amount(s._2)) :+ s"$$${profit}K",
+      textposition = BarTextPosition.Outside,
+      marker = Marker().withValues(
+        color = steps.map(s => if (s._2 >= 0) revenueColor else costColor) :+ profitColor
       )
-      .withShowarrow(false)
-  }
+    )
 
-  val layout = Layout()
-    .withTitle("Annual Profit 2015")
-    .withBarmode(BarMode.Stack)
-    .withPaper_bgcolor(Color.RGBA(245, 246, 249, 1))
-    .withPlot_bgcolor(Color.RGBA(245, 246, 249, 1))
-    .withWidth(600)
-    .withHeight(400)
-    .withShowlegend(false)
-    .withAnnotations(annotations)
+  val data = Seq(trace1)
+
+  val layout = Layout().withValues(
+    title = "Annual Profit 2025",
+    yaxis = Axis().withValues(tickprefix = "$", ticksuffix = "K", range = (0.0, 800.0)),
+    showlegend = false
+  )
 
   // demo source end
 

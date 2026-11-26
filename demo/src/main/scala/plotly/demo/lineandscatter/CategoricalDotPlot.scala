@@ -1,17 +1,15 @@
 package plotly.demo.lineandscatter
 
-import plotly.Scatter
+import plotly._
 import plotly.demo.DemoChart
 import plotly.element._
 import plotly.layout._
 
 object CategoricalDotPlot extends DemoChart {
 
-  val id = "categorical-dot-plot"
-
-  val plotlyDocUrl = "https://plot.ly/javascript/line-and-scatter/#categorical-dot-plot"
-
-  def source = CategoricalDotPlotSource.source
+  def plotlyDocUrl = "https://plot.ly/javascript/line-and-scatter/#categorical-dot-plot"
+  def id           = "categorical-dot-plot"
+  def source       = CategoricalDotPlotSource.source
 
   // demo source start
 
@@ -36,75 +34,47 @@ object CategoricalDotPlot extends DemoChart {
     49.1, 42.0, 52.7, 84.3, 51.7, 61.1, 55.3, 64.2, 91.1, 58.9
   )
 
-  val trace1 = Scatter(votingPop, country)
-    .withMode(ScatterMode(ScatterMode.Markers))
-    .withName("Percent of estimated voting age population")
-    .withMarker(
-      Marker()
-        .withColor(Color.RGBA(156, 165, 196, 0.95))
-        .withLine(
-          Line()
-            .withColor(Color.RGBA(156, 165, 196, 1.0))
-            .withWidth(1.0)
+  def dots(values: Seq[Double], name: String, color: Color) =
+    Scatter(values, country)
+      .withValues(
+        mode = ScatterMode(ScatterMode.Markers),
+        name = name,
+        marker = Marker().withValues(
+          color = color,
+          line = Line().withValues(color = Color.StringColor("white"), width = 1.5),
+          symbol = Symbol.Circle(),
+          size = 14
         )
-        .withSymbol(Symbol.Circle())
-        .withSize(16)
-    )
-
-  val trace2 = Scatter(regVoters, country)
-    .withMode(ScatterMode(ScatterMode.Markers))
-    .withName("Percent of estimated registered voters")
-    .withMarker(
-      Marker()
-        .withColor(Color.RGBA(204, 204, 204, 0.95))
-        .withLine(
-          Line()
-            .withColor(Color.RGBA(217, 217, 217, 1.0))
-            .withWidth(1.0)
-        )
-        .withSymbol(Symbol.Circle())
-        .withSize(16)
-    )
-
-  val data = Seq(trace1, trace2)
-
-  val layout = Layout()
-    .withTitle("Votes cast for ten lowest voting age population in OECD countries")
-    .withXaxis(
-      Axis()
-        .withShowgrid(false)
-        .withShowline(true)
-        .withLinecolor(Color.RGB(102, 102, 102))
-        .withTitlefont(
-          Font(Color.RGB(204, 204, 204))
-        )
-        .withTickfont(
-          Font(Color.RGB(102, 102, 102))
-        )
-        .withAutotick(false)
-        .withDtick(10.0)
-        .withTicks(Ticks.Outside)
-        .withTickcolor(Color.RGB(102, 102, 102))
-    )
-    .withMargin(
-      Margin(
-        l = 140,
-        r = 40,
-        b = 50,
-        t = 80
       )
-    )
-    .withLegend(
-      Legend()
-        .withFont(Font(size = 10))
-        .withYanchor(Anchor.Middle)
-        .withXanchor(Anchor.Right)
-    )
-    .withWidth(600)
-    .withHeight(400)
-    .withPaper_bgcolor(Color.RGB(254, 247, 234))
-    .withPlot_bgcolor(Color.RGB(254, 247, 234))
-    .withHovermode(HoverMode.Closest)
+
+  val data = Seq(
+    dots(votingPop, "% of voting age population", Color.RGBA(99, 110, 250, 0.95)),
+    dots(regVoters, "% of registered voters", Color.RGBA(255, 161, 90, 0.95))
+  )
+
+  val layout = Layout().withValues(
+    title = "Votes Cast in the Ten Lowest-Turnout OECD Countries",
+    xaxis = Axis().withValues(
+      showgrid = false,
+      showline = true,
+      linecolor = Color.RGB(102, 102, 102),
+      tickfont = Font(Color.RGB(102, 102, 102)),
+      autotick = false,
+      dtick = 10.0,
+      ticks = Ticks.Outside,
+      tickcolor = Color.RGB(102, 102, 102),
+      ticksuffix = "%"
+    ),
+    yaxis = Axis().withValues(automargin = true, gridcolor = Color.RGB(230, 232, 240)),
+    legend = Legend().withValues(
+      font = Font(size = 11),
+      orientation = Orientation.Horizontal,
+      xanchor = Anchor.Center,
+      x = 0.5,
+      y = -0.15
+    ),
+    hovermode = HoverMode.Closest
+  )
 
   // demo source end
 

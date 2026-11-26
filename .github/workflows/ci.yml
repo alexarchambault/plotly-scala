@@ -32,6 +32,16 @@ jobs:
     - uses: coursier/cache-action@v9
     - run: scripts/ci-mill.sh demo.fullSite
 
+  jupyter:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        fetch-depth: 2 # selective execution on PRs needs the base commit
+    - uses: coursier/cache-action@v9
+    # the plotly.js versions of the library and of the plotly renderer of dev.jupyterCmd
+    - run: scripts/ci-mill.sh dev.checkPlotlyJs
+
   publish:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest

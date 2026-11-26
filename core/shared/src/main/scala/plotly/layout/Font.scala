@@ -7,7 +7,10 @@ import plotly.element._
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues"
+  nullOptionCopyMethodName = "withValues",
+  deprecatedSetters = true,
+  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersSince = "0.8.6"
 ) final case class Font(
     size: Option[Int] = None,
     family: Option[String] = None,

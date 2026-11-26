@@ -13,45 +13,52 @@ object AnnotatedHeatmap extends DemoChart {
 
   // demo source start
 
-  val x = Seq("A", "B", "C", "D", "E");
-  val y = Seq("W", "X", "Y", "Z");
-  val z = Seq(
-    Seq(0.00, 0.00, 0.75, 0.75, 0.00),
-    Seq(0.00, 0.00, 0.75, 0.75, 0.00),
-    Seq(0.75, 0.75, 0.75, 0.75, 0.75),
-    Seq(0.00, 0.00, 0.00, 0.75, 0.00)
+  val classes = Seq("Cat", "Dog", "Bird", "Fish")
+
+  // confusion matrix of a (fictional) image classifier:
+  // one row per actual class, one column per predicted class
+  val counts = Seq(
+    Seq(88, 9, 2, 1),
+    Seq(11, 83, 4, 2),
+    Seq(3, 5, 86, 6),
+    Seq(1, 2, 7, 90)
   )
 
+  val accuracy = 100.0 * classes.indices.map(i => counts(i)(i)).sum / counts.flatten.sum
+
   val data = Seq(
-    Heatmap(z, x, y)
-      .withShowscale(false)
-      .withColorscale(
-        ColorScale.CustomScale(
+    Heatmap(counts.reverse, classes, classes.reverse) // rows are drawn from the bottom up
+      .withValues(
+        showscale = false,
+        colorscale = ColorScale.CustomScale(
           Seq(
-            (0, Color.StringColor("#3D9970")),
-            (1, Color.StringColor("#001f3f"))
+            (0, Color.StringColor("#f0f2f9")),
+            (1, Color.StringColor("#3d47c9"))
           )
         )
       )
   )
 
-  val layout = Layout()
-    .withTitle("Annotated Heatmap")
-    .withXaxis(Axis().withTicks(Ticks.Empty).withSide(Side.Top))
-    .withYaxis(Axis().withTicks(Ticks.Empty).withTicksuffix(" "))
-    .withAnnotations(
+  val layout = Layout().withValues(
+    title = f"Classifier Confusion Matrix (accuracy: $accuracy%.1f%%)",
+    xaxis = Axis().withValues(title = "Predicted", ticks = Ticks.Empty),
+    yaxis = Axis().withValues(title = "Actual", ticks = Ticks.Empty, ticksuffix = " "),
+    annotations =
       for {
-        (xv, xi) <- x.zipWithIndex
-        (yv, yi) <- y.zipWithIndex
-      } yield Annotation()
-        .withX(xv)
-        .withY(yv)
-        .withXref(Ref.Axis(AxisReference.X1))
-        .withYref(Ref.Axis(AxisReference.Y1))
-        .withShowarrow(false)
-        .withText(z(yi)(xi).toString)
-        .withFont(Font(Color.StringColor("white")))
-    )
+        (actual, row)       <- classes.zipWithIndex
+        (predicted, column) <- classes.zipWithIndex
+        count = counts(row)(column)
+      } yield Annotation().withValues(
+        x = predicted,
+        y = actual,
+        xref = Ref.Axis(AxisReference.X1),
+        yref = Ref.Axis(AxisReference.Y1),
+        showarrow = false,
+        text = count.toString,
+        // light text on dark cells, dark text on light ones
+        font = Font(Color.StringColor(if (count > 50) "white" else "#15172e"))
+      )
+  )
 
   // demo source end
 

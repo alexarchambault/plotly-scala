@@ -4,7 +4,11 @@ import dataclass.data
 
 import scala.util.Try
 
-@data final case class LocalDateTime(
+@data(
+  deprecatedSetters = true,
+  deprecatedSettersMessage = "Use copy instead",
+  deprecatedSettersSince = "0.8.6"
+) final case class LocalDateTime(
     year: Int,
     month: Int,
     dayOfMonth: Int,

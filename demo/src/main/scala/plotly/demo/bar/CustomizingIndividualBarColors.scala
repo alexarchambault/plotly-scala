@@ -7,36 +7,34 @@ import plotly.layout._
 
 object CustomizingIndividualBarColors extends DemoChart {
 
-  def plotlyDocUrl = ""
+  def plotlyDocUrl = "https://plotly.com/javascript/bar-charts/#customizing-individual-bar-colors"
   def id           = "customizing-individual-bar-colors"
   def source       = CustomizingIndividualBarColorsSource.source
 
   // demo source start
 
-  val defaultColor   = Color.RGBA(204, 204, 204, 1)
-  val highlightColor = Color.RGBA(222, 45, 38, 0.8)
+  val features = Seq("Search", "Export", "Dark mode", "Sharing", "Comments", "Templates")
 
-  val trace1 = Bar(
-    Seq("Feature A", "Feature B", "Feature C", "Feature D", "Feature E"),
-    Seq(20, 14, 23, 25, 22)
-  )
-    .withMarker(
-      Marker()
-        .withColor(
-          Seq(
-            defaultColor,
-            highlightColor,
-            defaultColor,
-            defaultColor,
-            defaultColor
-          )
-        )
-    )
+  // share of weekly active users using each feature (fictional)
+  val usage = Seq(78, 52, 64, 23, 41, 57)
+
+  val defaultColor   = Color.RGBA(180, 185, 205, 0.8)
+  val highlightColor = Color.RGBA(239, 85, 59, 0.9)
+
+  // highlight the least used feature
+  val colors = usage.map(u => if (u == usage.min) highlightColor else defaultColor)
+
+  val trace1 = Bar(features, usage)
+    .withValues(marker = Marker().withValues(color = colors))
 
   val data = Seq(trace1)
 
-  val layout = Layout()
-    .withTitle("Least Used Feature")
+  val leastUsed = features(usage.indexOf(usage.min))
+
+  val layout = Layout().withValues(
+    title = s"Least Used Feature: $leastUsed",
+    yaxis = Axis().withValues(title = "Weekly active users", ticksuffix = "%")
+  )
 
   // demo source end
 

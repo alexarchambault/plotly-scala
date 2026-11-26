@@ -1,9 +1,9 @@
 package plotly.demo.histogram
 
-import plotly.Histogram
+import plotly._
 import plotly.demo.DemoChart
-import plotly.layout.{Axis, Layout, RangeSlider}
 import plotly.element._
+import plotly.layout._
 
 object StyledBasicHistogram extends DemoChart {
 
@@ -13,38 +13,45 @@ object StyledBasicHistogram extends DemoChart {
 
   // demo source start
 
-  val categoryCount = 50
-
-  val indices    = 0 until categoryCount
-  val categories = indices.map(i => s"name-$i")
-  val values     = {
+  // simulated heights of 1,000 women and 1,000 men, in cm
+  val (women, men) = {
     // fixed seed, so that the plot is the same every time
     val random = new scala.util.Random(42)
-    indices.map(_ => random.nextDouble())
+    (
+      Seq.fill(1000)(163.5 + 7 * random.nextGaussian()),
+      Seq.fill(1000)(177 + 7.5 * random.nextGaussian())
+    )
   }
 
+  def histogram(name: String, values: Seq[Double], color: String) =
+    Histogram(values)
+      .withValues(
+        name = name,
+        opacity = 0.65,
+        xbins = Bins(135, 210, 2.5),
+        marker = new Marker().withValues(
+          color = Color.StringColor(color),
+          line = Line().withValues(color = Color.StringColor("white"), width = 0.5)
+        )
+      )
+
   val data = Seq(
-    Histogram(values, categories)
-      .withMarker(new Marker().withColor(Color.StringColor("#004A72")))
-      .withHovertext(categories.map(c => s"$c with hover text"))
+    histogram("Women", women, "#ab63fa"),
+    histogram("Men", men, "#19d3f3")
   )
 
-  val xAxis = new Axis()
-    .withRange((0d, 2d))
-    .withRangeslider(RangeSlider())
+  val xAxis = new Axis().withValues(title = "Height (cm)", rangeslider = RangeSlider())
 
-  val yAxis = new Axis()
-    .withTitle("Count")
-    .withFixedrange(true)
-    .withTickformat(".1f")
+  val yAxis = new Axis().withValues(title = "Count", fixedrange = true)
 
-  val layout = new Layout()
-    .withXaxis(xAxis)
-    .withYaxis(yAxis)
-    .withTitle("Styled Basic Histogram")
-    .withShowlegend(false)
-    .withHeight(400)
-    .withWidth(600)
+  val layout = new Layout().withValues(
+    xaxis = xAxis,
+    yaxis = yAxis,
+    title = "Heights of Women and Men (simulated)",
+    barmode = BarMode.Overlay,
+    bargap = 0.05
+  )
 
   // demo source end
+
 }

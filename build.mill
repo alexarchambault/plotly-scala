@@ -32,7 +32,10 @@ object Versions {
   def jsoniterScala = "2.43.0"
 
   // Used by the dev.* commands
-  def almond   = "0.15.0" // almond version of the dev.jupyterCmd kernels
+  // almond version of the dev.jupyterCmd kernels: a snapshot, for the new notebook coursier logger
+  // (--use-notebook-coursier-logger), that doesn't show failed downloads (like those of the
+  // sources JARs that don't exist), coming after 0.15.0
+  def almond   = "0.15.1-SNAPSHOT"
   def coursier = "2.1.26" // cs launcher installing these kernels
   def uv       = "0.12.18"
   def devJvm   = "21" // JVM these kernels run on
@@ -59,10 +62,8 @@ object Deps {
 }
 
 object WebDeps {
-  def bootstrap = mvn"org.webjars.bower:bootstrap:3.4.1"
-  def jquery    = mvn"org.webjars.bower:jquery:3.7.1"
-  def plotlyJs  = mvn"org.webjars.npm:plotly.js-dist-min:${Versions.plotlyJs}"
-  def prism     = mvn"org.webjars.bower:prism:1.16.0"
+  def plotlyJs = mvn"org.webjars.npm:plotly.js-dist-min:${Versions.plotlyJs}"
+  def prism    = mvn"org.webjars.bower:prism:1.16.0"
 }
 
 // The version after the "v" if HEAD has a "v*" tag, else the latest "v*" tag version,
@@ -319,14 +320,12 @@ object demo extends ScalaJSModule, SbtModule {
 
   def webJars = Task {
     defaultResolver().classpath(
-      Seq(WebDeps.plotlyJs, WebDeps.jquery, WebDeps.bootstrap, WebDeps.prism).map(_.exclude("*" -> "*"))
+      Seq(WebDeps.plotlyJs, WebDeps.prism).map(_.exclude("*" -> "*"))
     )
   }
   // JS dependencies of the demo, concatenated in this order
   def jsDependencies = Seq(
     "plotly.min.js",
-    "jquery.min.js",
-    "bootstrap.min.js",
     "prism.js",
     "prism-clike.js",
     "prism-java.js",
@@ -410,6 +409,7 @@ object dev extends Module {
 
   /** Installs almond kernels, one per Scala version of [[scalaVersions]], and prints the command
     * running JupyterLab with them, with `COURSIER_REPOSITORIES` pointing at [[localRepo]].
+    * JupyterLab is run from `notebooks`, where the notebooks of `demo/notebooks` are linked.
     *
     * Accepts `--base-address=…`, the external address JupyterLab is accessed from, like
     * `https://host/some/path/`, when it's run behind a proxy. Other arguments are passed to
@@ -424,7 +424,7 @@ object dev extends Module {
       Task.dest / "jupyter",
       args
     )
-    System.err.println(s"Load plotly-scala from notebooks with\n  import $$ivy.`$dependency`")
+    System.err.println(s"Load plotly-scala from notebooks with\n  //> using dep $dependency")
     cmd.shellCommand
   }
 
@@ -456,11 +456,42 @@ object dev extends Module {
       )
     ).shellCommand
   }
+
+  /** The lock file of the Jupyter environment of [[jupyterCmd]] */
+  def jupyterLock = Task.Source(BuildCtx.workspaceRoot / "jupyter" / "uv.lock")
+
+  /** Checks that the plotly.js version bundled by the JupyterLab renderer of plotly outputs, that
+    * comes with the `plotly` Python package of the Jupyter environment of [[jupyterCmd]], is
+    * compatible with the one of the library, [[Versions.plotlyJs]].
+    *
+    * In JupyterLab, the plotly outputs of plotly-scala (`application/vnd.plotly.v1+json`) are
+    * rendered by that renderer, with its own plotly.js, rather than by the plotly.js of the library.
+    * The renderer should have the same major version (plotly.js 3 ignores the string titles
+    * plotly-scala emits, for example), and a minor version at least as recent as the library's,
+    * so that it supports the attributes the library may emit.
+    */
+  def checkPlotlyJs = Task {
+    val (pythonPlotly, rendererPlotlyJs) = DevTools.rendererPlotlyJsVersion(jupyterLock().path)
+    val library                          = Versions.plotlyJs
+    DevTools.plotlyJsIncompatibility(library, rendererPlotlyJs) match {
+      case Some(reason) =>
+        Task.fail(
+          s"The plotly.js version of the JupyterLab renderer of plotly $pythonPlotly in " +
+            s"jupyter/uv.lock, $rendererPlotlyJs, isn't compatible with the one of plotly-scala, " +
+            s"$library: $reason"
+        )
+      case None =>
+        val message = s"plotly.js $library (plotly-scala) and $rendererPlotlyJs " +
+          s"(JupyterLab renderer of plotly $pythonPlotly in jupyter/uv.lock) are compatible"
+        Task.log.info(message)
+        message
+    }
+  }
 }
 
 /** Helpers of the [[dev]] commands */
 object DevTools {
-  import coursier.cache.ArchiveCache
+  import coursier.cache.{ArchiveCache, FileCache}
   import coursier.jvm.{JavaHome, JvmCache}
   import coursier.util.Artifact
 
@@ -517,6 +548,76 @@ object DevTools {
     }
   }
 
+  /** The version of the `plotly` Python package locked in `uvLock` (a `uv.lock` file), along with
+    * the version of the plotly.js bundled by its JupyterLab renderer, read from its wheel
+    */
+  def rendererPlotlyJsVersion(uvLock: os.Path): (String, String) = {
+    val packages = os.read(uvLock).split("\n\\[\\[package\\]\\]\n").toSeq
+    val block = packages.find(_.linesIterator.contains("name = \"plotly\"")).getOrElse {
+      sys.error(s"No plotly package in $uvLock")
+    }
+    val version = "(?m)^version = \"([^\"]+)\"".r.findFirstMatchIn(block).map(_.group(1))
+      .getOrElse(sys.error(s"No version for plotly in $uvLock"))
+    val (url, sha256) =
+      "\\{ url = \"([^\"]+\\.whl)\", hash = \"sha256:([0-9a-f]+)\"".r.findFirstMatchIn(block)
+        .map(m => (m.group(1), m.group(2)))
+        .getOrElse(sys.error(s"No wheel for plotly in $uvLock"))
+    val wheel = downloadFile(url)
+    val actualSha256 = {
+      val digest = java.security.MessageDigest.getInstance("SHA-256").digest(os.read.bytes(wheel))
+      digest.map(b => f"$b%02x").mkString
+    }
+    if (actualSha256 != sha256)
+      sys.error(s"Wrong SHA-256 for $url ($wheel): expected $sha256, got $actualSha256")
+    // lists the packages bundled by the renderer, plotly.js among them
+    val licensesSuffix = "share/jupyter/labextensions/jupyterlab-plotly/static/third-party-licenses.json"
+    val zf             = new ZipFile(wheel.toIO)
+    val licenses =
+      try {
+        val entry = zf.entries().asScala.find(_.getName.endsWith(licensesSuffix)).getOrElse {
+          sys.error(s"No $licensesSuffix in $url")
+        }
+        val is = zf.getInputStream(entry)
+        try new String(is.readAllBytes(), StandardCharsets.UTF_8)
+        finally is.close()
+      }
+      finally zf.close()
+    val plotlyJs = ujson.read(licenses)("packages").arr
+      .find(_("name").str == "plotly.js")
+      .map(_("versionInfo").str)
+      .getOrElse(sys.error(s"plotly.js not listed in $licensesSuffix in $url"))
+    (version, plotlyJs)
+  }
+
+  /** Why the plotly.js version of a renderer, `renderer`, isn't compatible with the one of the
+    * library, `library`, if it's not: it needs the same major version, and a minor version at least
+    * as recent
+    */
+  def plotlyJsIncompatibility(library: String, renderer: String): Option[String] = {
+    def majorMinor(v: String) = v.split('.').take(2).map(_.takeWhile(_.isDigit)) match {
+      case Array(major, minor) if major.nonEmpty && minor.nonEmpty => (major.toInt, minor.toInt)
+      case _ => sys.error(s"Malformed plotly.js version: $v")
+    }
+    val (libMajor, libMinor) = majorMinor(library)
+    val (renMajor, renMinor) = majorMinor(renderer)
+    if (libMajor != renMajor) Some("major versions differ")
+    else if (renMinor < libMinor)
+      Some(s"the renderer is older than $libMajor.$libMinor, it may not support all the attributes")
+    else None
+  }
+
+  /** Downloads `url` to the coursier cache, as is */
+  private def downloadFile(url: String): os.Path = {
+    val cache = FileCache()
+    cache.file(Artifact(url)).run.unsafeRun()(using cache.ec) match {
+      case Left(err) => throw new Exception(s"Error downloading $url", err)
+      case Right(f)  => os.Path(f.getAbsoluteFile)
+    }
+  }
+
+  /** The Maven Central snapshot repository, where the snapshots of [[Versions.almond]] are */
+  private def mavenSnapshots = "https://central.sonatype.com/repository/maven-snapshots"
+
   /** A `uv` launcher, downloaded if needed */
   def uv: os.Path = {
     val target =
@@ -571,7 +672,8 @@ object DevTools {
   /** JupyterLab options making it assume it's reached at the passed address, typically via a
     * reverse proxy handling TLS: URLs are displayed with that address, its origin is accepted for
     * CORS / websocket connections, non-local `Host` headers are accepted, and the `X-Forwarded-*`
-    * headers set by the proxy are trusted.
+    * headers set by the proxy are trusted. If the address has a path, it becomes the base URL of the
+    * server, and `/` redirects to it (see [[writeRootRedirectExtension]]).
     */
   private def baseAddressOptions(baseAddress: String): Seq[String] = {
     val uri = new java.net.URI(baseAddress)
@@ -581,13 +683,71 @@ object DevTools {
       val port = if (uri.getPort == -1) "" else s":${uri.getPort}"
       s"${uri.getScheme}://${uri.getHost}$port"
     }
-    val basePath = Option(uri.getPath).map(_.stripSuffix("/")).filter(_.nonEmpty)
+    val baseUrlOpt = baseAddressPath(baseAddress).toSeq.flatMap { path =>
+      Seq(
+        s"--ServerApp.base_url=$path/",
+        s"--ServerApp.jpserver_extensions=$rootRedirectExtension=True"
+      )
+    }
     Seq(
       s"--ServerApp.custom_display_url=$baseAddress",
       s"--ServerApp.allow_origin=$origin",
       "--ServerApp.allow_remote_access=True",
       "--ServerApp.trust_xheaders=True"
-    ) ++ basePath.map(path => s"--ServerApp.base_url=$path/")
+    ) ++ baseUrlOpt
+  }
+
+  /** The path of the passed base address, without trailing `/`, if it's not empty */
+  private def baseAddressPath(baseAddress: String): Option[String] =
+    Option(new java.net.URI(baseAddress).getPath).map(_.stripSuffix("/")).filter(_.nonEmpty)
+
+  /** Name of the Jupyter server extension redirecting `/` to the base URL of the server, see
+    * [[writeRootRedirectExtension]]
+    */
+  private def rootRedirectExtension = "plotly_scala_dev_root_redirect"
+
+  /** Writes, under `dir`, the Python module of the Jupyter server extension redirecting `/` to the
+    * base URL of the server, and returns `dir`, to put in `PYTHONPATH`
+    *
+    * When it has a base URL, Jupyter only serves things under it, and answers `/` with a 404:
+    * whatever checks if the server is up by requesting `/` (like the service runners starting the
+    * server behind a reverse proxy) would think it isn't.
+    */
+  private def writeRootRedirectExtension(dir: os.Path): os.Path = {
+    val content =
+      """from tornado import web
+        |
+        |
+        |def _jupyter_server_extension_points():
+        |    return [{"module": __name__}]
+        |
+        |
+        |def _load_jupyter_server_extension(serverapp):
+        |    if serverapp.base_url != "/":
+        |        options = {"url": serverapp.base_url, "permanent": False}
+        |        serverapp.web_app.add_handlers(".*$", [(r"/", web.RedirectHandler, options)])
+        |""".stripMargin
+    os.write.over(dir / s"$rootRedirectExtension.py", content, createFolders = true)
+    dir
+  }
+
+  /** Links the notebooks of `demo/notebooks` from `notebooks`, the root directory of JupyterLab, so
+    * that they're shown at the root of its file tree (`notebooks` itself is ignored by git, it holds
+    * the notebooks users create). Saving them from JupyterLab writes to the files under
+    * `demo/notebooks`. Files already in `notebooks` are left alone.
+    */
+  private def linkDemoNotebooks(workspace: os.Path): Unit = {
+    val demoDir = workspace / "demo" / "notebooks"
+    if (os.isDir(demoDir))
+      for (nb <- os.list(demoDir) if nb.ext == "ipynb") {
+        val link = workspace / "notebooks" / nb.last
+        if (!os.exists(link, followLinks = false))
+          try os.symlink(link, nb.relativeTo(link / os.up))
+          catch {
+            // symlinks may need specific permissions on Windows
+            case _: java.io.IOException => os.copy(nb, link)
+          }
+      }
   }
 
   /** Installs almond kernels under `jupyterDir`, one per Scala version of [[scalaVersions]], and
@@ -618,10 +778,15 @@ object DevTools {
         "launch",
         "--use-bootstrap",
         s"almond:${Versions.almond}",
+        "-r",
+        mavenSnapshots,
         "--scala",
         sv,
         "--",
         "--install",
+        // shows dependency downloads and their progress in the notebooks, rather than as
+        // "Downloading ..." / "Downloaded ..." / "Failed to download ..." lines on stderr
+        "--use-notebook-coursier-logger",
         "--jupyter-path",
         kernelsDir,
         "--id",
@@ -642,12 +807,18 @@ object DevTools {
       Seq(localRepo.toNIO.toUri.toASCIIString.stripSuffix("/"), "ivy2Local", "central")
     val (baseAddressOpt, args0) = extractOption(args, "--base-address")
     os.makeDir.all(workspace / "notebooks")
+    linkDemoNotebooks(workspace)
+    val rootRedirectEnv = baseAddressOpt.flatMap(baseAddressPath).map { _ =>
+      val dir = writeRootRedirectExtension(jupyterDir / "python")
+      "PYTHONPATH" -> (dir.toString +: sys.env.get("PYTHONPATH").toSeq)
+        .mkString(java.io.File.pathSeparator)
+    }
     Command(
       workspace,
       javaEnv ++ Map(
         "JUPYTER_PATH"          -> jupyterDir.toString,
         "COURSIER_REPOSITORIES" -> repositories.mkString("|")
-      ),
+      ) ++ rootRedirectEnv,
       Seq(
         uv.toString,
         "run",
