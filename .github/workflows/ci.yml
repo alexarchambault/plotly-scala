@@ -23,6 +23,14 @@ jobs:
       env:
         SCALA_VERSION: ${{ matrix.SCALA_VERSION }}
 
+  format:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+    - uses: coursier/cache-action@v9
+    # the Scala sources of all the modules, with the scalafmt settings of .scalafmt.conf
+    - run: ./mill --no-daemon mill.scalalib.scalafmt/checkFormatAll
+
   demo:
     runs-on: ubuntu-latest
     steps:
