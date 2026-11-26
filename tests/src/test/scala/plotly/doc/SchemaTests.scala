@@ -25,6 +25,9 @@ object SchemaTests {
   def flagAttributeFlags(trace: String, name: String): Seq[String] =
     attribute(trace, name, "flaglist")("flags").arr.map(_.str).toSeq
 
+  def traceAttributes(trace: String): Map[String, ujson.Value] =
+    schema("traces")(trace)("attributes").obj.toMap
+
   def enumeratedAttributeValues(trace: String, name: String): Seq[String] =
     attribute(trace, name, "enumerated")("values").arr.map(_.str).toSeq
 
@@ -50,6 +53,28 @@ class SchemaTests extends munit.FunSuite {
       .toSet
 
     compareValues(fromSchema, fromLib)
+  }
+
+  // the trace types having a case class extending Trace
+  private val traceTypes = Seq(
+    "bar",
+    "box",
+    "candlestick",
+    "heatmap",
+    "histogram",
+    "image",
+    "scatter",
+    "surface"
+  )
+
+  test("Hover info elements should include the hoverinfo flags of all trace types") {
+    val fromSchema = traceTypes
+      .flatMap(SchemaTests.traceAttributes(_).get("hoverinfo"))
+      .flatMap(_("flags").arr.map(_.str))
+      .toSet
+    val fromLib = HoverInfo.elements.map(_.label).toSet
+    val missing = (fromSchema -- fromLib).toVector.sorted
+    assert(missing.isEmpty, s"Missing in lib: ${missing.mkString(", ")}")
   }
 
   test("Text position should be exhaustive") {

@@ -21,6 +21,54 @@ object HoverInfo {
   case object Name  extends Element("name")
   case object Color extends Element("color")
 
+  // pie-like and hierarchical traces (pie, funnelarea, sunburst, treemap)
+  case object Label         extends Element("label")
+  case object Value         extends Element("value")
+  case object Percent       extends Element("percent")
+  case object CurrentPath   extends Element("current path")
+  case object PercentRoot   extends Element("percent root")
+  case object PercentEntry  extends Element("percent entry")
+  case object PercentParent extends Element("percent parent")
+
+  // waterfall traces
+  case object Initial extends Element("initial")
+  case object Delta   extends Element("delta")
+  case object Final   extends Element("final")
+
+  // funnel traces
+  case object PercentInitial  extends Element("percent initial")
+  case object PercentPrevious extends Element("percent previous")
+  case object PercentTotal    extends Element("percent total")
+
+  // polar traces
+  case object R     extends Element("r")
+  case object Theta extends Element("theta")
+
+  val elements: Seq[Element] = Seq(
+    X,
+    Y,
+    Z,
+    Text,
+    Name,
+    Color,
+    Label,
+    Value,
+    Percent,
+    CurrentPath,
+    PercentRoot,
+    PercentEntry,
+    PercentParent,
+    Initial,
+    Delta,
+    Final,
+    PercentInitial,
+    PercentPrevious,
+    PercentTotal,
+    R,
+    Theta
+  )
+  private[plotly] lazy val elementMap = elements.map(e => e.label -> e).toMap
+
   case object All extends HoverInfo {
     def label = "all"
   }

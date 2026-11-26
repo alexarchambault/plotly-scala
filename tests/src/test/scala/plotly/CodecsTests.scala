@@ -76,6 +76,13 @@ class CodecsTests extends munit.FunSuite {
     )
   }
 
+  test("Trace codec should read and write multi-word hover info elements") {
+    val bar  = Bar(Seq(1.0), Seq(2.0)).withValues(hoverinfo = HoverInfo(HoverInfo.PercentRoot, HoverInfo.Label))
+    val json = writeToString[Trace](bar)
+    assertEquals(ujson.read(json).obj.get("hoverinfo"), Some(ujson.Str("percent root+label")))
+    assertEquals(readFromString[Trace](json), bar)
+  }
+
   test("Trace codec should reject unknown enum values") {
     assert(Try(readFromString[Trace]("""{"y": [1], "textposition": "nowhere"}""")).isFailure)
   }

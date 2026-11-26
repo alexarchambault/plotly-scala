@@ -205,14 +205,8 @@ object JsoniterCodecsInternals {
       case ("skip", _)       => HoverInfo.Skip
       case ("none", _)       => HoverInfo.None
       case (combination, in) =>
-        val results = combination.split('+').map {
-          case "x"     => Right(HoverInfo.X)
-          case "y"     => Right(HoverInfo.Y)
-          case "z"     => Right(HoverInfo.Z)
-          case "color" => Right(HoverInfo.Color)
-          case "text"  => Right(HoverInfo.Text)
-          case "name"  => Right(HoverInfo.Name)
-          case other   => Left(other)
+        val results = combination.split('+').map { elem =>
+          HoverInfo.elementMap.get(elem).toRight(elem)
         }
         if (results.exists(_.isLeft))
           in.decodeError(s"Unrecognized hover info elements: ${results.flatMap(_.left.toSeq).mkString(", ")}")
