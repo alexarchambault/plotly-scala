@@ -195,7 +195,7 @@ import scalatags.JsDom.tags2
         ),
         pre(code(content))
       )
-    val hero        = tags2.section(
+    val hero = tags2.section(
       `class` := "hero",
       div(
         `class` := "hero-inner",

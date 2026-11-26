@@ -59,7 +59,7 @@ object CategoricalDotPlot extends DemoChart {
       showline = true,
       linecolor = Color.RGB(102, 102, 102),
       tickfont = Font(Color.RGB(102, 102, 102)),
-      autotick = false,
+      tickmode = TickMode.Linear,
       dtick = 10.0,
       ticks = Ticks.Outside,
       tickcolor = Color.RGB(102, 102, 102),

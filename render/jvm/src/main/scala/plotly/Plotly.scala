@@ -134,7 +134,7 @@ object Plotly {
          |<html>
          |<head>
          |<meta charset="UTF-8">
-         |<title>${layout.title.getOrElse("plotly chart")}</title>
+         |<title>${layout.title.flatMap(_.text).getOrElse("plotly chart")}</title>
          |$plotlyHeader
          |</head>
          |<body>

@@ -33,6 +33,7 @@ class SettersTests extends munit.FunSuite {
     classOf[RangeSlider]            -> true,
     classOf[Scene]                  -> true,
     classOf[Shape]                  -> true,
+    classOf[Title]                  -> true,
     classOf[Error.Data]             -> true,
     classOf[Error.Percent]          -> true,
     classOf[Error.Constant]         -> true,

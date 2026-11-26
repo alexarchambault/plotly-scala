@@ -28,7 +28,7 @@ object Versions {
   def scalaJs       = "1.23.0"
   // a snapshot, for the nullOptionBuilderMethodName and nullOptionCopyMethodName @data arguments
   def dataClass     = "0.3.2-SNAPSHOT"
-  def plotlyJs      = "2.35.3"
+  def plotlyJs      = "4.1.0"
   def jsoniterScala = "2.43.0"
 
   // Used by the dev.* commands
@@ -466,8 +466,8 @@ object dev extends Module {
     *
     * In JupyterLab, the plotly outputs of plotly-scala (`application/vnd.plotly.v1+json`) are
     * rendered by that renderer, with its own plotly.js, rather than by the plotly.js of the library.
-    * The renderer should have the same major version (plotly.js 3 ignores the string titles
-    * plotly-scala emits, for example), and a minor version at least as recent as the library's,
+    * The renderer should have the same major version (major versions drop attributes, like the
+    * string titles plotly.js 3 ignores), and a minor version at least as recent as the library's,
     * so that it supports the attributes the library may emit.
     */
   def checkPlotlyJs = Task {
@@ -569,23 +569,38 @@ object DevTools {
     }
     if (actualSha256 != sha256)
       sys.error(s"Wrong SHA-256 for $url ($wheel): expected $sha256, got $actualSha256")
-    // lists the packages bundled by the renderer, plotly.js among them
-    val licensesSuffix = "share/jupyter/labextensions/jupyterlab-plotly/static/third-party-licenses.json"
-    val zf             = new ZipFile(wheel.toIO)
-    val licenses =
-      try {
-        val entry = zf.entries().asScala.find(_.getName.endsWith(licensesSuffix)).getOrElse {
-          sys.error(s"No $licensesSuffix in $url")
-        }
+    val extensionDir = "share/jupyter/labextensions/jupyterlab-plotly/"
+    val zf           = new ZipFile(wheel.toIO)
+    def readEntry(suffix: String): Option[String] =
+      zf.entries().asScala.find(_.getName.endsWith(extensionDir + suffix)).map { entry =>
         val is = zf.getInputStream(entry)
         try new String(is.readAllBytes(), StandardCharsets.UTF_8)
         finally is.close()
       }
+    val plotlyJs =
+      try {
+        // lists the packages bundled by the renderer, plotly.js among them, up to plotly 6
+        val fromLicenses = readEntry("static/third-party-licenses.json").flatMap { licenses =>
+          ujson.read(licenses)("packages").arr
+            .find(_("name").str == "plotly.js")
+            .map(_("versionInfo").str)
+        }
+        // from plotly 7, plotly.js isn't listed there, but its package.json depends on an exact
+        // plotly.js version, the one it bundles
+        def fromPackageJson = readEntry("package.json").flatMap { packageJson =>
+          ujson.read(packageJson).obj.get("dependencies")
+            .flatMap(_.obj.get("plotly.js"))
+            .map(_.str)
+            .filter(_.matches("[0-9]+\\.[0-9]+\\.[0-9]+"))
+        }
+        fromLicenses.orElse(fromPackageJson).getOrElse {
+          sys.error(
+            s"Neither ${extensionDir}static/third-party-licenses.json nor ${extensionDir}package.json " +
+              s"in $url give the version of plotly.js"
+          )
+        }
+      }
       finally zf.close()
-    val plotlyJs = ujson.read(licenses)("packages").arr
-      .find(_("name").str == "plotly.js")
-      .map(_("versionInfo").str)
-      .getOrElse(sys.error(s"plotly.js not listed in $licensesSuffix in $url"))
     (version, plotlyJs)
   }
 

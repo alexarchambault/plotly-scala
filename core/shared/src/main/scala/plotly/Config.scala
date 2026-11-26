@@ -12,6 +12,5 @@ import dataclass.data
 ) final case class Config(
     editable: Option[Boolean] = None,
     responsive: Option[Boolean] = None,
-    showEditInChartStudio: Option[Boolean] = None,
     plotlyServerURL: Option[String] = None
 )
