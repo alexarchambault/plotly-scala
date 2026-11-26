@@ -24,6 +24,8 @@ class SettersTests extends munit.FunSuite {
     classOf[Candlestick]            -> true,
     classOf[Pie]                    -> true,
     classOf[Contour]                -> true,
+    classOf[Histogram2d]            -> true,
+    classOf[Histogram2dContour]     -> true,
     classOf[Config]                 -> true,
     classOf[Annotation]             -> true,
     classOf[Axis]                   -> true,

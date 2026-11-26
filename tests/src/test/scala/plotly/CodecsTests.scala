@@ -124,6 +124,23 @@ class CodecsTests extends munit.FunSuite {
     )
   }
 
+  test("Trace codec should round-trip 2D histograms") {
+    val hist = Histogram2d(Seq(1.0, 2.0), Seq(3.0, 4.0)).withValues(
+      histnorm = HistNorm.Probability,
+      xbins = Bins(0.0, 5.0, 0.5),
+      nbinsy = 10,
+      zsmooth = ZSmooth.Fast
+    )
+    roundTrip(hist)
+    assertEquals(ujson.read(writeToString[Trace](hist)).obj.get("type"), Some(ujson.Str("histogram2d")))
+    val contour = Histogram2dContour(Seq(1.0, 2.0), Seq(3.0, 4.0)).withValues(
+      contours = Contours().withValues(showlabels = true),
+      ncontours = 20
+    )
+    roundTrip(contour)
+    assertEquals(ujson.read(writeToString[Trace](contour)).obj.get("type"), Some(ujson.Str("histogram2dcontour")))
+  }
+
   test("Trace codec should reject unknown enum values") {
     assert(Try(readFromString[Trace]("""{"y": [1], "textposition": "nowhere"}""")).isFailure)
   }

@@ -254,7 +254,8 @@ class DocumentationTests extends munit.FunSuite {
     // TODO 2D Density plots
     "statistical/histogram",
     "scientific/heatmap",
-    // TODO 2D Histograms
+    "statistical/histogram2d",
+    "statistical/histogram2dcontour",
     // TODO Wind rose charts
     "scientific/contour",
     // TODO Heatmaps

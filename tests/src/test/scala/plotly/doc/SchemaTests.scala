@@ -63,6 +63,8 @@ class SchemaTests extends munit.FunSuite {
     "contour",
     "heatmap",
     "histogram",
+    "histogram2d",
+    "histogram2dcontour",
     "image",
     "pie",
     "scatter",

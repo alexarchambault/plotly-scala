@@ -337,6 +337,99 @@ object Contour {
     Contour().copy(z = Some(z), x = Some(x), y = Some(y))
 }
 
+/** A 2D histogram, counting (or aggregating) the points in each cell of a grid, colored by the count */
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues",
+  deprecatedSetters = true,
+  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersSince = "0.8.6"
+) final case class Histogram2d(
+    x: Option[Sequence] = None,
+    y: Option[Sequence] = None,
+    z: Option[Sequence] = None,
+    histfunc: Option[HistFunc] = None,
+    histnorm: Option[HistNorm] = None,
+    nbinsx: Option[Int] = None,
+    nbinsy: Option[Int] = None,
+    xbins: Option[Bins] = None,
+    ybins: Option[Bins] = None,
+    autobinx: Option[Boolean] = None,
+    autobiny: Option[Boolean] = None,
+    name: Option[String] = None,
+    hoverinfo: Option[HoverInfo] = None,
+    hovertemplate: Option[OneOrSeq[String]] = None,
+    hoverlabel: Option[HoverLabel] = None,
+    zsmooth: Option[ZSmooth] = None,
+    xgap: Option[Double] = None,
+    ygap: Option[Double] = None,
+    colorscale: Option[ColorScale] = None,
+    autocolorscale: Option[Boolean] = None,
+    reversescale: Option[Boolean] = None,
+    showscale: Option[Boolean] = None,
+    colorbar: Option[ColorBar] = None,
+    zmin: Option[Double] = None,
+    zmax: Option[Double] = None,
+    zmid: Option[Double] = None,
+    opacity: Option[Double] = None,
+    showlegend: Option[Boolean] = None,
+    xaxis: Option[AxisReference] = None,
+    yaxis: Option[AxisReference] = None
+) extends Trace
+
+object Histogram2d {
+  def apply(x: Sequence, y: Sequence): Histogram2d =
+    Histogram2d().copy(x = Some(x), y = Some(y))
+}
+
+/** A 2D histogram, drawn as contours */
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues",
+  deprecatedSetters = true,
+  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersSince = "0.8.6"
+) final case class Histogram2dContour(
+    x: Option[Sequence] = None,
+    y: Option[Sequence] = None,
+    z: Option[Sequence] = None,
+    histfunc: Option[HistFunc] = None,
+    histnorm: Option[HistNorm] = None,
+    nbinsx: Option[Int] = None,
+    nbinsy: Option[Int] = None,
+    xbins: Option[Bins] = None,
+    ybins: Option[Bins] = None,
+    autobinx: Option[Boolean] = None,
+    autobiny: Option[Boolean] = None,
+    name: Option[String] = None,
+    hoverinfo: Option[HoverInfo] = None,
+    hovertemplate: Option[OneOrSeq[String]] = None,
+    hoverlabel: Option[HoverLabel] = None,
+    autocontour: Option[Boolean] = None,
+    ncontours: Option[Int] = None,
+    contours: Option[Contours] = None,
+    line: Option[Line] = None,
+    colorscale: Option[ColorScale] = None,
+    autocolorscale: Option[Boolean] = None,
+    reversescale: Option[Boolean] = None,
+    showscale: Option[Boolean] = None,
+    colorbar: Option[ColorBar] = None,
+    zmin: Option[Double] = None,
+    zmax: Option[Double] = None,
+    zmid: Option[Double] = None,
+    opacity: Option[Double] = None,
+    showlegend: Option[Boolean] = None,
+    xaxis: Option[AxisReference] = None,
+    yaxis: Option[AxisReference] = None
+) extends Trace
+
+object Histogram2dContour {
+  def apply(x: Sequence, y: Sequence): Histogram2dContour =
+    Histogram2dContour().copy(x = Some(x), y = Some(y))
+}
+
 object Pie {
   def apply(values: Sequence, labels: Sequence): Pie =
     Pie().copy(values = Some(values), labels = Some(labels))

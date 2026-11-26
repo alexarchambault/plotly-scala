@@ -100,7 +100,9 @@ import scalatags.JsDom.tags2
       ("#4a55e8", "#19d3f3"),
       Seq(
         histogram.BasicHistogram,
-        histogram.StyledBasicHistogram
+        histogram.StyledBasicHistogram,
+        histogram.BivariateNormalHistogram,
+        histogram.HistogramContourWithPoints
       )
     ),
     Category(
