@@ -1,0 +1,48 @@
+name: plotly.js webjar
+
+# plotly-scala gets plotly.js from the org.webjars.npm:plotly.js-dist-min webjar, that webjars.org
+# only deploys to Maven Central when asked to. This asks it to deploy the latest plotly.js version
+# from npm, if Maven Central doesn't have it yet.
+on:
+  schedule:
+  - cron: "0 6 * * 1" # every Monday
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  deploy:
+    if: github.repository == 'alexarchambault/plotly-scala'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy the latest plotly.js version to Maven Central if needed
+      run: |
+        set -euo pipefail
+
+        package=plotly.js-dist-min
+        version="$(curl -fsSL "https://registry.npmjs.org/$package/latest" | jq -r .version)"
+        echo "Latest $package version on npm: $version"
+
+        pom="https://repo1.maven.org/maven2/org/webjars/npm/$package/$version/$package-$version.pom"
+        status="$(curl -sSL -o /dev/null -w '%{http_code}' "$pom")"
+        if [ "$status" = 200 ]; then
+          echo "Maven Central already has org.webjars.npm:$package:$version"
+          exit 0
+        fi
+        if [ "$status" != 404 ]; then
+          echo "Unexpected HTTP status $status for $pom" 1>&2
+          exit 1
+        fi
+
+        echo "Maven Central doesn't have org.webjars.npm:$package:$version, asking webjars.org to deploy it"
+        log="$(mktemp)"
+        # streams the deploy log, and ends it with a [deploy-failure:…] line if the deploy failed
+        curl -fsS --no-buffer --max-time 3600 -X POST \
+          "https://www.webjars.org/deploy?webJarType=npm&nameOrUrlish=$package&version=$version" \
+          | tee "$log"
+        echo
+        if grep -q '\[deploy-failure:' "$log"; then
+          echo "webjars.org failed to deploy org.webjars.npm:$package:$version" 1>&2
+          exit 1
+        fi
+        echo "Deployed org.webjars.npm:$package:$version (it can take a few hours to be available from Maven Central)"
