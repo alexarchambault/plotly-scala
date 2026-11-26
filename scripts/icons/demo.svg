@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <!-- Bar chart with 3 columns, in the colors of the default plotly palette -->
+  <rect x="7" y="22" width="9" height="20" rx="1.5" fill="#636EFA"/>
+  <rect x="19.5" y="8" width="9" height="34" rx="1.5" fill="#EF553B"/>
+  <rect x="32" y="16" width="9" height="26" rx="1.5" fill="#00CC96"/>
+  <rect x="3" y="42" width="42" height="3" rx="1.5" fill="#2A3F5F"/>
+</svg>
