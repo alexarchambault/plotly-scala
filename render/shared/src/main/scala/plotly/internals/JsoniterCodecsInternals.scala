@@ -264,8 +264,9 @@ object JsoniterCodecsInternals {
     else
       None
 
+  // like in CSS, color names are case-insensitive
   private def parseStringColor(s: String): Option[Color.StringColor] =
-    if (Color.StringColor.colors(s)) Some(Color.StringColor(s))
+    if (Color.StringColor.colors(s.toLowerCase(java.util.Locale.ROOT))) Some(Color.StringColor(s))
     else None
 
   private val HexaColor3 = "#([0-9a-fA-F]{3})".r

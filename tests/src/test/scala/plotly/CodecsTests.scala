@@ -183,4 +183,13 @@ class CodecsTests extends munit.FunSuite {
       scatter(Color.HSL(120, 50, 40))
     )
   }
+
+  test("Color codec should read CSS named colors") {
+    for (name <- Seq("cyan", "rebeccapurple", "lightgoldenrodyellow", "transparent", "Maroon", "DarkBlue"))
+      assertEquals(
+        readFromString[Trace](s"""{"y": [1], "marker": {"color": "$name"}}"""),
+        Scatter(Seq(1.0)).withValues(marker = Marker().withValues(color = Color.StringColor(name)))
+      )
+    assert(Try(readFromString[Trace]("""{"y": [1], "marker": {"color": "notacolor"}}""")).isFailure)
+  }
 }
