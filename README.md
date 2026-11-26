@@ -30,7 +30,7 @@ It is published for scala 2.12, 2.13, and 3 (built with the Scala 3 LTS, so that
 Add the `org.plotly-scala::plotly-almond:0.8.1` dependency to the notebook. (Latest version: [![Maven Central](https://img.shields.io/maven-central/v/org.plotly-scala/plotly-render_2.13.svg)](https://maven-badges.herokuapp.com/maven-central/org.plotly-scala/plotly-render_2.13))
 Then initialize plotly-scala, and use it, like
 ```scala
-import $ivy.`org.plotly-scala::plotly-almond:0.8.1`
+//> using dep org.plotly-scala::plotly-almond:0.8.1
 
 import plotly._
 import plotly.element._
@@ -45,6 +45,8 @@ val (x, y) = Seq(
 
 Bar(x, y).plot()
 ```
+(`//> using` directives need almond 0.14.0 or later. With earlier versions, load the dependency with
+``import $ivy.`org.plotly-scala::plotly-almond:0.8.1` `` instead.)
 
 #### JupyterLab
 If you're using [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/), you have to install [jupyterlab-plotly](https://plotly.com/python/getting-started/#jupyterlab-support-python-35) to enable support for rendering Plotly charts:
