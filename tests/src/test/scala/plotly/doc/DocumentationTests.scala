@@ -337,10 +337,11 @@ class DocumentationTests extends munit.FunSuite {
     assertEquals(
       maybeLayout,
       Some(
-        Layout()
-          .withWidth(400)
-          .withHeight(400)
-          .withTitle("image with opacity 0.1")
+        Layout().withValues(
+          width = 400,
+          height = 400,
+          title = "image with opacity 0.1"
+        )
       )
     )
 
@@ -349,12 +350,13 @@ class DocumentationTests extends munit.FunSuite {
         val colors = Seq(
           Seq(Seq(255d, 0d, 0d), Seq(0d, 255, 0), Seq(0d, 0, 255))
         )
-        val expected = Image(z = colors)
-          .withOpacity(0.1)
-          .withX0(0.05)
-          .withY0(0.05)
-          .withHoverinfo(HoverInfo(X, Y, Z, HoverInfo.Color))
-          .withColormodel(RGB)
+        val expected = Image(z = colors).withValues(
+          opacity = 0.1,
+          x0 = 0.05,
+          y0 = 0.05,
+          hoverinfo = HoverInfo(X, Y, Z, HoverInfo.Color),
+          colormodel = RGB
+        )
 
         assertEquals(image, expected)
       case None =>

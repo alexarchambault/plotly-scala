@@ -4,7 +4,11 @@ package layout
 import dataclass.data
 import plotly.element._
 
-@data(optionSetters = true) class Axis(
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues"
+) class Axis(
     title: Option[String] = None,
     titlefont: Option[Font] = None,
     showgrid: Option[Boolean] = None,

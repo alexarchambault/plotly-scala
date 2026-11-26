@@ -2,7 +2,11 @@ package plotly
 
 import dataclass.data
 
-@data(optionSetters = true) class Config(
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues"
+) class Config(
     editable: Option[Boolean] = None,
     responsive: Option[Boolean] = None,
     showEditInChartStudio: Option[Boolean] = None,

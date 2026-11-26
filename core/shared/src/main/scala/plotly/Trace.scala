@@ -7,7 +7,11 @@ import plotly.element._
 
 sealed abstract class Trace extends Product with Serializable
 
-@data(optionSetters = true) class Scatter(
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues"
+) class Scatter(
     x: Option[Sequence] = None,
     y: Option[Sequence] = None,
     text: Option[OneOrSeq[String]] = None,
@@ -41,7 +45,11 @@ object Scatter {
     Scatter().withY(y)
 }
 
-@data(optionSetters = true) class Box(
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues"
+) class Box(
     y: Option[Sequence] = None,
     x: Option[Sequence] = None,
     boxpoints: Option[BoxPoints] = None,
@@ -67,7 +75,11 @@ object Box {
     Box().withY(y).withX(x)
 }
 
-@data(optionSetters = true) class Image(
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues"
+) class Image(
     z: Seq[Seq[Seq[Double]]],
     x0: Option[Element] = None,
     y0: Option[Element] = None,
@@ -90,7 +102,11 @@ object Box {
     hoverlabel: Option[HoverLabel] = None
 ) extends Trace
 
-@data(optionSetters = true) class Bar(
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues"
+) class Bar(
     x: Sequence,
     y: Sequence,
     @since
@@ -111,7 +127,11 @@ object Box {
     hovertemplate: Option[OneOrSeq[String]] = None
 ) extends Trace
 
-@data(optionSetters = true) class Histogram(
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues"
+) class Histogram(
     x: Option[Sequence] = None,
     y: Option[Sequence] = None,
     opacity: Option[Double] = None,
@@ -138,7 +158,11 @@ object Histogram {
     Histogram().withX(x).withY(y)
 }
 
-@data(optionSetters = true) class Surface(
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues"
+) class Surface(
     x: Option[Sequence] = None,
     y: Option[Sequence] = None,
     z: Option[Sequence] = None,
@@ -148,7 +172,11 @@ object Histogram {
     hovertemplate: Option[OneOrSeq[String]] = None
 ) extends Trace
 
-@data(optionSetters = true) class Heatmap(
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues"
+) class Heatmap(
     y: Option[Sequence] = None,
     x: Option[Sequence] = None,
     z: Option[Sequence] = None,
@@ -169,7 +197,11 @@ object Heatmap {
     Heatmap().withZ(z).withX(x).withY(y)
 }
 
-@data(optionSetters = true) class Candlestick(
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues"
+) class Candlestick(
     x: Option[Sequence] = None,
     close: Option[Sequence] = None,
     high: Option[Sequence] = None,

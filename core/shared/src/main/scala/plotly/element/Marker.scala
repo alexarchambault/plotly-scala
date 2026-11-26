@@ -3,7 +3,11 @@ package element
 
 import dataclass.data
 
-@data(optionSetters = true) class Marker(
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues"
+) class Marker(
     size: Option[OneOrSeq[Int]] = None,
     color: Option[OneOrSeq[Color]] = None,
     opacity: Option[OneOrSeq[Double]] = None,

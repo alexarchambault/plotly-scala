@@ -3,7 +3,11 @@ package layout
 
 import dataclass.data
 
-@data(optionSetters = true) class Margin(
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues"
+) class Margin(
     autoexpand: Option[Boolean] = None,
     l: Option[Int] = None,
     r: Option[Int] = None,

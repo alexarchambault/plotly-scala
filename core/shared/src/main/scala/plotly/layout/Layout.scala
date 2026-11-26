@@ -4,7 +4,11 @@ package layout
 import dataclass.data
 import plotly.element._
 
-@data(optionSetters = true) class Layout(
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues"
+) class Layout(
     title: Option[String] = None,
     legend: Option[Legend] = None,
     width: Option[Int] = None,

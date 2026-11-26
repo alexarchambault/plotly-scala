@@ -4,7 +4,11 @@ package layout
 import dataclass._
 import plotly.element._
 
-@data(optionSetters = true) class Legend(
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues"
+) class Legend(
     x: Option[Double] = None,
     y: Option[Double] = None,
     traceorder: Option[TraceOrder] = None,
