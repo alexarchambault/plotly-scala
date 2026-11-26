@@ -57,5 +57,9 @@ import plotly.element._
     violingroupgap: Option[Double] = None,
     waterfallmode: Option[BoxMode] = None,
     waterfallgap: Option[Double] = None,
-    waterfallgroupgap: Option[Double] = None
+    waterfallgroupgap: Option[Double] = None,
+    funnelmode: Option[BarMode] = None,
+    funnelgap: Option[Double] = None,
+    funnelgroupgap: Option[Double] = None,
+    funnelareacolorway: Option[Seq[Color]] = None
 )

@@ -27,6 +27,8 @@ import scala.language.implicitConversions
   *   whether the margins should be expanded to fit the title
   * @param side
   *   for a color bar title, its location with respect to the color bar
+  * @param position
+  *   for the title of a pie or funnelarea trace, its position with respect to the trace
   */
 @data(
   optionSetters = true,
@@ -44,7 +46,8 @@ import scala.language.implicitConversions
     xanchor: Option[Anchor] = None,
     yanchor: Option[Anchor] = None,
     automargin: Option[Boolean] = None,
-    side: Option[Side] = None
+    side: Option[Side] = None,
+    position: Option[TitlePosition] = None
 )
 
 object Title {

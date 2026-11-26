@@ -4,7 +4,7 @@ import scala.language.implicitConversions
 
 import dataclass._
 import plotly.element._
-import plotly.layout.Font
+import plotly.layout.{Font, Title}
 
 sealed abstract class Trace extends Product with Serializable
 
@@ -284,7 +284,8 @@ object Heatmap {
     showlegend: Option[Boolean] = None,
     legendgroup: Option[String] = None,
     opacity: Option[Double] = None,
-    scalegroup: Option[String] = None
+    scalegroup: Option[String] = None,
+    title: Option[Title] = None
 ) extends Trace
 
 @data(
@@ -524,6 +525,82 @@ object Waterfall {
 
   def apply(x: Sequence, y: Sequence, measure: Seq[WaterfallMeasure]): Waterfall =
     Waterfall().copy(x = Some(x), y = Some(y), measure = Some(measure))
+}
+
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues",
+  deprecatedSetters = true,
+  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersSince = "0.8.6"
+) final case class Funnel(
+    x: Option[Sequence] = None,
+    y: Option[Sequence] = None,
+    name: Option[String] = None,
+    orientation: Option[Orientation] = None,
+    text: Option[OneOrSeq[String]] = None,
+    textposition: Option[BarTextPosition] = None,
+    textinfo: Option[TextInfo] = None,
+    texttemplate: Option[OneOrSeq[String]] = None,
+    textfont: Option[Font] = None,
+    insidetextfont: Option[Font] = None,
+    outsidetextfont: Option[Font] = None,
+    hoverinfo: Option[HoverInfo] = None,
+    hovertemplate: Option[OneOrSeq[String]] = None,
+    hovertext: Option[OneOrSeq[String]] = None,
+    marker: Option[Marker] = None,
+    connector: Option[Connector] = None,
+    width: Option[Double] = None,
+    offset: Option[Double] = None,
+    offsetgroup: Option[String] = None,
+    alignmentgroup: Option[String] = None,
+    opacity: Option[Double] = None,
+    showlegend: Option[Boolean] = None,
+    legendgroup: Option[String] = None,
+    xaxis: Option[AxisReference] = None,
+    yaxis: Option[AxisReference] = None
+) extends Trace
+
+object Funnel {
+  def apply(x: Sequence, y: Sequence): Funnel =
+    Funnel().copy(x = Some(x), y = Some(y))
+}
+
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues",
+  deprecatedSetters = true,
+  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersSince = "0.8.6"
+) final case class FunnelArea(
+    values: Option[Sequence] = None,
+    labels: Option[Sequence] = None,
+    name: Option[String] = None,
+    title: Option[Title] = None,
+    text: Option[OneOrSeq[String]] = None,
+    textposition: Option[BarTextPosition] = None,
+    textinfo: Option[TextInfo] = None,
+    texttemplate: Option[OneOrSeq[String]] = None,
+    textfont: Option[Font] = None,
+    insidetextfont: Option[Font] = None,
+    hoverinfo: Option[HoverInfo] = None,
+    hovertemplate: Option[OneOrSeq[String]] = None,
+    hovertext: Option[OneOrSeq[String]] = None,
+    marker: Option[Marker] = None,
+    domain: Option[Domain] = None,
+    aspectratio: Option[Double] = None,
+    baseratio: Option[Double] = None,
+    scalegroup: Option[String] = None,
+    opacity: Option[Double] = None,
+    showlegend: Option[Boolean] = None,
+    legendgroup: Option[String] = None
+) extends Trace
+
+object FunnelArea {
+  def apply(values: Sequence, labels: Sequence): FunnelArea =
+    FunnelArea().copy(values = Some(values), labels = Some(labels))
 }
 
 object Pie {

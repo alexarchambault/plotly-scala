@@ -239,6 +239,7 @@ class DocumentationTests extends munit.FunSuite {
     "financial/candlestick-charts",
 //    "financial/ohlc",
     "financial/waterfall",
+    "financial/funnel",
     "basic/bubble",
     "basic/area",
     "fundamentals/sizing",
@@ -275,7 +276,11 @@ class DocumentationTests extends munit.FunSuite {
     "basic/pie/2020-01-14-inside-text-orientation.html"              -> "its layout is an array rather than an object",
     "financial/waterfall/2015-04-09-horizontal-waterfall-chart.html" ->
       "its connector line has dash: 0, that isn't a dash style (and plotly-scala doesn't support autorange: reversed yet)",
-    "financial/waterfall/2015-04-09-style-waterfall.html" -> "deep sky blue isn't a valid color"
+    "financial/waterfall/2015-04-09-style-waterfall.html" -> "deep sky blue isn't a valid color",
+    "financial/funnel/2019-06-27-multi-funnelarea.html"   -> "its layout has showlegend: 'true', a string",
+    "financial/funnel/2019-06-27-stacked-funnel.html"     -> "its layout has showlegend: 'True', a string",
+    "financial/funnel/2019-06-27-funnelarea.html"         ->
+      "its shapes have numbers as x0 and x1, that plotly-scala's Shape only accepts as strings"
   )
 
   for {

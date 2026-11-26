@@ -182,6 +182,7 @@ object JsoniterCodecsInternals {
   implicit val connectorModeCodec: JsonValueCodec[ConnectorMode]       = enumCodec[ConnectorMode](_.label)
   implicit val waterfallMeasureCodec: JsonValueCodec[WaterfallMeasure] =
     enumCodec[WaterfallMeasure](_.label)
+  implicit val titlePositionCodec: JsonValueCodec[TitlePosition]         = enumCodec[TitlePosition](_.label)
   implicit val rotationDirectionCodec: JsonValueCodec[RotationDirection] =
     enumCodec[RotationDirection](_.label)
   implicit val insideTextOrientationCodec: JsonValueCodec[InsideTextOrientation] =

@@ -188,6 +188,21 @@ class CodecsTests extends munit.FunSuite {
     )
   }
 
+  test("Trace codec should round-trip funnel traces") {
+    val funnel = Funnel(Seq(100.0, 60.0, 20.0), Seq("visits", "carts", "orders")).withValues(
+      orientation = Orientation.Horizontal,
+      textinfo = TextInfo(TextInfo.Value, TextInfo.PercentInitial),
+      connector = Connector().withValues(fillcolor = Color.StringColor("lightgray"))
+    )
+    roundTrip(funnel)
+    assertEquals(ujson.read(writeToString[Trace](funnel)).obj.get("type"), Some(ujson.Str("funnel")))
+    val funnelArea = FunnelArea(Seq(5.0, 4.0, 3.0), Seq("a", "b", "c")).withValues(
+      title = Title.from(text = "Sales", position = TitlePosition.TopLeft)
+    )
+    roundTrip(funnelArea)
+    assertEquals(ujson.read(writeToString[Trace](funnelArea)).obj.get("type"), Some(ujson.Str("funnelarea")))
+  }
+
   test("Trace codec should reject unknown enum values") {
     assert(Try(readFromString[Trace]("""{"y": [1], "textposition": "nowhere"}""")).isFailure)
   }

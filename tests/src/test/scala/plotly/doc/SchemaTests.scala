@@ -64,6 +64,8 @@ class SchemaTests extends munit.FunSuite {
     "box",
     "candlestick",
     "contour",
+    "funnel",
+    "funnelarea",
     "heatmap",
     "histogram",
     "histogram2d",
@@ -190,6 +192,20 @@ class SchemaTests extends munit.FunSuite {
       SchemaTests.schema("traces")("waterfall")("layoutAttributes")("waterfallmode")("values").arr.map(_.str).toSet,
       Enumerate[plotly.layout.BoxMode].apply().map(_.label).toSet
     )
+  }
+
+  test("Title positions should be exhaustive") {
+    compareValues(
+      SchemaTests.traceAttributes("pie")("title")("position")("values").arr.map(_.str).toSet,
+      Enumerate[TitlePosition].apply().map(_.label).toSet
+    )
+  }
+
+  test("Funnel modes should be bar modes") {
+    val fromSchema = SchemaTests.schema("traces")("funnel")("layoutAttributes")("funnelmode")("values").arr.map(_.str)
+    val fromLib    = Enumerate[plotly.layout.BarMode].apply().map(_.label).toSet
+    val missing    = fromSchema.filterNot(fromLib).toVector.sorted
+    assert(missing.isEmpty, s"Missing in lib: ${missing.mkString(", ")}")
   }
 
   test("Text position should be exhaustive") {

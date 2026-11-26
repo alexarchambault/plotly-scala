@@ -60,6 +60,15 @@ import scalatags.JsDom.tags2
       )
     ),
     Category(
+      "Funnel Charts",
+      Icons.funnel,
+      ("#ffa15a", "#ef553b"),
+      Seq(
+        funnel.StackedFunnel,
+        funnel.FunnelAreaChart
+      )
+    ),
+    Category(
       "Horizontal Bar Charts",
       Icons.horizontalBars,
       ("#ffa15a", "#ffc58f"),

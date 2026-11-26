@@ -74,6 +74,11 @@ object Icons {
       """<rect x="12" y="4" width="4" height="3" rx="0.8" opacity="0.6"/><rect x="17" y="4" width="4" height="17" rx="0.8"/>"""
   )
 
+  val funnel = filled(
+    """<rect x="2" y="3" width="20" height="4" rx="1"/><rect x="5" y="9" width="14" height="4" rx="1" opacity="0.8"/>""" +
+      """<rect x="8" y="15" width="8" height="4" rx="1" opacity="0.6"/>"""
+  )
+
   val violin = filled(
     """<path d="M12 2c1 3 4 5 4 9s-3 5-3 7 1 3-1 4c-2-1-1-2-1-4s-3-3-3-7 3-6 4-9z"/>"""
   )

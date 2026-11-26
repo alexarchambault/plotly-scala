@@ -28,6 +28,8 @@ class SettersTests extends munit.FunSuite {
     classOf[Histogram2dContour]     -> true,
     classOf[Violin]                 -> true,
     classOf[Waterfall]              -> true,
+    classOf[Funnel]                 -> true,
+    classOf[FunnelArea]             -> true,
     classOf[Connector]              -> true,
     classOf[BarStyle]               -> true,
     classOf[ViolinBox]              -> true,
