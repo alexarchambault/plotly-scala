@@ -18,6 +18,7 @@ import java.nio.charset.StandardCharsets
 import java.util.zip.ZipFile
 
 import scala.jdk.CollectionConverters.*
+import scala.util.Properties
 
 object Versions {
   def scala212      = "2.12.21"
@@ -29,6 +30,12 @@ object Versions {
   def dataClass     = "0.3.2-SNAPSHOT"
   def plotlyJs      = "2.35.3"
   def jsoniterScala = "2.43.0"
+
+  // Used by the dev.* commands
+  def almond   = "0.15.0" // almond version of the dev.jupyterCmd kernels
+  def coursier = "2.1.26" // cs launcher installing these kernels
+  def uv       = "0.12.18"
+  def devJvm   = "21" // JVM these kernels run on
 }
 
 val scalaVersions = Seq(Versions.scala213, Versions.scala212, Versions.scala3)
@@ -372,5 +379,288 @@ object demo extends ScalaJSModule, SbtModule {
       Task.fail(s"Error: $dest already exists.")
     os.copy(fullSite().path, dest, createFolders = true)
     Task.log.info(s"Wrote demo site to $dest")
+  }
+}
+
+/** Commands to try the modules built from sources: in JupyterLab, with almond, and on the demo page.
+  *
+  * The `*Cmd` commands print a shell command line, to be run with `eval`, like
+  * {{{
+  * eval "$(./mill show dev.jupyterCmd | jq -r .)"
+  * }}}
+  * (see `services.json`).
+  */
+object dev extends Module {
+
+  /** The modules we publish, for all the Scala versions */
+  def publishedModules: Seq[PublishModule] =
+    scalaVersions.flatMap { sv =>
+      Seq(core.jvm(sv), core.js(sv), render.jvm(sv), render.js(sv), almond(sv))
+    }
+
+  /** A Maven repository with all the modules of [[publishedModules]] */
+  def localRepo: T[PathRef] = {
+    val repos = Task.sequence(publishedModules.map(_.publishLocalTestRepo))
+    Task {
+      for (repo <- repos(); elem <- os.list(repo.path))
+        os.copy.into(elem, Task.dest, mergeFolders = true)
+      PathRef(Task.dest)
+    }
+  }
+
+  /** Installs almond kernels, one per Scala version of [[scalaVersions]], and prints the command
+    * running JupyterLab with them, with `COURSIER_REPOSITORIES` pointing at [[localRepo]].
+    *
+    * Accepts `--base-address=…`, the external address JupyterLab is accessed from, like
+    * `https://host/some/path/`, when it's run behind a proxy. Other arguments are passed to
+    * JupyterLab.
+    */
+  def jupyterCmd(args: String*) = Task.Command(persistent = true) {
+    val dependency = s"${almond(Versions.scala213).pomSettings().organization}::" +
+      s"${almond(Versions.scala213).artifactName()}:${almond(Versions.scala213).publishVersion()}"
+    val cmd = DevTools.jupyterLabCommand(
+      BuildCtx.workspaceRoot,
+      localRepo().path,
+      Task.dest / "jupyter",
+      args
+    )
+    System.err.println(s"Load plotly-scala from notebooks with\n  import $$ivy.`$dependency`")
+    cmd.shellCommand
+  }
+
+  /** Builds the demo page, and prints the command serving it.
+    *
+    * Accepts `--host=…` (the address to bind to, `localhost` by default) and `--port=…` (8000 by
+    * default).
+    */
+  def demoCmd(args: String*) = Task.Command {
+    val (hostOpt, args0) = DevTools.extractOption(args, "--host")
+    val (portOpt, args1) = DevTools.extractOption(args0, "--port")
+    if (args1.nonEmpty)
+      Task.fail(s"Unrecognized arguments: ${args1.mkString(" ")} (expected --host, --port)")
+    DevTools.Command(
+      BuildCtx.workspaceRoot,
+      Map.empty,
+      Seq(
+        DevTools.uv.toString,
+        "run",
+        "--no-project",
+        "python",
+        "-m",
+        "http.server",
+        portOpt.getOrElse("8000"),
+        "--bind",
+        hostOpt.getOrElse("localhost"),
+        "--directory",
+        demo.fastSite().path.toString
+      )
+    ).shellCommand
+  }
+}
+
+/** Helpers of the [[dev]] commands */
+object DevTools {
+  import coursier.cache.ArchiveCache
+  import coursier.jvm.{JavaHome, JvmCache}
+  import coursier.util.Artifact
+
+  /** A command to run: `command`, from the `cwd` directory, with the `env` variables added to the
+    * environment
+    */
+  final case class Command(cwd: os.Path, env: Map[String, String], command: Seq[String]) {
+
+    /** This command as a single shell command line, to pass to `eval` in a POSIX shell: a `cd` to
+      * `cwd`, `VAR=value` assignments for `env`, then the command itself
+      */
+    def shellCommand: String =
+      (Seq(s"cd ${shellQuote(cwd.toString)} &&") ++
+        env.toSeq.sorted.map { case (k, v) => s"$k=${shellQuote(v)}" } ++
+        command.map(shellQuote)).mkString(" ")
+  }
+
+  private def shellQuote(s: String): String = {
+    def isSafe(c: Char) =
+      (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') ||
+      "_@%+=:,./-".contains(c)
+    if (s.nonEmpty && s.forall(isSafe)) s
+    else "'" + s.replace("'", "'\\''") + "'"
+  }
+
+  /** Extracts an option like `--name=value` or `--name value` from `args`, and returns its value,
+    * if any, along with the remaining arguments
+    */
+  def extractOption(args: Seq[String], name: String): (Option[String], Seq[String]) =
+    args.indexWhere(a => a == name || a.startsWith(name + "=")) match {
+      case -1 => (None, args)
+      case idx =>
+        val arg = args(idx)
+        if (arg == name)
+          if (idx + 1 < args.length) (Some(args(idx + 1)), args.patch(idx, Nil, 2))
+          else sys.error(s"Missing value for $name")
+        else
+          (Some(arg.stripPrefix(name + "=")), args.patch(idx, Nil, 1))
+    }
+
+  private def arch =
+    sys.props.getOrElse("os.arch", "").toLowerCase(java.util.Locale.ROOT) match {
+      case "amd64" | "x86_64"  => "x86_64"
+      case "aarch64" | "arm64" => "aarch64"
+      case other               => sys.error(s"Unsupported CPU architecture: $other")
+    }
+
+  /** Downloads `url` to the coursier cache, and extracts it if it's an archive */
+  private def download(url: String): os.Path = {
+    val archiveCache = ArchiveCache()
+    archiveCache.get(Artifact(url)).unsafeRun()(using archiveCache.cache.ec) match {
+      case Left(err) => throw new Exception(s"Error downloading $url", err)
+      case Right(f)  => os.Path(f.getAbsoluteFile)
+    }
+  }
+
+  /** A `uv` launcher, downloaded if needed */
+  def uv: os.Path = {
+    val target =
+      if (Properties.isWin) s"$arch-pc-windows-msvc"
+      else if (Properties.isMac) s"$arch-apple-darwin"
+      else s"$arch-unknown-linux-gnu"
+    val ext  = if (Properties.isWin) "zip" else "tar.gz"
+    val url  = s"https://github.com/astral-sh/uv/releases/download/${Versions.uv}/uv-$target.$ext"
+    val dir  = download(url)
+    val name = if (Properties.isWin) "uv.exe" else "uv"
+    // The tar.gz archives have a top-level "uv-<target>" directory, the zip ones don't
+    Seq(dir / name, dir / s"uv-$target" / name).find(os.exists(_)).getOrElse {
+      sys.error(s"$name not found in $url (extracted under $dir)")
+    }
+  }
+
+  /** A `cs` launcher, downloaded if needed */
+  def cs: os.Path = {
+    val (target, ext) =
+      if (Properties.isWin) (s"$arch-pc-win32", "zip")
+      else if (Properties.isMac) (s"$arch-apple-darwin", "gz")
+      else (s"$arch-pc-linux", "gz")
+    val url =
+      s"https://github.com/coursier/coursier/releases/download/v${Versions.coursier}/cs-$target.$ext"
+    val f = download(url)
+    if (Properties.isWin)
+      os.list(f).find(_.last.endsWith(".exe")).getOrElse(sys.error(s"No .exe found under $f"))
+    else {
+      f.toIO.setExecutable(true)
+      f
+    }
+  }
+
+  /** Java home for the passed JVM id (like "21"), downloaded by coursier if needed */
+  def javaHome(id: String): os.Path = {
+    val jvmCache = JvmCache().withDefaultIndex
+    val home     = JavaHome().withCache(jvmCache).get(id)
+      .unsafeRun()(using jvmCache.archiveCache.cache.ec)
+    os.Path(home.getAbsoluteFile)
+  }
+
+  /** Environment variables making the JVM at `javaHome` the default one for sub-processes */
+  private def javaEnvironment(javaHome: os.Path): Map[String, String] = {
+    val pathKey     = sys.env.keys.find(_.equalsIgnoreCase("PATH")).getOrElse("PATH")
+    val currentPath = sys.env.get(pathKey).filter(_.nonEmpty).toSeq
+    Map(
+      "JAVA_HOME" -> javaHome.toString,
+      pathKey     -> ((javaHome / "bin").toString +: currentPath).mkString(java.io.File.pathSeparator)
+    )
+  }
+
+  /** JupyterLab options making it assume it's reached at the passed address, typically via a
+    * reverse proxy handling TLS: URLs are displayed with that address, its origin is accepted for
+    * CORS / websocket connections, non-local `Host` headers are accepted, and the `X-Forwarded-*`
+    * headers set by the proxy are trusted.
+    */
+  private def baseAddressOptions(baseAddress: String): Seq[String] = {
+    val uri = new java.net.URI(baseAddress)
+    if (uri.getScheme == null || uri.getHost == null)
+      sys.error(s"Invalid base address '$baseAddress', expected something like https://host:port")
+    val origin = {
+      val port = if (uri.getPort == -1) "" else s":${uri.getPort}"
+      s"${uri.getScheme}://${uri.getHost}$port"
+    }
+    val basePath = Option(uri.getPath).map(_.stripSuffix("/")).filter(_.nonEmpty)
+    Seq(
+      s"--ServerApp.custom_display_url=$baseAddress",
+      s"--ServerApp.allow_origin=$origin",
+      "--ServerApp.allow_remote_access=True",
+      "--ServerApp.trust_xheaders=True"
+    ) ++ basePath.map(path => s"--ServerApp.base_url=$path/")
+  }
+
+  /** Installs almond kernels under `jupyterDir`, one per Scala version of [[scalaVersions]], and
+    * returns the command running JupyterLab with them, from the uv-managed environment of
+    * `jupyter/pyproject.toml`.
+    *
+    * JupyterLab and the kernels get `COURSIER_REPOSITORIES` pointing at `localRepo` first, so that
+    * the dependencies users add get our modules from there. `args` may contain `--base-address=…`,
+    * handled here, the rest is passed to JupyterLab.
+    */
+  def jupyterLabCommand(
+    workspace: os.Path,
+    localRepo: os.Path,
+    jupyterDir: os.Path,
+    args: Seq[String]
+  ): Command = {
+    val javaEnv = javaEnvironment(javaHome(Versions.devJvm))
+
+    val kernelsDir = jupyterDir / "kernels"
+    os.remove.all(kernelsDir)
+    os.makeDir.all(kernelsDir)
+    for (sv <- scalaVersions) {
+      val binarySv = sv.split('.').take(2).mkString(".")
+      val id       = "scala" + binarySv.filter(_ != '.')
+      System.err.println(s"Installing almond kernel $id")
+      os.proc(
+        cs,
+        "launch",
+        "--use-bootstrap",
+        s"almond:${Versions.almond}",
+        "--scala",
+        sv,
+        "--",
+        "--install",
+        "--jupyter-path",
+        kernelsDir,
+        "--id",
+        id,
+        "--display-name",
+        s"Scala $binarySv (plotly-scala sources)"
+      ).call(
+        cwd = jupyterDir,
+        env = javaEnv,
+        stdin = "",
+        // kept off our stdout, that `show dev.jupyterCmd` prints the command to
+        stdout = os.ProcessOutput.Readlines(System.err.println),
+        stderr = os.Inherit
+      )
+    }
+
+    val repositories =
+      Seq(localRepo.toNIO.toUri.toASCIIString.stripSuffix("/"), "ivy2Local", "central")
+    val (baseAddressOpt, args0) = extractOption(args, "--base-address")
+    os.makeDir.all(workspace / "notebooks")
+    Command(
+      workspace,
+      javaEnv ++ Map(
+        "JUPYTER_PATH"          -> jupyterDir.toString,
+        "COURSIER_REPOSITORIES" -> repositories.mkString("|")
+      ),
+      Seq(
+        uv.toString,
+        "run",
+        "--project",
+        (workspace / "jupyter").toString,
+        "--frozen",
+        "jupyter",
+        "lab",
+        "--notebook-dir",
+        "notebooks"
+      ) ++
+        baseAddressOpt.toSeq.flatMap(baseAddressOptions) ++
+        args0
+    )
   }
 }
