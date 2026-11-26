@@ -54,5 +54,8 @@ import plotly.element._
     hiddenlabels: Option[Seq[String]] = None,
     violinmode: Option[BoxMode] = None,
     violingap: Option[Double] = None,
-    violingroupgap: Option[Double] = None
+    violingroupgap: Option[Double] = None,
+    waterfallmode: Option[BoxMode] = None,
+    waterfallgap: Option[Double] = None,
+    waterfallgroupgap: Option[Double] = None
 )

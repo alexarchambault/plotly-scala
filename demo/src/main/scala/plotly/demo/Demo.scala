@@ -51,6 +51,15 @@ import scalatags.JsDom.tags2
       )
     ),
     Category(
+      "Waterfall Charts",
+      Icons.waterfall,
+      ("#00cc96", "#636efa"),
+      Seq(
+        waterfall.BasicWaterfallChart,
+        waterfall.MultiCategoryWaterfallChart
+      )
+    ),
+    Category(
       "Horizontal Bar Charts",
       Icons.horizontalBars,
       ("#ffa15a", "#ffc58f"),

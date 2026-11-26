@@ -72,7 +72,8 @@ class SchemaTests extends munit.FunSuite {
     "pie",
     "scatter",
     "surface",
-    "violin"
+    "violin",
+    "waterfall"
   )
 
   test("Hover info elements should include the hoverinfo flags of all trace types") {
@@ -177,6 +178,17 @@ class SchemaTests extends munit.FunSuite {
     compareValues(
       SchemaTests.schema("layout")("layoutAttributes")("xaxis")("type")("values").arr.map(_.str).toSet,
       Enumerate[AxisType].apply().map(_.label).toSet
+    )
+  }
+
+  test("Waterfall enums should be exhaustive") {
+    compareValues(
+      SchemaTests.traceAttributes("waterfall")("connector")("mode")("values").arr.map(_.str).toSet,
+      Enumerate[ConnectorMode].apply().map(_.label).toSet
+    )
+    compareValues(
+      SchemaTests.schema("traces")("waterfall")("layoutAttributes")("waterfallmode")("values").arr.map(_.str).toSet,
+      Enumerate[plotly.layout.BoxMode].apply().map(_.label).toSet
     )
   }
 

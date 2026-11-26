@@ -69,6 +69,11 @@ object Icons {
     }.mkString
   )
 
+  val waterfall = filled(
+    """<rect x="2" y="12" width="4" height="9" rx="0.8"/><rect x="7" y="7" width="4" height="5" rx="0.8" opacity="0.8"/>""" +
+      """<rect x="12" y="4" width="4" height="3" rx="0.8" opacity="0.6"/><rect x="17" y="4" width="4" height="17" rx="0.8"/>"""
+  )
+
   val violin = filled(
     """<path d="M12 2c1 3 4 5 4 9s-3 5-3 7 1 3-1 4c-2-1-1-2-1-4s-3-3-3-7 3-6 4-9z"/>"""
   )

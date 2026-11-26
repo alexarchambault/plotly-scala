@@ -479,6 +479,53 @@ object Violin {
     Violin().copy(y = Some(y), x = Some(x))
 }
 
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues",
+  deprecatedSetters = true,
+  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersSince = "0.8.6"
+) final case class Waterfall(
+    x: Option[Sequence] = None,
+    y: Option[Sequence] = None,
+    measure: Option[Seq[WaterfallMeasure]] = None,
+    base: Option[Double] = None,
+    name: Option[String] = None,
+    orientation: Option[Orientation] = None,
+    text: Option[OneOrSeq[String]] = None,
+    textposition: Option[BarTextPosition] = None,
+    textinfo: Option[TextInfo] = None,
+    texttemplate: Option[OneOrSeq[String]] = None,
+    textfont: Option[Font] = None,
+    insidetextfont: Option[Font] = None,
+    outsidetextfont: Option[Font] = None,
+    hoverinfo: Option[HoverInfo] = None,
+    hovertemplate: Option[OneOrSeq[String]] = None,
+    hovertext: Option[OneOrSeq[String]] = None,
+    connector: Option[Connector] = None,
+    increasing: Option[BarStyle] = None,
+    decreasing: Option[BarStyle] = None,
+    totals: Option[BarStyle] = None,
+    width: Option[OneOrSeq[Double]] = None,
+    offset: Option[OneOrSeq[Double]] = None,
+    offsetgroup: Option[String] = None,
+    alignmentgroup: Option[String] = None,
+    opacity: Option[Double] = None,
+    showlegend: Option[Boolean] = None,
+    legendgroup: Option[String] = None,
+    xaxis: Option[AxisReference] = None,
+    yaxis: Option[AxisReference] = None
+) extends Trace
+
+object Waterfall {
+  def apply(x: Sequence, y: Sequence): Waterfall =
+    Waterfall().copy(x = Some(x), y = Some(y))
+
+  def apply(x: Sequence, y: Sequence, measure: Seq[WaterfallMeasure]): Waterfall =
+    Waterfall().copy(x = Some(x), y = Some(y), measure = Some(measure))
+}
+
 object Pie {
   def apply(values: Sequence, labels: Sequence): Pie =
     Pie().copy(values = Some(values), labels = Some(labels))

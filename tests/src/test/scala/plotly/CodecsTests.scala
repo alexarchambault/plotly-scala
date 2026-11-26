@@ -171,6 +171,23 @@ class CodecsTests extends munit.FunSuite {
     roundTrip(Heatmap(Seq(Seq.empty[Double], Seq(3.0, 4.0))))
   }
 
+  test("Trace codec should round-trip waterfall traces") {
+    val waterfall = Waterfall(
+      Seq("a", "b", "c"),
+      Seq(10.0, -2.0, 0.0),
+      Seq(WaterfallMeasure.Absolute, WaterfallMeasure.Relative, WaterfallMeasure.Total)
+    ).withValues(
+      connector = Connector().withValues(mode = ConnectorMode.Between, line = Line().withValues(dash = Dash.Dot)),
+      increasing = BarStyle().withValues(marker = Marker().withValues(color = Color.StringColor("teal"))),
+      textinfo = TextInfo(TextInfo.Delta)
+    )
+    roundTrip(waterfall)
+    assertEquals(
+      ujson.read(writeToString[Trace](waterfall)).obj.get("measure"),
+      Some(ujson.Arr("absolute", "relative", "total"))
+    )
+  }
+
   test("Trace codec should reject unknown enum values") {
     assert(Try(readFromString[Trace]("""{"y": [1], "textposition": "nowhere"}""")).isFailure)
   }

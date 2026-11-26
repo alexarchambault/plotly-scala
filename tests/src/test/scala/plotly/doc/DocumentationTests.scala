@@ -238,6 +238,7 @@ class DocumentationTests extends munit.FunSuite {
     "financial/time-series",
     "financial/candlestick-charts",
 //    "financial/ohlc",
+    "financial/waterfall",
     "basic/bubble",
     "basic/area",
     "fundamentals/sizing",
@@ -271,7 +272,10 @@ class DocumentationTests extends munit.FunSuite {
 
   // posts that can't be run or decoded, for reasons unrelated to plotly-scala
   val ignoredPosts = Map(
-    "basic/pie/2020-01-14-inside-text-orientation.html" -> "its layout is an array rather than an object"
+    "basic/pie/2020-01-14-inside-text-orientation.html"              -> "its layout is an array rather than an object",
+    "financial/waterfall/2015-04-09-horizontal-waterfall-chart.html" ->
+      "its connector line has dash: 0, that isn't a dash style (and plotly-scala doesn't support autorange: reversed yet)",
+    "financial/waterfall/2015-04-09-style-waterfall.html" -> "deep sky blue isn't a valid color"
   )
 
   for {
