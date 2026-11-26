@@ -12,6 +12,8 @@ object Sequence extends MutableSequenceImplicitConversions {
   final case class NestedInts(seq: Seq[Seq[Int]])       extends Sequence
   final case class Strings(seq: Seq[String])            extends Sequence
   final case class DateTimes(seq: Seq[LocalDateTime])   extends Sequence
+  // the levels of the values of multi-category axes, like Seq(Seq("2024", "2024", "2025"), Seq("Q1", "Q2", "Q1"))
+  final case class NestedStrings(seq: Seq[Seq[String]]) extends Sequence
 
   implicit def fromDoubleSeq(s: Seq[Double]): Sequence =
     Doubles(s)
@@ -29,4 +31,6 @@ object Sequence extends MutableSequenceImplicitConversions {
     Strings(s)
   implicit def fromDateTimes(seq: Seq[LocalDateTime]): Sequence =
     DateTimes(seq)
+  implicit def fromNestedStringSeq(s: Seq[Seq[String]]): Sequence =
+    NestedStrings(s)
 }

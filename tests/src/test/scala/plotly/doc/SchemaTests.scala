@@ -173,6 +173,13 @@ class SchemaTests extends munit.FunSuite {
     )
   }
 
+  test("Axis types should be exhaustive") {
+    compareValues(
+      SchemaTests.schema("layout")("layoutAttributes")("xaxis")("type")("values").arr.map(_.str).toSet,
+      Enumerate[AxisType].apply().map(_.label).toSet
+    )
+  }
+
   test("Text position should be exhaustive") {
     val fromSchema = SchemaTests
       .enumeratedAttributeValues("scatter", "textposition")

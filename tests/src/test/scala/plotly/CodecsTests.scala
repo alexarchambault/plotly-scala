@@ -161,6 +161,16 @@ class CodecsTests extends munit.FunSuite {
     assertEquals(ujson.read(writeToString[Trace](violin)).obj.get("type"), Some(ujson.Str("violin")))
   }
 
+  test("Trace codec should round-trip multi-category sequences") {
+    val bar  = Bar(Seq(Seq("2024", "2024", "2025"), Seq("Q1", "Q2", "Q1")), Seq(1.0, 2.0, 3.0))
+    val json = writeToString[Trace](bar)
+    assertEquals(ujson.read(json)("x"), ujson.Arr(ujson.Arr("2024", "2024", "2025"), ujson.Arr("Q1", "Q2", "Q1")))
+    assertEquals(readFromString[Trace](json), bar)
+    // still reads nested doubles, including empty ones
+    roundTrip(Heatmap(Seq(Seq(1.0, 2.0), Seq(3.0, 4.0))))
+    roundTrip(Heatmap(Seq(Seq.empty[Double], Seq(3.0, 4.0))))
+  }
+
   test("Trace codec should reject unknown enum values") {
     assert(Try(readFromString[Trace]("""{"y": [1], "textposition": "nowhere"}""")).isFailure)
   }

@@ -64,6 +64,18 @@ object JsoniterCodecsInternals {
     t
   }
 
+  // Returns the first token of the first element of the first element of the upcoming array of arrays
+  // (or ']' if one of them is empty), without consuming anything
+  private def peekFirstNestedArrayElementToken(in: JsonReader): Byte = {
+    in.setMark()
+    val isNestedArray = in.isNextToken('[') && in.isNextToken('[')
+    val t             = if (isNestedArray) in.nextToken() else 0: Byte
+    in.rollbackToMark()
+    if (!isNestedArray)
+      in.decodeError("expected '[['")
+    t
+  }
+
   private def stringCodec[T](encode: T => String)(decode: (String, JsonReader) => T): JsonValueCodec[T] =
     new JsonValueCodec[T] {
       def decodeValue(in: JsonReader, default: T): T = {
@@ -418,6 +430,7 @@ object JsoniterCodecsInternals {
 
   private val nestedDoublesCodec: JsonValueCodec[Seq[Seq[Double]]] = JsonCodecMaker.make
   private val nestedIntsCodec: JsonValueCodec[Seq[Seq[Int]]]       = JsonCodecMaker.make
+  private val nestedStringsCodec: JsonValueCodec[Seq[Seq[String]]] = JsonCodecMaker.make
 
   implicit val sequenceCodec: JsonValueCodec[Sequence] =
     new JsonValueCodec[Sequence] {
@@ -431,7 +444,10 @@ object JsoniterCodecsInternals {
             if (dateTimes.forall(_.nonEmpty)) Sequence.DateTimes(dateTimes.flatten)
             else Sequence.Strings(strings)
           case '[' =>
-            Sequence.NestedDoubles(nestedDoublesCodec.decodeValue(in, null))
+            if (peekFirstNestedArrayElementToken(in) == '"')
+              Sequence.NestedStrings(nestedStringsCodec.decodeValue(in, null))
+            else
+              Sequence.NestedDoubles(nestedDoublesCodec.decodeValue(in, null))
           case _ =>
             Sequence.Doubles(readSeq(in, doubleCodec))
         }
@@ -442,6 +458,7 @@ object JsoniterCodecsInternals {
           case Sequence.NestedInts(seq)    => nestedIntsCodec.encodeValue(seq, out)
           case Sequence.Strings(seq)       => writeSeq(seq, out, stringValueCodec)
           case Sequence.DateTimes(seq)     => writeSeq(seq, out, localDateTimeCodec)
+          case Sequence.NestedStrings(seq) => nestedStringsCodec.encodeValue(seq, out)
         }
       def nullValue: Sequence = null
     }

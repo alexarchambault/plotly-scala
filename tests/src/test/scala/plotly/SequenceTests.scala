@@ -26,4 +26,11 @@ class SequenceTests extends munit.FunSuite {
     assertEquals(mutableNestedDoubles: Sequence, Sequence.NestedDoubles(nestedDoublesList))
   }
 
+  test("The implicit sequence conversion should convert nested strings to a Sequence") {
+    assertEquals(
+      Seq(Seq("2024", "2025"), Seq("Q1", "Q1")): Sequence,
+      Sequence.NestedStrings(Seq(Seq("2024", "2025"), Seq("Q1", "Q1")))
+    )
+  }
+
 }
