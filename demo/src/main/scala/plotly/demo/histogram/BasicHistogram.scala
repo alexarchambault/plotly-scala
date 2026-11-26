@@ -25,7 +25,7 @@ object BasicHistogram extends DemoChart {
   val data = Seq(Histogram(values, categories))
 
   val layout =
-    new Layout().copy(title = Some("Basic Histogram"), showlegend = Some(false), height = Some(400), width = Some(600))
+    new Layout().withValues(title = "Basic Histogram", showlegend = false, height = 400, width = 600)
 
   // demo source end
 

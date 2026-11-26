@@ -74,21 +74,23 @@ val y1 = x.map(d => 2.0 * d + util.Random.nextGaussian())
 val y2 = x.map(math.exp)
 
 val plot = Seq(
-  Scatter(x, y1).copy(name = Some("Approx twice")),
-  Scatter(x, y2).copy(name = Some("Exp"))
+  Scatter(x, y1).withValues(name = "Approx twice"),
+  Scatter(x, y2).withValues(name = "Exp")
 )
 ```
 and plot them with
 
 ```scala
-val lay = Layout().copy(title = Some("Curves"))
+val lay = Layout().withValues(title = "Curves")
 plot.plot("plot", lay)  // attaches to div element with id 'plot'
 ```
 
-The `with*` setters (`withName`, `withTitle`, …) are deprecated, and only available on Scala 2. Use `copy`, like above, or named arguments instead, like
+`withValues`, available on Scala 2 and Scala 3, returns a copy of a trace or layout element with the fields passed to it updated, and the other ones left unchanged. Unlike `copy`, it takes the values of optional fields as is, without wrapping them in `Some(…)`, and several fields can be set at once, like
 ```scala
-Layout(title = Some("Curves"))
+Layout().withValues(title = "Curves", width = 600, height = 400)
 ```
+
+The `with*` setters (`withName`, `withTitle`, …) are deprecated, and only available on Scala 2. Use `withValues` instead. The few classes with no `withValues` method (colors, `Bins`, …) can be updated with `copy`.
 
 
 ### From Ammonite
@@ -106,9 +108,9 @@ val valuesA = labels.map(_ => util.Random.nextGaussian())
 val valuesB = labels.map(_ => 0.5 + util.Random.nextGaussian())
 
 Seq(
-  Bar(labels, valuesA).copy(name = Some("A")),
-  Bar(labels, valuesB).copy(name = Some("B"))
-).plot("plot.html", Layout().copy(title = Some("Level")))
+  Bar(labels, valuesA).withValues(name = "A"),
+  Bar(labels, valuesB).withValues(name = "B")
+).plot("plot.html", Layout().withValues(title = "Level"))
 ```
 
 
@@ -159,7 +161,7 @@ The classes of plotly-scala are defined with the `@data` annotation of [data-cla
     b: Option[String] = None
 )
 ```
-When adding fields to an existing class, put them at the end, with default values, and annotate the first one added in a given version with `@since`, so that binary compatibility is maintained. On Scala 2, data-class generates the binary-compatible overloads and the deprecated `with*` setters (`withA`, `withB`) of these classes. On Scala 3, the data-class compiler plugin generates the binary-compatible overloads, but no setters. So code shared by Scala 2 and Scala 3 (in `src/main/scala`, or in the tests) shouldn't use the `with*` setters, but `copy` or named arguments.
+When adding fields to an existing class, put them at the end, with default values, and annotate the first one added in a given version with `@since`, so that binary compatibility is maintained. On Scala 2, data-class generates the binary-compatible overloads and the deprecated `with*` setters (`withA`, `withB`) of these classes. On Scala 3, the data-class compiler plugin generates the binary-compatible overloads, but no setters. On both, the classes with `nullOptionCopyMethodName = "withValues"` in their `@data` annotation also get a `withValues` method. So code shared by Scala 2 and Scala 3 (in `src/main/scala`, or in the tests) shouldn't use the `with*` setters, but `withValues`, or `copy` on the classes that don't have it.
 
 ## About
 

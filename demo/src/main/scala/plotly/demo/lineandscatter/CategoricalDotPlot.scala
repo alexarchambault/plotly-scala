@@ -37,70 +37,56 @@ object CategoricalDotPlot extends DemoChart {
   )
 
   val trace1 = Scatter(votingPop, country)
-    .copy(
-      mode = Some(ScatterMode(ScatterMode.Markers)),
-      name = Some("Percent of estimated voting age population"),
-      marker = Some(
-        Marker().copy(
-          color = Some(Color.RGBA(156, 165, 196, 0.95)),
-          line = Some(
-            Line().copy(color = Some(Color.RGBA(156, 165, 196, 1.0)), width = Some(1.0))
-          ),
-          symbol = Some(Symbol.Circle()),
-          size = Some(16)
-        )
+    .withValues(
+      mode = ScatterMode(ScatterMode.Markers),
+      name = "Percent of estimated voting age population",
+      marker = Marker().withValues(
+        color = Color.RGBA(156, 165, 196, 0.95),
+        line = Line().withValues(color = Color.RGBA(156, 165, 196, 1.0), width = 1.0),
+        symbol = Symbol.Circle(),
+        size = 16
       )
     )
 
   val trace2 = Scatter(regVoters, country)
-    .copy(
-      mode = Some(ScatterMode(ScatterMode.Markers)),
-      name = Some("Percent of estimated registered voters"),
-      marker = Some(
-        Marker().copy(
-          color = Some(Color.RGBA(204, 204, 204, 0.95)),
-          line = Some(
-            Line().copy(color = Some(Color.RGBA(217, 217, 217, 1.0)), width = Some(1.0))
-          ),
-          symbol = Some(Symbol.Circle()),
-          size = Some(16)
-        )
+    .withValues(
+      mode = ScatterMode(ScatterMode.Markers),
+      name = "Percent of estimated registered voters",
+      marker = Marker().withValues(
+        color = Color.RGBA(204, 204, 204, 0.95),
+        line = Line().withValues(color = Color.RGBA(217, 217, 217, 1.0), width = 1.0),
+        symbol = Symbol.Circle(),
+        size = 16
       )
     )
 
   val data = Seq(trace1, trace2)
 
-  val layout = Layout().copy(
-    title = Some("Votes cast for ten lowest voting age population in OECD countries"),
-    xaxis = Some(
-      Axis().copy(
-        showgrid = Some(false),
-        showline = Some(true),
-        linecolor = Some(Color.RGB(102, 102, 102)),
-        titlefont = Some(Font(Color.RGB(204, 204, 204))),
-        tickfont = Some(Font(Color.RGB(102, 102, 102))),
-        autotick = Some(false),
-        dtick = Some(10.0),
-        ticks = Some(Ticks.Outside),
-        tickcolor = Some(Color.RGB(102, 102, 102))
-      )
+  val layout = Layout().withValues(
+    title = "Votes cast for ten lowest voting age population in OECD countries",
+    xaxis = Axis().withValues(
+      showgrid = false,
+      showline = true,
+      linecolor = Color.RGB(102, 102, 102),
+      titlefont = Font(Color.RGB(204, 204, 204)),
+      tickfont = Font(Color.RGB(102, 102, 102)),
+      autotick = false,
+      dtick = 10.0,
+      ticks = Ticks.Outside,
+      tickcolor = Color.RGB(102, 102, 102)
     ),
-    margin = Some(
-      Margin(
-        l = 140,
-        r = 40,
-        b = 50,
-        t = 80
-      )
+    margin = Margin(
+      l = 140,
+      r = 40,
+      b = 50,
+      t = 80
     ),
-    legend = Some(
-      Legend().copy(font = Some(Font(size = 10)), yanchor = Some(Anchor.Middle), xanchor = Some(Anchor.Right))
-    ),
-    width = Some(600),
-    height = Some(400),
-    paper_bgcolor = Some(Color.RGB(254, 247, 234)),
-    plot_bgcolor = Some(Color.RGB(254, 247, 234)),
-    hovermode = Some(HoverMode.Closest)
+    legend = Legend().withValues(font = Font(size = 10), yanchor = Anchor.Middle, xanchor = Anchor.Right),
+    width = 600,
+    height = 400,
+    paper_bgcolor = Color.RGB(254, 247, 234),
+    plot_bgcolor = Color.RGB(254, 247, 234),
+    hovermode = HoverMode.Closest
   )
 
   // demo source end

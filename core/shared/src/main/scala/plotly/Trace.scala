@@ -12,7 +12,7 @@ sealed abstract class Trace extends Product with Serializable
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use copy instead",
+  deprecatedSettersMessage = "Use withValues instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Scatter(
     x: Option[Sequence] = None,
@@ -53,7 +53,7 @@ object Scatter {
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use copy instead",
+  deprecatedSettersMessage = "Use withValues instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Box(
     y: Option[Sequence] = None,
@@ -86,7 +86,7 @@ object Box {
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use copy instead",
+  deprecatedSettersMessage = "Use withValues instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Image(
     z: Seq[Seq[Seq[Double]]],
@@ -116,7 +116,7 @@ object Box {
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use copy instead",
+  deprecatedSettersMessage = "Use withValues instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Bar(
     x: Sequence,
@@ -144,7 +144,7 @@ object Box {
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use copy instead",
+  deprecatedSettersMessage = "Use withValues instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Histogram(
     x: Option[Sequence] = None,
@@ -178,7 +178,7 @@ object Histogram {
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use copy instead",
+  deprecatedSettersMessage = "Use withValues instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Surface(
     x: Option[Sequence] = None,
@@ -195,7 +195,7 @@ object Histogram {
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use copy instead",
+  deprecatedSettersMessage = "Use withValues instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Heatmap(
     y: Option[Sequence] = None,
@@ -223,7 +223,7 @@ object Heatmap {
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use copy instead",
+  deprecatedSettersMessage = "Use withValues instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Candlestick(
     x: Option[Sequence] = None,

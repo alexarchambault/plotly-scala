@@ -8,7 +8,7 @@ import plotly.element.{Color, Line}
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use copy instead",
+  deprecatedSettersMessage = "Use withValues instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Shape(
     `type`: Option[String] = None,

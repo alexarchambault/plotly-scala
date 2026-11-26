@@ -24,37 +24,34 @@ object AnnotatedHeatmap extends DemoChart {
 
   val data = Seq(
     Heatmap(z, x, y)
-      .copy(
-        showscale = Some(false),
-        colorscale = Some(
-          ColorScale.CustomScale(
-            Seq(
-              (0, Color.StringColor("#3D9970")),
-              (1, Color.StringColor("#001f3f"))
-            )
+      .withValues(
+        showscale = false,
+        colorscale = ColorScale.CustomScale(
+          Seq(
+            (0, Color.StringColor("#3D9970")),
+            (1, Color.StringColor("#001f3f"))
           )
         )
       )
   )
 
-  val layout = Layout().copy(
-    title = Some("Annotated Heatmap"),
-    xaxis = Some(Axis().copy(ticks = Some(Ticks.Empty), side = Some(Side.Top))),
-    yaxis = Some(Axis().copy(ticks = Some(Ticks.Empty), ticksuffix = Some(" "))),
-    annotations = Some(
+  val layout = Layout().withValues(
+    title = "Annotated Heatmap",
+    xaxis = Axis().withValues(ticks = Ticks.Empty, side = Side.Top),
+    yaxis = Axis().withValues(ticks = Ticks.Empty, ticksuffix = " "),
+    annotations =
       for {
         (xv, xi) <- x.zipWithIndex
         (yv, yi) <- y.zipWithIndex
-      } yield Annotation().copy(
-        x = Some(xv),
-        y = Some(yv),
-        xref = Some(Ref.Axis(AxisReference.X1)),
-        yref = Some(Ref.Axis(AxisReference.Y1)),
-        showarrow = Some(false),
-        text = Some(z(yi)(xi).toString),
-        font = Some(Font(Color.StringColor("white")))
+      } yield Annotation().withValues(
+        x = xv,
+        y = yv,
+        xref = Ref.Axis(AxisReference.X1),
+        yref = Ref.Axis(AxisReference.Y1),
+        showarrow = false,
+        text = z(yi)(xi).toString,
+        font = Font(Color.StringColor("white"))
       )
-    )
   )
 
   // demo source end

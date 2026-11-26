@@ -9,7 +9,7 @@ import plotly.element._
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use copy instead",
+  deprecatedSettersMessage = "Use withValues instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Legend(
     x: Option[Double] = None,

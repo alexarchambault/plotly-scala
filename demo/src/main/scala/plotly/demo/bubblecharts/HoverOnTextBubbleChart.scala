@@ -14,37 +14,31 @@ object HoverOnTextBubbleChart extends DemoChart {
   // demo source start
 
   val trace1 = Scatter(Seq(1, 2, 3, 4), Seq(10, 11, 12, 13))
-    .copy(
-      text = Some(
-        Seq(
-          """A
+    .withValues(
+      text = Seq(
+        """A
     size = 40""",
-          """B
+        """B
     size = 60""",
-          """C
+        """C
     size = 80""",
-          """D
+        """D
     size = 100"""
-        )
       ),
-      mode = Some(ScatterMode(ScatterMode.Markers)),
-      marker = Some(
-        Marker().copy(
-          color = Some(
-            Seq(Color.RGB(93, 164, 214), Color.RGB(255, 144, 14), Color.RGB(44, 160, 101), Color.RGB(255, 65, 54))
-          ),
-          size = Some(Seq(40, 60, 80, 100))
-        )
+      mode = ScatterMode(ScatterMode.Markers),
+      marker = Marker().withValues(
+        color = Seq(Color.RGB(93, 164, 214), Color.RGB(255, 144, 14), Color.RGB(44, 160, 101), Color.RGB(255, 65, 54)),
+        size = Seq(40, 60, 80, 100)
       )
     )
 
   val data = Seq(trace1)
 
-  val layout = Layout().copy(
-    title = Some("Bubble Chart Hover Text"),
-    showlegend = Some(false),
-    height = Some(400),
-    width = Some(600)
+  val layout = Layout().withValues(
+    title = "Bubble Chart Hover Text",
+    showlegend = false,
+    height = 400,
+    width = 600
   )
 
   // demo source end

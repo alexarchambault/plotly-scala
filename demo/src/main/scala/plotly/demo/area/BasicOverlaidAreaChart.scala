@@ -13,10 +13,10 @@ object BasicOverlaidAreaChart extends NoLayoutDemoChart {
   // demo source start
 
   val trace1 = Scatter(Seq(1, 2, 3, 4), Seq(0, 2, 3, 5))
-    .copy(fill = Some(Fill.ToZeroY))
+    .withValues(fill = Fill.ToZeroY)
 
   val trace2 = Scatter(Seq(1, 2, 3, 4), Seq(3, 5, 1, 7))
-    .copy(fill = Some(Fill.ToNextY))
+    .withValues(fill = Fill.ToNextY)
 
   val data = Seq(trace1, trace2)
 

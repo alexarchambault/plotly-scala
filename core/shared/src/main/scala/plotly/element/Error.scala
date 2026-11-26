@@ -11,7 +11,7 @@ object Error {
     nullOptionBuilderMethodName = "from",
     nullOptionCopyMethodName = "withValues",
     deprecatedSetters = true,
-    deprecatedSettersMessage = "Use copy instead",
+    deprecatedSettersMessage = "Use withValues instead",
     deprecatedSettersSince = "0.8.6"
   ) final case class Data(
       array: Seq[Double],
@@ -26,7 +26,7 @@ object Error {
     nullOptionBuilderMethodName = "from",
     nullOptionCopyMethodName = "withValues",
     deprecatedSetters = true,
-    deprecatedSettersMessage = "Use copy instead",
+    deprecatedSettersMessage = "Use withValues instead",
     deprecatedSettersSince = "0.8.6"
   ) final case class Percent(
       value: Double,
@@ -41,7 +41,7 @@ object Error {
     nullOptionBuilderMethodName = "from",
     nullOptionCopyMethodName = "withValues",
     deprecatedSetters = true,
-    deprecatedSettersMessage = "Use copy instead",
+    deprecatedSettersMessage = "Use withValues instead",
     deprecatedSettersSince = "0.8.6"
   ) final case class Constant(
       value: Double,
