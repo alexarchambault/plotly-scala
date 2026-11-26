@@ -1,7 +1,7 @@
 package plotly
 package element
 
-import dataclass.data
+import dataclass.{data, since}
 
 @data(
   optionSetters = true,
@@ -16,5 +16,8 @@ import dataclass.data
     width: Option[OneOrSeq[Double]] = None,
     dash: Option[Dash] = None,
     outliercolor: Option[Color] = None,
-    outlierwidth: Option[Double] = None
+    outlierwidth: Option[Double] = None,
+    // smoothing of the contour lines of contour traces
+    @since("0.8.6")
+    smoothing: Option[Double] = None
 )

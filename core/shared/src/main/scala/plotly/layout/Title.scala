@@ -25,6 +25,8 @@ import scala.language.implicitConversions
   *   for the layout title, its vertical alignment with respect to `y`
   * @param automargin
   *   whether the margins should be expanded to fit the title
+  * @param side
+  *   for a color bar title, its location with respect to the color bar
   */
 @data(
   optionSetters = true,
@@ -41,7 +43,8 @@ import scala.language.implicitConversions
     y: Option[Double] = None,
     xanchor: Option[Anchor] = None,
     yanchor: Option[Anchor] = None,
-    automargin: Option[Boolean] = None
+    automargin: Option[Boolean] = None,
+    side: Option[Side] = None
 )
 
 object Title {

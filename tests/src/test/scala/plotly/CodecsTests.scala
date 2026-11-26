@@ -104,6 +104,26 @@ class CodecsTests extends munit.FunSuite {
     assertEquals(readFromString[Trace](json), pie)
   }
 
+  test("Trace codec should round-trip contour and heatmap traces") {
+    roundTrip(
+      Contour(Seq(Seq(1.0, 2.0), Seq(3.0, 4.0))).withValues(
+        contours = Contours().withValues(coloring = ContourColoring.Heatmap, showlabels = true, start = 0.0),
+        colorbar = ColorBar().withValues(
+          title = Title.from(text = "Level", side = Side.Right),
+          thicknessmode = SizeUnit.Pixels,
+          thickness = 20.0
+        ),
+        line = Line().withValues(smoothing = 0.85)
+      )
+    )
+    roundTrip(Heatmap(Seq(Seq(1.0, 2.0))).withValues(zsmooth = ZSmooth.False))
+    roundTrip(Heatmap(Seq(Seq(1.0, 2.0))).withValues(zsmooth = ZSmooth.Best))
+    assertEquals(
+      ujson.read(writeToString[Trace](Heatmap(Seq(Seq(1.0))).withValues(zsmooth = ZSmooth.False))).obj.get("zsmooth"),
+      Some(ujson.False)
+    )
+  }
+
   test("Trace codec should reject unknown enum values") {
     assert(Try(readFromString[Trace]("""{"y": [1], "textposition": "nowhere"}""")).isFailure)
   }

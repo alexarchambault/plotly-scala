@@ -162,6 +162,8 @@ object JsoniterCodecsInternals {
   implicit val rowOrderCodec: JsonValueCodec[RowOrder]                   = enumCodec[RowOrder](_.label)
   implicit val alignmentCodec: JsonValueCodec[Alignment]                 = enumCodec[Alignment](_.label)
   implicit val colorModelCodec: JsonValueCodec[ColorModel]               = enumCodec[ColorModel](_.label)
+  implicit val sizeUnitCodec: JsonValueCodec[SizeUnit]                   = enumCodec[SizeUnit](_.label)
+  implicit val contourColoringCodec: JsonValueCodec[ContourColoring]     = enumCodec[ContourColoring](_.label)
   implicit val rotationDirectionCodec: JsonValueCodec[RotationDirection] =
     enumCodec[RotationDirection](_.label)
   implicit val insideTextOrientationCodec: JsonValueCodec[InsideTextOrientation] =
@@ -186,6 +188,24 @@ object JsoniterCodecsInternals {
           case l: BoxMean.Labeled => boxMeanLabeledCodec.encodeValue(l, out)
         }
       def nullValue: BoxMean = null
+    }
+
+  private val zSmoothLabeledCodec = enumCodec[ZSmooth.Labeled](_.label)
+
+  implicit val zSmoothCodec: JsonValueCodec[ZSmooth] =
+    new JsonValueCodec[ZSmooth] {
+      def decodeValue(in: JsonReader, default: ZSmooth): ZSmooth =
+        if (peekToken(in) == 'f') {
+          in.readBoolean()
+          ZSmooth.False
+        } else
+          zSmoothLabeledCodec.decodeValue(in, null)
+      def encodeValue(x: ZSmooth, out: JsonWriter): Unit =
+        x match {
+          case ZSmooth.False      => out.writeVal(false)
+          case l: ZSmooth.Labeled => zSmoothLabeledCodec.encodeValue(l, out)
+        }
+      def nullValue: ZSmooth = null
     }
 
   implicit val boxPointsCodec: JsonValueCodec[BoxPoints] =

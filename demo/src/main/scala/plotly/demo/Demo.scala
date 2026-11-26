@@ -104,6 +104,15 @@ import scalatags.JsDom.tags2
       )
     ),
     Category(
+      "Contour Plots",
+      Icons.contour,
+      ("#636efa", "#00cc96"),
+      Seq(
+        contour.BasicContourPlot,
+        contour.ContourLinesWithLabels
+      )
+    ),
+    Category(
       "Pie Charts",
       Icons.pie,
       ("#b6e880", "#00cc96"),

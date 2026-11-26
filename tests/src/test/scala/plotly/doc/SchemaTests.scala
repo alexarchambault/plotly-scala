@@ -60,6 +60,7 @@ class SchemaTests extends munit.FunSuite {
     "bar",
     "box",
     "candlestick",
+    "contour",
     "heatmap",
     "histogram",
     "image",
@@ -100,6 +101,29 @@ class SchemaTests extends munit.FunSuite {
       SchemaTests.enumeratedAttributeValues("pie", "direction").toSet,
       Enumerate[RotationDirection].apply().map(_.label).toSet
     )
+  }
+
+  test("Size units should be exhaustive") {
+    val colorBar = SchemaTests.traceAttributes("contour")("colorbar")
+    for (attr <- Seq("lenmode", "thicknessmode"))
+      compareValues(
+        colorBar(attr)("values").arr.map(_.str).toSet,
+        Enumerate[SizeUnit].apply().map(_.label).toSet
+      )
+  }
+
+  test("Contour coloring should be exhaustive") {
+    compareValues(
+      SchemaTests.traceAttributes("contour")("contours")("coloring")("values").arr.map(_.str).toSet,
+      Enumerate[ContourColoring].apply().map(_.label).toSet
+    )
+  }
+
+  test("Z smoothing should be exhaustive") {
+    val fromSchema = SchemaTests.traceAttributes("heatmap")("zsmooth")("values").arr.map(_.render()).toSet
+    // the labels, as JSON, and false
+    val fromLib = Enumerate[ZSmooth.Labeled].apply().map(l => ujson.Str(l.label).render()).toSet + "false"
+    compareValues(fromSchema, fromLib)
   }
 
   test("Text position should be exhaustive") {

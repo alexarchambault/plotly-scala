@@ -208,7 +208,19 @@ object Histogram {
     name: Option[String] = None,
     @since("0.8.2")
     hovertemplate: Option[OneOrSeq[String]] = None,
-    hoverongaps: Option[Boolean] = None
+    hoverongaps: Option[Boolean] = None,
+    @since("0.8.6")
+    connectgaps: Option[Boolean] = None,
+    zsmooth: Option[ZSmooth] = None,
+    zmin: Option[Double] = None,
+    zmax: Option[Double] = None,
+    zmid: Option[Double] = None,
+    reversescale: Option[Boolean] = None,
+    colorbar: Option[ColorBar] = None,
+    xgap: Option[Double] = None,
+    ygap: Option[Double] = None,
+    xaxis: Option[AxisReference] = None,
+    yaxis: Option[AxisReference] = None
 ) extends Trace
 
 object Heatmap {
@@ -274,6 +286,56 @@ object Heatmap {
     opacity: Option[Double] = None,
     scalegroup: Option[String] = None
 ) extends Trace
+
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues",
+  deprecatedSetters = true,
+  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersSince = "0.8.6"
+) final case class Contour(
+    z: Option[Sequence] = None,
+    x: Option[Sequence] = None,
+    y: Option[Sequence] = None,
+    x0: Option[Element] = None,
+    dx: Option[Double] = None,
+    y0: Option[Element] = None,
+    dy: Option[Double] = None,
+    transpose: Option[Boolean] = None,
+    name: Option[String] = None,
+    text: Option[Sequence] = None,
+    hoverinfo: Option[HoverInfo] = None,
+    hovertemplate: Option[OneOrSeq[String]] = None,
+    hoverongaps: Option[Boolean] = None,
+    connectgaps: Option[Boolean] = None,
+    autocontour: Option[Boolean] = None,
+    ncontours: Option[Int] = None,
+    contours: Option[Contours] = None,
+    line: Option[Line] = None,
+    fillcolor: Option[Color] = None,
+    colorscale: Option[ColorScale] = None,
+    autocolorscale: Option[Boolean] = None,
+    reversescale: Option[Boolean] = None,
+    showscale: Option[Boolean] = None,
+    colorbar: Option[ColorBar] = None,
+    zmin: Option[Double] = None,
+    zmax: Option[Double] = None,
+    zmid: Option[Double] = None,
+    zauto: Option[Boolean] = None,
+    opacity: Option[Double] = None,
+    showlegend: Option[Boolean] = None,
+    xaxis: Option[AxisReference] = None,
+    yaxis: Option[AxisReference] = None
+) extends Trace
+
+object Contour {
+  def apply(z: Sequence): Contour =
+    Contour().copy(z = Some(z))
+
+  def apply(z: Sequence, x: Sequence, y: Sequence): Contour =
+    Contour().copy(z = Some(z), x = Some(x), y = Some(y))
+}
 
 object Pie {
   def apply(values: Sequence, labels: Sequence): Pie =

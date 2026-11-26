@@ -69,6 +69,11 @@ object Icons {
     }.mkString
   )
 
+  val contour = stroked(
+    """<ellipse cx="12" cy="12" rx="10" ry="8"/><ellipse cx="12.5" cy="12" rx="6.5" ry="5"/>""" +
+      """<ellipse cx="13" cy="12" rx="3" ry="2.2"/>"""
+  )
+
   val pie = filled(
     """<path d="M11 3a9 9 0 1 0 9 10h-9z"/><path d="M13 1v10h10A10 10 0 0 0 13 1z" opacity="0.7"/>"""
   )
