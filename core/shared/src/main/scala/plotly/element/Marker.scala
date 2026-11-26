@@ -7,7 +7,7 @@ import dataclass.data
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues"
-) class Marker(
+) final case class Marker(
     size: Option[OneOrSeq[Int]] = None,
     color: Option[OneOrSeq[Color]] = None,
     opacity: Option[OneOrSeq[Double]] = None,

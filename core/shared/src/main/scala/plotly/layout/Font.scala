@@ -8,7 +8,7 @@ import plotly.element._
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues"
-) class Font(
+) final case class Font(
     size: Option[Int] = None,
     family: Option[String] = None,
     color: Option[Color] = None

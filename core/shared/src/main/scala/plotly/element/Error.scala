@@ -10,7 +10,7 @@ object Error {
     optionSetters = true,
     nullOptionBuilderMethodName = "from",
     nullOptionCopyMethodName = "withValues"
-  ) class Data(
+  ) final case class Data(
       array: Seq[Double],
       @since
       visible: Option[Boolean] = None,
@@ -22,7 +22,7 @@ object Error {
     optionSetters = true,
     nullOptionBuilderMethodName = "from",
     nullOptionCopyMethodName = "withValues"
-  ) class Percent(
+  ) final case class Percent(
       value: Double,
       @since
       visible: Option[Boolean] = None,
@@ -34,7 +34,7 @@ object Error {
     optionSetters = true,
     nullOptionBuilderMethodName = "from",
     nullOptionCopyMethodName = "withValues"
-  ) class Constant(
+  ) final case class Constant(
       value: Double,
       color: Option[String] = None,
       thickness: Option[Double] = None,

@@ -66,6 +66,7 @@ class CodecsTests extends munit.FunSuite {
           color = Seq[Color](Color.RGB(1, 2, 3), Color.HSL(1, 2, 3), Color.StringColor("red")),
           size = 3
         )
+      )
     )
     roundTrip(
       Box(Seq(1.0, 2.0)).withValues(

@@ -4,7 +4,7 @@ import dataclass.data
 
 import scala.util.Try
 
-@data class LocalDateTime(
+@data final case class LocalDateTime(
     year: Int,
     month: Int,
     dayOfMonth: Int,

@@ -6,7 +6,7 @@ import dataclass.data
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues"
-) class Config(
+) final case class Config(
     editable: Option[Boolean] = None,
     responsive: Option[Boolean] = None,
     showEditInChartStudio: Option[Boolean] = None,

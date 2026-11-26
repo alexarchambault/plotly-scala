@@ -6,7 +6,7 @@ import dataclass.data
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues"
-) class Grid(
+) final case class Grid(
     rows: Option[Int] = None,
     columns: Option[Int] = None,
     pattern: Option[Pattern] = None,

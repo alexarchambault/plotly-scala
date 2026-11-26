@@ -7,6 +7,6 @@ import plotly.Range
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues"
-) class RangeSlider(
+) final case class RangeSlider(
     range: Option[Range] = None
 )

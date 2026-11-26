@@ -7,7 +7,7 @@ import plotly.element.{Color, Line}
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues"
-) class Shape(
+) final case class Shape(
     `type`: Option[String] = None,
     xref: Option[String] = None,
     yref: Option[String] = None,

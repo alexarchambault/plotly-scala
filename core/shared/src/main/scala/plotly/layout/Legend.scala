@@ -8,7 +8,7 @@ import plotly.element._
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues"
-) class Legend(
+) final case class Legend(
     x: Option[Double] = None,
     y: Option[Double] = None,
     traceorder: Option[TraceOrder] = None,

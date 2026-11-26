@@ -7,7 +7,7 @@ import dataclass.data
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues"
-) class Margin(
+) final case class Margin(
     autoexpand: Option[Boolean] = None,
     l: Option[Int] = None,
     r: Option[Int] = None,
@@ -18,5 +18,5 @@ import dataclass.data
 
 object Margin {
   def apply(l: Int, r: Int, t: Int, b: Int): Margin =
-    Margin().withL(l).withR(r).withT(t).withB(b)
+    Margin().copy(l = Some(l), r = Some(r), t = Some(t), b = Some(b))
 }

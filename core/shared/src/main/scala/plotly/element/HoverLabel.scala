@@ -6,7 +6,7 @@ import dataclass.data
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues"
-) class HoverLabel(
+) final case class HoverLabel(
     bgcolor: Option[OneOrSeq[Color]] = None,
     bordercolor: Option[OneOrSeq[Color]] = None,
     font: Option[HoverLabelFont] = None,

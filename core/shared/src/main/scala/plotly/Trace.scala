@@ -11,7 +11,7 @@ sealed abstract class Trace extends Product with Serializable
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues"
-) class Scatter(
+) final case class Scatter(
     x: Option[Sequence] = None,
     y: Option[Sequence] = None,
     text: Option[OneOrSeq[String]] = None,
@@ -39,17 +39,17 @@ sealed abstract class Trace extends Product with Serializable
 
 object Scatter {
   def apply(x: Sequence, y: Sequence): Scatter =
-    Scatter().withX(x).withY(y)
+    Scatter().copy(x = Some(x), y = Some(y))
 
   def apply(y: Sequence): Scatter =
-    Scatter().withY(y)
+    Scatter().copy(y = Some(y))
 }
 
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues"
-) class Box(
+) final case class Box(
     y: Option[Sequence] = None,
     x: Option[Sequence] = None,
     boxpoints: Option[BoxPoints] = None,
@@ -69,17 +69,17 @@ object Scatter {
 
 object Box {
   def apply(y: Sequence): Box =
-    Box().withY(y)
+    Box().copy(y = Some(y))
 
   def apply(y: Sequence, x: Sequence): Box =
-    Box().withY(y).withX(x)
+    Box().copy(y = Some(y), x = Some(x))
 }
 
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues"
-) class Image(
+) final case class Image(
     z: Seq[Seq[Seq[Double]]],
     x0: Option[Element] = None,
     y0: Option[Element] = None,
@@ -106,7 +106,7 @@ object Box {
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues"
-) class Bar(
+) final case class Bar(
     x: Sequence,
     y: Sequence,
     @since
@@ -131,7 +131,7 @@ object Box {
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues"
-) class Histogram(
+) final case class Histogram(
     x: Option[Sequence] = None,
     y: Option[Sequence] = None,
     opacity: Option[Double] = None,
@@ -152,17 +152,17 @@ object Box {
 
 object Histogram {
   def apply(x: Sequence): Histogram =
-    Histogram().withX(x)
+    Histogram().copy(x = Some(x))
 
   def apply(x: Sequence, y: Sequence): Histogram =
-    Histogram().withX(x).withY(y)
+    Histogram().copy(x = Some(x), y = Some(y))
 }
 
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues"
-) class Surface(
+) final case class Surface(
     x: Option[Sequence] = None,
     y: Option[Sequence] = None,
     z: Option[Sequence] = None,
@@ -176,7 +176,7 @@ object Histogram {
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues"
-) class Heatmap(
+) final case class Heatmap(
     y: Option[Sequence] = None,
     x: Option[Sequence] = None,
     z: Option[Sequence] = None,
@@ -191,17 +191,17 @@ object Histogram {
 
 object Heatmap {
   def apply(z: Sequence): Heatmap =
-    Heatmap().withZ(z)
+    Heatmap().copy(z = Some(z))
 
   def apply(z: Sequence, x: Sequence, y: Sequence): Heatmap =
-    Heatmap().withZ(z).withX(x).withY(y)
+    Heatmap().copy(z = Some(z), x = Some(x), y = Some(y))
 }
 
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues"
-) class Candlestick(
+) final case class Candlestick(
     x: Option[Sequence] = None,
     close: Option[Sequence] = None,
     high: Option[Sequence] = None,

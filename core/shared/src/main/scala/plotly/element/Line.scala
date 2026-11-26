@@ -7,7 +7,7 @@ import dataclass.data
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
   nullOptionCopyMethodName = "withValues"
-) class Line(
+) final case class Line(
     shape: Option[LineShape] = None,
     color: Option[OneOrSeq[Color]] = None,
     width: Option[OneOrSeq[Double]] = None,
