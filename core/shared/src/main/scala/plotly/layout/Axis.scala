@@ -12,8 +12,7 @@ import plotly.element._
   deprecatedSettersMessage = "Use withValues instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Axis(
-    title: Option[String] = None,
-    titlefont: Option[Font] = None,
+    title: Option[Title] = None,
     showgrid: Option[Boolean] = None,
     gridwidth: Option[Int] = None,
     gridcolor: Option[Color] = None,
@@ -21,7 +20,6 @@ import plotly.element._
     showticklabels: Option[Boolean] = None,
     linecolor: Option[Color] = None,
     linewidth: Option[Int] = None,
-    autotick: Option[Boolean] = None,
     tickcolor: Option[Color] = None,
     tickwidth: Option[Int] = None,
     tickangle: Option[Double] = None,

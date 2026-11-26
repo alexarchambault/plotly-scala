@@ -96,6 +96,43 @@ class CodecsTests extends munit.FunSuite {
   test("Plotly.jsonSnippet should be valid JSON") {
     val json = ujson.read(Plotly.jsonSnippet(Seq(Scatter(Seq(1.0))), Layout().withValues(title = "foo"), Config()))
     assertEquals(json.obj.keySet, Set("data", "layout", "config"))
-    assertEquals(json("layout")("title").str, "foo")
+    assertEquals(json("layout")("title")("text").str, "foo")
+  }
+
+  test("Title codec should write titles as objects") {
+    val layout = Layout().withValues(
+      title = "foo",
+      xaxis = Axis().withValues(title = Title.from(text = "bar", font = Font(12), standoff = 5.0))
+    )
+    assertEquals(
+      ujson.read(writeToString(layout)),
+      ujson.Obj(
+        "title" -> ujson.Obj("text" -> "foo"),
+        "xaxis" -> ujson.Obj(
+          "title" -> ujson.Obj("text" -> "bar", "font" -> ujson.Obj("size" -> 12), "standoff" -> 5.0)
+        )
+      )
+    )
+    assertEquals(readFromString[Layout](writeToString(layout)), layout)
+  }
+
+  test("Title codec should read string titles") {
+    assertEquals(
+      readFromString[Layout]("""{"title": "foo", "yaxis": {"title": "bar"}}"""),
+      Layout().withValues(title = "foo", yaxis = Axis().withValues(title = "bar"))
+    )
+  }
+
+  test("Color codec should write HSL colors with percentages") {
+    def scatter(color: Color): Trace = Scatter(Seq(1.0)).withValues(marker = Marker().withValues(color = color))
+
+    val json = writeToString(scatter(Color.HSL(120, 50, 40)))
+    assertEquals(ujson.read(json)("marker")("color").str, "hsl(120, 50%, 40%)")
+    assertEquals(readFromString[Trace](json), scatter(Color.HSL(120, 50, 40)))
+    // plotly.js < 4 accepted HSL colors without percentages
+    assertEquals(
+      readFromString[Trace]("""{"y": [1], "marker": {"color": "hsl(120,50,40)"}}"""),
+      scatter(Color.HSL(120, 50, 40))
+    )
   }
 }

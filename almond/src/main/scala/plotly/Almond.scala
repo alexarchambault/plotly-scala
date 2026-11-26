@@ -44,6 +44,7 @@ object Almond {
 
     // offline mode like in plotly-python
 
+    // offline, plotly.js sees the CommonJS module of define, and sets its exports
     val requireInit =
       if (offline)
         s"""define('plotly', function(require, exports, module) {
@@ -54,6 +55,10 @@ object Almond {
         s"""require.config({
            |  paths: {
            |    plotly: 'https://cdn.plot.ly/plotly-${Plotly.plotlyVersion}.min'
+           |  },
+           |  // plotly.js >= 3 doesn't define an AMD module, it only sets window.Plotly
+           |  shim: {
+           |    plotly: { exports: 'Plotly' }
            |  }
            |});
         """.stripMargin

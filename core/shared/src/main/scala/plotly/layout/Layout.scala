@@ -12,7 +12,7 @@ import plotly.element._
   deprecatedSettersMessage = "Use withValues instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Layout(
-    title: Option[String] = None,
+    title: Option[Title] = None,
     legend: Option[Legend] = None,
     width: Option[Int] = None,
     height: Option[Int] = None,

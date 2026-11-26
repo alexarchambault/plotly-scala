@@ -8,7 +8,7 @@ Scala bindings for [plotly.js](https://plot.ly/javascript/)
 
 [Demo](https://alexarchambault.github.io/plotly-scala/)
 
-*plotly-scala* is a Scala library able to output JSON that can be passed to [plotly.js](https://plot.ly/javascript/) (it currently targets plotly.js 2.x). Its classes closely follow the API of plotly.js, so that one can use plotly-scala by following the [documentation](https://plot.ly/javascript/) of plotly.js. These classes can be converted to JSON, that can be fed directly to plotly.js.
+*plotly-scala* is a Scala library able to output JSON that can be passed to [plotly.js](https://plot.ly/javascript/) (it currently targets plotly.js 4.x). Its classes closely follow the API of plotly.js, so that one can use plotly-scala by following the [documentation](https://plot.ly/javascript/) of plotly.js. These classes can be converted to JSON, that can be fed directly to plotly.js.
 
 It can be used from [almond](https://github.com/jupyter-scala/jupyter-scala/tree/develop), from scala-js, or from a Scala REPL like [Ammonite](https://github.com/lihaoyi/Ammonite), to plot things straightaway in the browser.
 
@@ -49,9 +49,9 @@ Bar(x, y).plot()
 ``import $ivy.`org.plotly-scala::plotly-almond:0.8.1` `` instead.)
 
 #### JupyterLab
-If you're using [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/), you have to install [jupyterlab-plotly](https://plotly.com/python/getting-started/#jupyterlab-support-python-35) to enable support for rendering Plotly charts:
+If you're using [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/), you have to install [jupyterlab-plotly](https://plotly.com/python/getting-started/#jupyterlab-support-python-35) to enable support for rendering Plotly charts. It comes with the `plotly` Python package, and renders charts with its own plotly.js, that should be a 4.x one, like that of plotly 7.1 or later:
 ```bash
-jupyter labextension install jupyterlab-plotly
+pip install "plotly>=7.1"
 ```
 
 ### From scala-js
@@ -89,6 +89,8 @@ plot.plot("plot", lay)  // attaches to div element with id 'plot'
 ```scala
 Layout().withValues(title = "Curves", width = 600, height = 400)
 ```
+
+Titles (`title` of `Layout` and `Axis`) are `Title` objects, written as `{"text": …}`, as plotly.js >= 3 expects them. A `String` gets converted to a `Title` with that text, like above. Their font or position can be set via `Title.from`, like `Axis().withValues(title = Title.from(text = "Count", font = Font(18)))`.
 
 The `with*` setters (`withName`, `withTitle`, …) are deprecated, and only available on Scala 2. Use `withValues` instead. The few classes with no `withValues` method (colors, `Bins`, …) can be updated with `copy`.
 
@@ -147,7 +149,7 @@ Some of these are illustrated in the [demo](https://alexarchambault.github.io/pl
 ## Adding support for extra plotly.js features
 
 The following workflow can be followed to add support for extra sections of the plotly.js documentation:
-- find the corresponding directory in the [source](https://github.com/plotly/graphing-library-docs/tree/6e36d5a9c955e810be1e27420b97640774c5653a/_posts/plotly_js) of the plotly.js documentation. These directories can also be found in the sources of plotly-scala, under `plotly-documentation/_posts/plotly_js`, if its repository has been cloned with the `--recursive` option,
+- find the corresponding directory in the [source](https://github.com/plotly/graphing-library-docs/tree/fbb3950a44b6461ab1e2d7e11b9b94ed5d85e62f/_posts/plotly_js) of the plotly.js documentation. These directories can also be found in the sources of plotly-scala, under `plotly-documentation/_posts/plotly_js`, if its repository has been cloned with the `--recursive` option,
 - enabling testing of the corresponding documentation section examples in the `DocumentationTests` class, around [this line](https://github.com/alexarchambault/plotly-scala/blob/master/tests/src/test/scala/plotly/doc/DocumentationTests.scala#L224),
 - running the tests with `./mill -w "tests[2.13.18].test"`,
 - fixing the possible Javascript typos in the plotly-documentation submodule in the plotly-scala sources, so that the enabled JS snippets run fine with Rhino from the tests, then committing these fixes to [`plotly/graphing-library-docs`](https://github.com/plotly/graphing-library-docs),

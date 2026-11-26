@@ -47,7 +47,6 @@ object Error {
       value: Double,
       color: Option[String] = None,
       thickness: Option[Double] = None,
-      opacity: Option[Double] = None,
       width: Option[Double] = None
   ) extends Error("constant")
 }

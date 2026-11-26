@@ -268,25 +268,12 @@ object JsoniterCodecsInternals {
     }
   }
 
-  private def decodeNum(s: String) = {
+  // Accepts numbers, like 40, and percentages, like 40%, returning 40 for both
+  private def decodeNum(s: String) =
+    Try(s.stripSuffix("%").trim.toDouble).toOption.map(_.toInt)
 
-    val intOpt = Try(s.toInt).toOption
-
-    val fromDouble = Try(s.toDouble).toOption
-      .map(_.toInt)
-
-    def fromPct =
-      if (s.endsWith("%"))
-        Try(s.stripSuffix("%").trim.toDouble).toOption
-          .map(v => (256 * v).toInt)
-      else
-        None
-
-    intOpt
-      .orElse(fromDouble)
-      .orElse(fromPct)
-  }
-
+  // Accepts the saturation and lightness as percentages (hsl(120, 50%, 40%), the CSS syntax) or as
+  // numbers (hsl(120, 50, 40), that plotly.js accepted before plotly.js 4)
   private def parseHSL(s: String): Option[Color.HSL] =
     if (s.startsWith("hsl(") && s.endsWith(")"))
       s.stripPrefix("hsl(").stripSuffix(")").split(',').map(_.trim).map(decodeNum) match {
@@ -311,12 +298,14 @@ object JsoniterCodecsInternals {
           if (r >= 0 && r < 256) Color.RGB(r, 0, 0)
           else in.decodeError(s"Unrecognized RGB color: $r")
         }
+      // plotly.js >= 4 rejects the colors that aren't valid CSS colors, like HSL ones without
+      // percentages
       def encodeValue(x: Color, out: JsonWriter): Unit =
         x match {
           case c: Color.RGBA        => out.writeVal(s"rgba(${c.r}, ${c.g}, ${c.b}, ${c.alpha})")
           case c: Color.StringColor => out.writeVal(c.color)
           case c: Color.RGB         => out.writeVal(s"rgb(${c.r}, ${c.g}, ${c.b})")
-          case c: Color.HSL         => out.writeVal(s"hsl(${c.h}, ${c.s}, ${c.l})")
+          case c: Color.HSL         => out.writeVal(s"hsl(${c.h}, ${c.s}%, ${c.l}%)")
         }
       def nullValue: Color = null
     }
@@ -466,6 +455,27 @@ object JsoniterCodecsInternals {
       def encodeValue(x: Font, out: JsonWriter): Unit =
         unwrappedFontCodec.encodeValue(x, out)
       def nullValue: Font = null
+    }
+
+  private val unwrappedTitleCodec: JsonValueCodec[Title] =
+    JsonCodecMaker.make(
+      CodecMakerConfig
+        .withSkipUnexpectedFields(false)
+        .withTransientDefault(false)
+        .withTransientEmpty(false)
+        .withRequireCollectionFields(true)
+    )
+
+  // Writes titles as objects, like {"text": …, "font": …}, as plotly.js >= 3 ignores string titles,
+  // but also reads string titles, like "My plot" (plotly.js < 3 accepted those)
+  implicit lazy val titleCodec: JsonValueCodec[Title] =
+    new JsonValueCodec[Title] {
+      def decodeValue(in: JsonReader, default: Title): Title =
+        if (peekToken(in) == '"') Title.from(text = in.readString(null))
+        else unwrappedTitleCodec.decodeValue(in, default)
+      def encodeValue(x: Title, out: JsonWriter): Unit =
+        unwrappedTitleCodec.encodeValue(x, out)
+      def nullValue: Title = null
     }
 
   private val typedTraceCodec: JsonValueCodec[Trace] =
