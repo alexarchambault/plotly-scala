@@ -332,8 +332,47 @@ object JsoniterCodecsInternals {
       def nullValue: Color = null
     }
 
+  // The levels of the color scales are numbers, that plotly.js also accepts as strings, like "0.5"
+  private val colorScaleLevelCodec: JsonValueCodec[Double] =
+    new JsonValueCodec[Double] {
+      def decodeValue(in: JsonReader, default: Double): Double =
+        if (peekToken(in) == '"') {
+          val s = in.readString(null)
+          Try(s.trim.toDouble).getOrElse(in.decodeError(s"Invalid color scale level: '$s'"))
+        } else
+          in.readDouble()
+      def encodeValue(x: Double, out: JsonWriter): Unit = out.writeVal(x)
+      def nullValue: Double                             = 0.0
+    }
+
+  private val colorScaleEntryCodec: JsonValueCodec[(Double, Color)] =
+    new JsonValueCodec[(Double, Color)] {
+      def decodeValue(in: JsonReader, default: (Double, Color)): (Double, Color) =
+        if (in.isNextToken('[')) {
+          val level = colorScaleLevelCodec.decodeValue(in, 0.0)
+          if (!in.isNextToken(',')) in.commaError()
+          val color = colorCodec.decodeValue(in, null)
+          if (!in.isNextToken(']')) in.arrayEndError()
+          (level, color)
+        } else
+          in.decodeError("expected '['")
+      def encodeValue(x: (Double, Color), out: JsonWriter): Unit = {
+        out.writeArrayStart()
+        colorScaleLevelCodec.encodeValue(x._1, out)
+        colorCodec.encodeValue(x._2, out)
+        out.writeArrayEnd()
+      }
+      def nullValue: (Double, Color) = null
+    }
+
   private val customColorScaleValuesCodec: JsonValueCodec[Seq[(Double, Color)]] =
-    JsonCodecMaker.make
+    new JsonValueCodec[Seq[(Double, Color)]] {
+      def decodeValue(in: JsonReader, default: Seq[(Double, Color)]): Seq[(Double, Color)] =
+        readSeq(in, colorScaleEntryCodec)
+      def encodeValue(x: Seq[(Double, Color)], out: JsonWriter): Unit =
+        writeSeq(x, out, colorScaleEntryCodec)
+      def nullValue: Seq[(Double, Color)] = null
+    }
 
   implicit val colorScaleCodec: JsonValueCodec[ColorScale] =
     new JsonValueCodec[ColorScale] {

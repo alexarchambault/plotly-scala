@@ -192,4 +192,21 @@ class CodecsTests extends munit.FunSuite {
       )
     assert(Try(readFromString[Trace]("""{"y": [1], "marker": {"color": "notacolor"}}""")).isFailure)
   }
+
+  test("Color scale codec should read levels written as strings") {
+    val expected = Heatmap(Seq(Seq(1.0))).withValues(
+      colorscale = ColorScale.CustomScale(Seq(0.0 -> Color.RGB(12, 51, 131), 0.5 -> Color.StringColor("red")))
+    )
+    assertEquals(
+      readFromString[Trace](
+        """{"type": "heatmap", "z": [[1]], "colorscale": [["0", "rgb(12,51,131)"], [0.5, "red"]]}"""
+      ),
+      expected
+    )
+    roundTrip(expected)
+    assertEquals(
+      ujson.read(writeToString[Trace](expected))("colorscale"),
+      ujson.Arr(ujson.Arr(0.0, "rgb(12, 51, 131)"), ujson.Arr(0.5, "red"))
+    )
+  }
 }
