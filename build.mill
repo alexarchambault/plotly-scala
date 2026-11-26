@@ -23,6 +23,8 @@ object Versions {
   def scala212      = "2.12.21"
   def scala213      = "2.13.18"
   def scalaJs       = "1.23.0"
+  // a snapshot, for the nullOptionBuilderMethodName and nullOptionCopyMethodName @data arguments
+  def dataClass     = "0.3.2-SNAPSHOT"
   def plotlyJs      = "2.35.3"
   def jsoniterScala = "2.43.0"
 }
@@ -31,7 +33,7 @@ val scalaVersions = Seq(Versions.scala213, Versions.scala212)
 
 object Deps {
   def almondScalaApi = mvn"sh.almond::jupyter-api:0.14.5"
-  def dataClass      = mvn"io.github.alexarchambault::data-class:0.3.1"
+  def dataClass      = mvn"io.github.alexarchambault::data-class:${Versions.dataClass}"
   def jsoniterCore   = mvn"com.github.plokhotnyuk.jsoniter-scala::jsoniter-scala-core::${Versions.jsoniterScala}"
   def jsoniterMacros = mvn"com.github.plokhotnyuk.jsoniter-scala::jsoniter-scala-macros::${Versions.jsoniterScala}"
   def macroParadise  = mvn"org.scalamacros:::paradise:2.1.1"
@@ -92,6 +94,8 @@ trait ScalaSettings extends CrossScalaModule {
     (if (isScala212) Nil else Seq("-Ymacro-annotations"))
   def scalacPluginMvnDeps = super.scalacPluginMvnDeps() ++
     (if (isScala212) Seq(Deps.macroParadise) else Nil)
+  // for the data-class snapshots
+  def repositories = super.repositories() ++ Seq("central:maven-snapshots")
 }
 
 trait Published extends ScalaSettings, PublishModule {
