@@ -186,4 +186,13 @@ object Color {
     deprecatedSettersMessage = "Use copy instead",
     deprecatedSettersSince = "0.8.6"
   ) final case class HSL(h: Int, s: Int, l: Int) extends Color
+
+  /** A number, mapped to a color by the color scale of the marker or line it's the color of (see
+    * `colorscale`, `cmin` and `cmax` in [[Marker]] and [[Line]])
+    */
+  @data(
+    deprecatedSetters = true,
+    deprecatedSettersMessage = "Use copy instead",
+    deprecatedSettersSince = "0.8.6"
+  ) final case class Number(value: Double) extends Color
 }

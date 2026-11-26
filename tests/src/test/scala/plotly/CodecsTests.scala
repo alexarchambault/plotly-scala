@@ -298,4 +298,20 @@ class CodecsTests extends munit.FunSuite {
       ujson.Arr(ujson.Arr(0.0, "rgb(12, 51, 131)"), ujson.Arr(0.5, "red"))
     )
   }
+
+  test("Color codec should read and write numeric colors") {
+    val scatter = Scatter(Seq(1.0, 2.0, 3.0)).withValues(
+      marker = Marker().withValues(
+        color = Seq[Color](Color.Number(0.5), Color.Number(10), Color.Number(300)),
+        colorscale = ColorScale.NamedScale("Viridis"),
+        cmin = 0.0,
+        cmax = 300.0,
+        showscale = true
+      ),
+      line = Line().withValues(color = Color.Number(2), colorscale = ColorScale.NamedScale("Greens"))
+    )
+    val json = writeToString[Trace](scatter)
+    assertEquals(ujson.read(json)("marker")("color"), ujson.Arr(0.5, 10.0, 300.0))
+    assertEquals(readFromString[Trace](json), scatter)
+  }
 }

@@ -63,6 +63,7 @@ class SettersTests extends munit.FunSuite {
     classOf[BoxMean.Bool]           -> false,
     classOf[BoxPoints.Bool]         -> false,
     classOf[Color.HSL]              -> false,
+    classOf[Color.Number]           -> false,
     classOf[Color.RGB]              -> false,
     classOf[Color.RGBA]             -> false,
     classOf[Color.StringColor]      -> false,

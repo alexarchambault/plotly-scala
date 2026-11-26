@@ -19,5 +19,14 @@ import dataclass.{data, since}
     outlierwidth: Option[Double] = None,
     // smoothing of the contour lines of contour traces
     @since("0.8.6")
-    smoothing: Option[Double] = None
+    smoothing: Option[Double] = None,
+    // the color scale the numeric colors are mapped with, and its bounds (scatter3d traces)
+    colorscale: Option[ColorScale] = None,
+    autocolorscale: Option[Boolean] = None,
+    reversescale: Option[Boolean] = None,
+    cmin: Option[Double] = None,
+    cmax: Option[Double] = None,
+    cmid: Option[Double] = None,
+    showscale: Option[Boolean] = None,
+    colorbar: Option[ColorBar] = None
 )

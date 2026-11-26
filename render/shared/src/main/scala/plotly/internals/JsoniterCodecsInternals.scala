@@ -344,11 +344,9 @@ object JsoniterCodecsInternals {
             .orElse(parseRGBA(s))
             .orElse(parseStringColor(s))
             .getOrElse(in.decodeError(s"Unrecognized color: '$s'"))
-        } else {
-          val r = in.readInt()
-          if (r >= 0 && r < 256) Color.RGB(r, 0, 0)
-          else in.decodeError(s"Unrecognized RGB color: $r")
-        }
+        } else
+          // numbers are mapped to colors by color scales
+          Color.Number(in.readDouble())
       // plotly.js >= 4 rejects the colors that aren't valid CSS colors, like HSL ones without
       // percentages
       def encodeValue(x: Color, out: JsonWriter): Unit =
@@ -357,6 +355,7 @@ object JsoniterCodecsInternals {
           case c: Color.StringColor => out.writeVal(c.color)
           case c: Color.RGB         => out.writeVal(s"rgb(${c.r}, ${c.g}, ${c.b})")
           case c: Color.HSL         => out.writeVal(s"hsl(${c.h}, ${c.s}%, ${c.l}%)")
+          case c: Color.Number      => doubleCodec.encodeValue(c.value, out)
         }
       def nullValue: Color = null
     }

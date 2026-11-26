@@ -22,5 +22,14 @@ import dataclass.{data, since}
     width: Option[OneOrSeq[Int]] = None,
     // the colors of the sectors of pie-like and hierarchical traces
     @since("0.8.6")
-    colors: Option[Seq[Color]] = None
+    colors: Option[Seq[Color]] = None,
+    // the color scale the numeric colors are mapped with, and its bounds
+    colorscale: Option[ColorScale] = None,
+    autocolorscale: Option[Boolean] = None,
+    reversescale: Option[Boolean] = None,
+    cmin: Option[Double] = None,
+    cmax: Option[Double] = None,
+    cmid: Option[Double] = None,
+    showscale: Option[Boolean] = None,
+    colorbar: Option[ColorBar] = None
 )
