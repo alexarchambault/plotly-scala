@@ -22,16 +22,20 @@ import scala.jdk.CollectionConverters.*
 object Versions {
   def scala212      = "2.12.21"
   def scala213      = "2.13.18"
+  // the Scala 3 LTS, so that the library can be used from any later Scala 3 version
+  def scala3        = "3.3.9"
   def scalaJs       = "1.23.0"
+  // a snapshot, for the nullOptionBuilderMethodName and nullOptionCopyMethodName @data arguments
+  def dataClass     = "0.3.2-SNAPSHOT"
   def plotlyJs      = "2.35.3"
   def jsoniterScala = "2.43.0"
 }
 
-val scalaVersions = Seq(Versions.scala213, Versions.scala212)
+val scalaVersions = Seq(Versions.scala213, Versions.scala212, Versions.scala3)
 
 object Deps {
   def almondScalaApi = mvn"sh.almond::jupyter-api:0.14.5"
-  def dataClass      = mvn"io.github.alexarchambault::data-class:0.3.1"
+  def dataClass      = mvn"io.github.alexarchambault::data-class:${Versions.dataClass}"
   def jsoniterCore   = mvn"com.github.plokhotnyuk.jsoniter-scala::jsoniter-scala-core::${Versions.jsoniterScala}"
   def jsoniterMacros = mvn"com.github.plokhotnyuk.jsoniter-scala::jsoniter-scala-macros::${Versions.jsoniterScala}"
   def macroParadise  = mvn"org.scalamacros:::paradise:2.1.1"
@@ -42,6 +46,9 @@ object Deps {
   def ujson          = mvn"com.lihaoyi::ujson:4.4.3"
 
   def scalaReflect(sv: String) = mvn"org.scala-lang:scala-reflect:$sv"
+
+  // the data-class compiler plugin, on Scala 3 (compiler plugins are built against exact Scala versions)
+  def dataClassPlugin = mvn"io.github.alexarchambault:::data-class-plugin:${Versions.dataClass}"
 }
 
 object WebDeps {
@@ -83,15 +90,22 @@ def gitHead = Task.Input {
   os.proc("git", "rev-parse", "HEAD").call(cwd = BuildCtx.workspaceRoot).out.trim()
 }
 
-trait ScalaSettings extends CrossScalaModule {
-  private def isScala212 = crossScalaVersion.startsWith("2.12.")
-  def scalacOptions      = super.scalacOptions() ++
+// CrossScalaVersionRanges: scala-2.13+ source directories, for both Scala 2.13 and Scala 3
+trait ScalaSettings extends CrossScalaModule, CrossScalaVersionRanges {
+  protected def isScala212 = crossScalaVersion.startsWith("2.12.")
+  protected def isScala3   = crossScalaVersion.startsWith("3.")
+  def scalacOptions        = super.scalacOptions() ++
     Seq("-deprecation", "-feature") ++
     // keep targeting Java 11, even when building with a more recent JDK
     Seq("-release", "11") ++
-    (if (isScala212) Nil else Seq("-Ymacro-annotations"))
+    // On Scala 2, data-class expands the @data / @since annotations itself (macro annotations).
+    // On Scala 3, the data-class compiler plugin generates the binary-compatible overloads of
+    // @since parameters, and makes compilation fail if it's not enabled.
+    (if (isScala212) Nil else if (isScala3) Seq("-Xplugin-require:data-class") else Seq("-Ymacro-annotations"))
   def scalacPluginMvnDeps = super.scalacPluginMvnDeps() ++
-    (if (isScala212) Seq(Deps.macroParadise) else Nil)
+    (if (isScala212) Seq(Deps.macroParadise) else if (isScala3) Seq(Deps.dataClassPlugin) else Nil)
+  // for the data-class snapshots
+  def repositories = super.repositories() ++ Seq("central:maven-snapshots")
 }
 
 trait Published extends ScalaSettings, PublishModule {
@@ -138,16 +152,17 @@ trait Platform extends CrossSbtPlatformModule {
 }
 
 object core extends Module {
-  object jvm extends Cross[Jvm](scalaVersions)
-  trait Jvm  extends PublishedJvm, Platform {
+  trait Core extends ScalaSettings {
     // scala-reflect is needed to compile the Enumerate macro
-    def compileMvnDeps = Seq(Deps.dataClass, Deps.scalaReflect(scalaVersion()))
+    def compileMvnDeps =
+      Seq(Deps.dataClass) ++ (if (isScala3) Nil else Seq(Deps.scalaReflect(scalaVersion())))
   }
 
+  object jvm extends Cross[Jvm](scalaVersions)
+  trait Jvm  extends PublishedJvm, Platform, Core
+
   object js extends Cross[Js](scalaVersions)
-  trait Js  extends PublishedJs, Platform {
-    def compileMvnDeps = Seq(Deps.dataClass, Deps.scalaReflect(scalaVersion()))
-  }
+  trait Js  extends PublishedJs, Platform, Core
 }
 
 object render extends Module {

@@ -49,29 +49,30 @@ class CodecsTests extends munit.FunSuite {
   test("Trace codec should round-trip the various kinds of sequences") {
     roundTrip(Scatter(Seq(1.0, 2.0), Seq("a", "b")))
     roundTrip(Scatter(Seq(LocalDateTime(2020, 1, 2, 3, 4, 5), LocalDateTime(2021, 6, 7, 8, 9, 10)), Seq(1.0, 2.0)))
-    roundTrip(Heatmap().withZ(Seq(Seq(1.0, 2.0), Seq(3.0, 4.0))))
+    roundTrip(Heatmap().withValues(z = Seq(Seq(1.0, 2.0), Seq(3.0, 4.0))))
   }
 
   test("Trace codec should round-trip enums, flags, colors and unions") {
     roundTrip(
-      Scatter(Seq(1.0, 2.0))
-        .withMode(ScatterMode(ScatterMode.Markers, ScatterMode.Lines))
-        .withTextposition(TextPosition.BottomRight)
-        .withHoverinfo(HoverInfo(HoverInfo.X, HoverInfo.Y))
-        .withText(Seq("a", "b"))
-        .withFillcolor(Color.RGBA(1, 2, 3, 0.5))
-        .withError_y(Error.Data(Seq(1.0, 2.0)).withVisible(true))
-        .withMarker(
-          Marker()
-            .withSymbol(Seq[Symbol](Symbol.Circle(true, false), Symbol.Square(false, true)))
-            .withColor(Seq[Color](Color.RGB(1, 2, 3), Color.HSL(1, 2, 3), Color.StringColor("red")))
-            .withSize(3)
+      Scatter(Seq(1.0, 2.0)).withValues(
+        mode = ScatterMode(ScatterMode.Markers, ScatterMode.Lines),
+        textposition = TextPosition.BottomRight,
+        hoverinfo = HoverInfo(HoverInfo.X, HoverInfo.Y),
+        text = Seq("a", "b"),
+        fillcolor = Color.RGBA(1, 2, 3, 0.5),
+        error_y = Error.Data(Seq(1.0, 2.0)).withValues(visible = true),
+        marker = Marker().withValues(
+          symbol = Seq[Symbol](Symbol.Circle(true, false), Symbol.Square(false, true)),
+          color = Seq[Color](Color.RGB(1, 2, 3), Color.HSL(1, 2, 3), Color.StringColor("red")),
+          size = 3
         )
+      )
     )
     roundTrip(
-      Box(Seq(1.0, 2.0))
-        .withBoxpoints(BoxPoints.SuspectedOutliers)
-        .withBoxmean(BoxMean.True)
+      Box(Seq(1.0, 2.0)).withValues(
+        boxpoints = BoxPoints.SuspectedOutliers,
+        boxmean = BoxMean.True
+      )
     )
   }
 
@@ -80,19 +81,20 @@ class CodecsTests extends munit.FunSuite {
   }
 
   test("Layout codec should accept wrapped fonts") {
-    assertEquals(readFromString[Layout]("""{"font": {"font": {"size": 12}}}"""), Layout().withFont(Font(12)))
-    assertEquals(readFromString[Layout]("""{"font": {"size": 12}}"""), Layout().withFont(Font(12)))
+    assertEquals(readFromString[Layout]("""{"font": {"font": {"size": 12}}}"""), Layout().withValues(font = Font(12)))
+    assertEquals(readFromString[Layout]("""{"font": {"size": 12}}"""), Layout().withValues(font = Font(12)))
   }
 
   test("Layout codec should round-trip ranges") {
-    val layout = Layout()
-      .withXaxis(Axis().withRange((1.0, 2.0)))
-      .withYaxis(Axis().withRange((LocalDateTime(2020, 1, 2, 3, 4, 5), LocalDateTime(2021, 6, 7, 8, 9, 10))))
+    val layout = Layout().withValues(
+      xaxis = Axis().withValues(range = (1.0, 2.0)),
+      yaxis = Axis().withValues(range = (LocalDateTime(2020, 1, 2, 3, 4, 5), LocalDateTime(2021, 6, 7, 8, 9, 10)))
+    )
     assertEquals(readFromString[Layout](writeToString(layout)), layout)
   }
 
   test("Plotly.jsonSnippet should be valid JSON") {
-    val json = ujson.read(Plotly.jsonSnippet(Seq(Scatter(Seq(1.0))), Layout().withTitle("foo"), Config()))
+    val json = ujson.read(Plotly.jsonSnippet(Seq(Scatter(Seq(1.0))), Layout().withValues(title = "foo"), Config()))
     assertEquals(json.obj.keySet, Set("data", "layout", "config"))
     assertEquals(json("layout")("title").str, "foo")
   }

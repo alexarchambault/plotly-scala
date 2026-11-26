@@ -1,10 +1,14 @@
 package plotly
 package layout
 
-import dataclass.data
+import dataclass.{data, since}
 import plotly.element._
 
-@data(optionSetters = true) class Layout(
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues"
+) final case class Layout(
     title: Option[String] = None,
     legend: Option[Legend] = None,
     width: Option[Int] = None,

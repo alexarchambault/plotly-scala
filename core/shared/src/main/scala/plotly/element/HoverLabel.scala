@@ -2,7 +2,11 @@ package plotly.element
 
 import dataclass.data
 
-@data(optionSetters = true) class HoverLabel(
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues"
+) final case class HoverLabel(
     bgcolor: Option[OneOrSeq[Color]] = None,
     bordercolor: Option[OneOrSeq[Color]] = None,
     font: Option[HoverLabelFont] = None,

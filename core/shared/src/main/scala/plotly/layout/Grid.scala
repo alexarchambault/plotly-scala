@@ -2,7 +2,11 @@ package plotly.layout
 
 import dataclass.data
 
-@data(optionSetters = true) class Grid(
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues"
+) final case class Grid(
     rows: Option[Int] = None,
     columns: Option[Int] = None,
     pattern: Option[Pattern] = None,

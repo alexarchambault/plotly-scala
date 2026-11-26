@@ -3,7 +3,11 @@ package plotly.layout
 import dataclass.data
 import plotly.element.{Color, Line}
 
-@data(optionSetters = true) class Shape(
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues"
+) final case class Shape(
     `type`: Option[String] = None,
     xref: Option[String] = None,
     yref: Option[String] = None,

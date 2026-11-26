@@ -1,10 +1,14 @@
 package plotly
 package layout
 
-import dataclass.data
+import dataclass.{data, since}
 import plotly.element._
 
-@data(optionSetters = true) class Axis(
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues"
+) final case class Axis(
     title: Option[String] = None,
     titlefont: Option[Font] = None,
     showgrid: Option[Boolean] = None,

@@ -6,7 +6,11 @@ import dataclass._
 sealed abstract class Error(val `type`: String) extends Product with Serializable
 
 object Error {
-  @data(optionSetters = true) class Data(
+  @data(
+    optionSetters = true,
+    nullOptionBuilderMethodName = "from",
+    nullOptionCopyMethodName = "withValues"
+  ) final case class Data(
       array: Seq[Double],
       @since
       visible: Option[Boolean] = None,
@@ -14,7 +18,11 @@ object Error {
       arrayminus: Option[Seq[Double]] = None
   ) extends Error("data")
 
-  @data(optionSetters = true) class Percent(
+  @data(
+    optionSetters = true,
+    nullOptionBuilderMethodName = "from",
+    nullOptionCopyMethodName = "withValues"
+  ) final case class Percent(
       value: Double,
       @since
       visible: Option[Boolean] = None,
@@ -22,7 +30,11 @@ object Error {
       valueminus: Option[Double] = None
   ) extends Error("percent")
 
-  @data(optionSetters = true) class Constant(
+  @data(
+    optionSetters = true,
+    nullOptionBuilderMethodName = "from",
+    nullOptionCopyMethodName = "withValues"
+  ) final case class Constant(
       value: Double,
       color: Option[String] = None,
       thickness: Option[Double] = None,

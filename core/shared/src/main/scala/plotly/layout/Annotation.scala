@@ -1,10 +1,14 @@
 package plotly
 package layout
 
-import dataclass.data
+import dataclass.{data, since}
 import plotly.element._
 
-@data(optionSetters = true) class Annotation(
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues"
+) final case class Annotation(
     xref: Option[Ref] = None,
     yref: Option[Ref] = None,
     x: Option[Element] = None,

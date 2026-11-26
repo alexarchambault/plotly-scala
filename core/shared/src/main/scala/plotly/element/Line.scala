@@ -3,7 +3,11 @@ package element
 
 import dataclass.data
 
-@data(optionSetters = true) class Line(
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues"
+) final case class Line(
     shape: Option[LineShape] = None,
     color: Option[OneOrSeq[Color]] = None,
     width: Option[OneOrSeq[Double]] = None,

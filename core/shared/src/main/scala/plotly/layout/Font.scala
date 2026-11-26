@@ -4,7 +4,11 @@ package layout
 import dataclass.data
 import plotly.element._
 
-@data(optionSetters = true) class Font(
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues"
+) final case class Font(
     size: Option[Int] = None,
     family: Option[String] = None,
     color: Option[Color] = None
