@@ -141,6 +141,13 @@ class CodecsTests extends munit.FunSuite {
     assertEquals(ujson.read(writeToString[Trace](contour)).obj.get("type"), Some(ujson.Str("histogram2dcontour")))
   }
 
+  test("Trace codec should write outliers box points in lower case") {
+    val box = Box(Seq(1.0, 2.0)).withValues(boxpoints = BoxPoints.Outliers)
+    assertEquals(ujson.read(writeToString[Trace](box)).obj.get("boxpoints"), Some(ujson.Str("outliers")))
+    roundTrip(box)
+    assertEquals(readFromString[Trace]("""{"type": "box", "y": [1, 2], "boxpoints": "Outliers"}"""), box)
+  }
+
   test("Trace codec should reject unknown enum values") {
     assert(Try(readFromString[Trace]("""{"y": [1], "textposition": "nowhere"}""")).isFailure)
   }

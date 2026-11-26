@@ -28,6 +28,9 @@ object SchemaTests {
   def traceAttributes(trace: String): Map[String, ujson.Value] =
     schema("traces")(trace)("attributes").obj.toMap
 
+  def enumeratedAttributeValues0(trace: String, name: String): Seq[ujson.Value] =
+    attribute(trace, name, "enumerated")("values").arr.toSeq
+
   def enumeratedAttributeValues(trace: String, name: String): Seq[String] =
     attribute(trace, name, "enumerated")("values").arr.map(_.str).toSeq
 
@@ -126,6 +129,20 @@ class SchemaTests extends munit.FunSuite {
     // the labels, as JSON, and false
     val fromLib = Enumerate[ZSmooth.Labeled].apply().map(l => ujson.Str(l.label).render()).toSet + "false"
     compareValues(fromSchema, fromLib)
+  }
+
+  test("Box points should be exhaustive") {
+    val fromSchema = SchemaTests.enumeratedAttributeValues0("box", "boxpoints").map(_.render()).toSet
+    // the labels, as JSON, and false (true isn't accepted by plotly.js)
+    val fromLib = Enumerate[BoxPoints.Labeled].apply().map(l => ujson.Str(l.label).render()).toSet + "false"
+    compareValues(fromSchema, fromLib)
+  }
+
+  test("Box mode should be exhaustive") {
+    compareValues(
+      SchemaTests.schema("traces")("box")("layoutAttributes")("boxmode")("values").arr.map(_.str).toSet,
+      Enumerate[plotly.layout.BoxMode].apply().map(_.label).toSet
+    )
   }
 
   test("Text position should be exhaustive") {

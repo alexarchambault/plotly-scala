@@ -172,8 +172,18 @@ object JsoniterCodecsInternals {
   implicit val scatterLayoutModeCodec: JsonValueCodec[ScatterLayoutMode] =
     enumCodec[ScatterLayoutMode](_.label)
 
-  private val boxMeanLabeledCodec   = enumCodec[BoxMean.Labeled](_.label)
-  private val boxPointsLabeledCodec = enumCodec[BoxPoints.Labeled](_.label)
+  private val boxMeanLabeledCodec = enumCodec[BoxMean.Labeled](_.label)
+  // Also reads "Outliers", that BoxPoints.Outliers used to be written as (and that some examples
+  // of the plotly.js documentation use, although plotly.js ignores it)
+  private val boxPointsLabeledCodec = {
+    stringCodec[BoxPoints.Labeled](_.label) { (s, in) =>
+      Enumerate[BoxPoints.Labeled]
+        .apply()
+        .find(_.label == s)
+        .orElse(Some(BoxPoints.Outliers).filter(_ => s == "Outliers"))
+        .getOrElse(in.decodeError(s"Unrecognized BoxPoints.Labeled: '$s'"))
+    }
+  }
 
   implicit val boxMeanCodec: JsonValueCodec[BoxMean] =
     new JsonValueCodec[BoxMean] {

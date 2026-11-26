@@ -18,5 +18,5 @@ object BoxPoints {
 
   case object All               extends Labeled("all")
   case object SuspectedOutliers extends Labeled("suspectedoutliers")
-  case object Outliers          extends Labeled("Outliers") // FIXME case?
+  case object Outliers          extends Labeled("outliers")
 }
