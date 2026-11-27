@@ -212,6 +212,7 @@ object JsoniterCodecsInternals {
   implicit val quartileMethodCodec: JsonValueCodec[QuartileMethod]       = enumCodec[QuartileMethod](_.label)
   implicit val boxSizeModeCodec: JsonValueCodec[BoxSizeMode]             = enumCodec[BoxSizeMode](_.label)
   implicit val boxHoverOnCodec: JsonValueCodec[BoxHoverOn]               = enumCodec[BoxHoverOn](_.label)
+  implicit val coordinateTypeCodec: JsonValueCodec[CoordinateType]       = enumCodec[CoordinateType](_.label)
   implicit val rotationDirectionCodec: JsonValueCodec[RotationDirection] =
     enumCodec[RotationDirection](_.label)
   implicit val insideTextOrientationCodec: JsonValueCodec[InsideTextOrientation] =

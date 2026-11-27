@@ -443,6 +443,22 @@ class CodecsTests extends munit.FunSuite {
     )
   }
 
+  test("Trace codec should round-trip heatmap, image and candlestick attributes") {
+    roundTrip(
+      Heatmap(Seq(Seq(1.0, 2.0), Seq(3.0, 4.0))).withValues(
+        texttemplate = "%{z}",
+        textfont = Font(10),
+        transpose = true,
+        xtype = CoordinateType.Scaled,
+        x0 = 1.0,
+        dx = 2.0,
+        zauto = false
+      )
+    )
+    roundTrip(Image(Seq(Seq(Seq(1.0, 2.0, 3.0)))).withValues(zsmooth = ZSmooth.Fast))
+    roundTrip(Candlestick().withValues(whiskerwidth = 0.2, name = "candles"))
+  }
+
   test("Trace codec should reject unknown enum values") {
     assert(Try(readFromString[Trace]("""{"y": [1], "textposition": "nowhere"}""")).isFailure)
   }

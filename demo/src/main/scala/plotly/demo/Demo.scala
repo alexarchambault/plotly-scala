@@ -84,7 +84,8 @@ import scalatags.JsDom.tags2
       Icons.financial,
       ("#00cc96", "#ef553b"),
       Seq(
-        financial.OhlcChart
+        financial.OhlcChart,
+        financial.CandlestickChart
       )
     ),
     Category(
@@ -121,7 +122,8 @@ import scalatags.JsDom.tags2
         heatmaps.BasicHeatmap,
         heatmaps.CategoricalAxisHeatmap,
         heatmaps.CustomColorScaleHeatmap,
-        heatmaps.AnnotatedHeatmap
+        heatmaps.AnnotatedHeatmap,
+        heatmaps.HeatmapWithText
       )
     ),
     Category(

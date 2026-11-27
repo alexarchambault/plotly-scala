@@ -335,6 +335,13 @@ class SchemaTests extends munit.FunSuite {
     compareValues((flags :+ flags.mkString("+")).toSet, Enumerate[BoxHoverOn].apply().map(_.label).toSet)
   }
 
+  test("Coordinate types should be exhaustive") {
+    compareValues(
+      SchemaTests.enumeratedAttributeValues("heatmap", "xtype").toSet,
+      Enumerate[CoordinateType].apply().map(_.label).toSet
+    )
+  }
+
   test("Text position should be exhaustive") {
     val fromSchema = SchemaTests
       .enumeratedAttributeValues("scatter", "textposition")

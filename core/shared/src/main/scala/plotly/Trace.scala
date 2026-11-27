@@ -219,7 +219,8 @@ object Box {
     uirevision: Option[Element] = None,
     hovertemplatefallback: Option[Element] = None,
     hovertext: Option[Sequence] = None,
-    zorder: Option[Int] = None
+    zorder: Option[Int] = None,
+    zsmooth: Option[ZSmooth] = None
 ) extends Trace
 
 @data(
@@ -482,7 +483,12 @@ object Histogram {
     ycalendar: Option[Calendar] = None,
     xhoverformat: Option[String] = None,
     yhoverformat: Option[String] = None,
-    zhoverformat: Option[String] = None
+    zhoverformat: Option[String] = None,
+    textfont: Option[Font] = None,
+    transpose: Option[Boolean] = None,
+    xtype: Option[CoordinateType] = None,
+    ytype: Option[CoordinateType] = None,
+    zauto: Option[Boolean] = None
 ) extends Trace
 
 object Heatmap {
@@ -539,7 +545,8 @@ object Heatmap {
     xperiodalignment: Option[PeriodAlignment] = None,
     xcalendar: Option[Calendar] = None,
     xhoverformat: Option[String] = None,
-    yhoverformat: Option[String] = None
+    yhoverformat: Option[String] = None,
+    whiskerwidth: Option[Double] = None
 ) extends Trace
 
 @data(
@@ -659,7 +666,10 @@ object Heatmap {
     ycalendar: Option[Calendar] = None,
     xhoverformat: Option[String] = None,
     yhoverformat: Option[String] = None,
-    zhoverformat: Option[String] = None
+    zhoverformat: Option[String] = None,
+    textfont: Option[Font] = None,
+    xtype: Option[CoordinateType] = None,
+    ytype: Option[CoordinateType] = None
 ) extends Trace
 
 object Contour {
@@ -727,7 +737,9 @@ object Contour {
     ycalendar: Option[Calendar] = None,
     xhoverformat: Option[String] = None,
     yhoverformat: Option[String] = None,
-    zhoverformat: Option[String] = None
+    zhoverformat: Option[String] = None,
+    textfont: Option[Font] = None,
+    zauto: Option[Boolean] = None
 ) extends Trace
 
 object Histogram2d {
@@ -793,7 +805,9 @@ object Histogram2d {
     ycalendar: Option[Calendar] = None,
     xhoverformat: Option[String] = None,
     yhoverformat: Option[String] = None,
-    zhoverformat: Option[String] = None
+    zhoverformat: Option[String] = None,
+    textfont: Option[Font] = None,
+    zauto: Option[Boolean] = None
 ) extends Trace
 
 object Histogram2dContour {
