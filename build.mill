@@ -21,14 +21,14 @@ import scala.jdk.CollectionConverters.*
 import scala.util.Properties
 
 object Versions {
-  def scala212      = "2.12.21"
-  def scala213      = "2.13.18"
+  def scala212 = "2.12.21"
+  def scala213 = "2.13.18"
   // the Scala 3 LTS, so that the library can be used from any later Scala 3 version
-  def scala3        = "3.3.9"
-  def scalaJs       = "1.23.0"
+  def scala3  = "3.3.9"
+  def scalaJs = "1.23.0"
   // a snapshot, for the nullOptionBuilderMethodName and nullOptionCopyMethodName @data arguments
   def dataClass     = "0.3.2-SNAPSHOT"
-  def plotlyJs      = "4.1.0"
+  def plotlyJs      = "4.3.0"
   def jsoniterScala = "2.43.0"
 
   // Used by the dev.* commands
@@ -38,7 +38,7 @@ object Versions {
   def almond   = "0.15.1-SNAPSHOT"
   def coursier = "2.1.26" // cs launcher installing these kernels
   def uv       = "0.12.18"
-  def devJvm   = "21" // JVM these kernels run on
+  def devJvm   = "21"     // JVM these kernels run on
 }
 
 val scalaVersions = Seq(Versions.scala213, Versions.scala212, Versions.scala3)
@@ -401,7 +401,10 @@ object dev extends Module {
   def localRepo: T[PathRef] = {
     val repos = Task.sequence(publishedModules.map(_.publishLocalTestRepo))
     Task {
-      for (repo <- repos(); elem <- os.list(repo.path))
+      for {
+        repo <- repos()
+        elem <- os.list(repo.path)
+      }
         os.copy.into(elem, Task.dest, mergeFolders = true)
       PathRef(Task.dest)
     }
@@ -438,23 +441,25 @@ object dev extends Module {
     val (portOpt, args1) = DevTools.extractOption(args0, "--port")
     if (args1.nonEmpty)
       Task.fail(s"Unrecognized arguments: ${args1.mkString(" ")} (expected --host, --port)")
-    DevTools.Command(
-      BuildCtx.workspaceRoot,
-      Map.empty,
-      Seq(
-        DevTools.uv.toString,
-        "run",
-        "--no-project",
-        "python",
-        "-m",
-        "http.server",
-        portOpt.getOrElse("8000"),
-        "--bind",
-        hostOpt.getOrElse("localhost"),
-        "--directory",
-        demo.fastSite().path.toString
+    DevTools
+      .Command(
+        BuildCtx.workspaceRoot,
+        Map.empty,
+        Seq(
+          DevTools.uv.toString,
+          "run",
+          "--no-project",
+          "python",
+          "-m",
+          "http.server",
+          portOpt.getOrElse("8000"),
+          "--bind",
+          hostOpt.getOrElse("localhost"),
+          "--directory",
+          demo.fastSite().path.toString
+        )
       )
-    ).shellCommand
+      .shellCommand
   }
 
   /** The lock file of the Jupyter environment of [[jupyterCmd]] */
@@ -512,7 +517,7 @@ object DevTools {
   private def shellQuote(s: String): String = {
     def isSafe(c: Char) =
       (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') ||
-      "_@%+=:,./-".contains(c)
+        "_@%+=:,./-".contains(c)
     if (s.nonEmpty && s.forall(isSafe)) s
     else "'" + s.replace("'", "'\\''") + "'"
   }
@@ -522,7 +527,7 @@ object DevTools {
     */
   def extractOption(args: Seq[String], name: String): (Option[String], Seq[String]) =
     args.indexWhere(a => a == name || a.startsWith(name + "=")) match {
-      case -1 => (None, args)
+      case -1  => (None, args)
       case idx =>
         val arg = args(idx)
         if (arg == name)
@@ -553,24 +558,27 @@ object DevTools {
     */
   def rendererPlotlyJsVersion(uvLock: os.Path): (String, String) = {
     val packages = os.read(uvLock).split("\n\\[\\[package\\]\\]\n").toSeq
-    val block = packages.find(_.linesIterator.contains("name = \"plotly\"")).getOrElse {
+    val block    = packages.find(_.linesIterator.contains("name = \"plotly\"")).getOrElse {
       sys.error(s"No plotly package in $uvLock")
     }
-    val version = "(?m)^version = \"([^\"]+)\"".r.findFirstMatchIn(block).map(_.group(1))
+    val version = "(?m)^version = \"([^\"]+)\"".r
+      .findFirstMatchIn(block)
+      .map(_.group(1))
       .getOrElse(sys.error(s"No version for plotly in $uvLock"))
     val (url, sha256) =
-      "\\{ url = \"([^\"]+\\.whl)\", hash = \"sha256:([0-9a-f]+)\"".r.findFirstMatchIn(block)
+      "\\{ url = \"([^\"]+\\.whl)\", hash = \"sha256:([0-9a-f]+)\"".r
+        .findFirstMatchIn(block)
         .map(m => (m.group(1), m.group(2)))
         .getOrElse(sys.error(s"No wheel for plotly in $uvLock"))
-    val wheel = downloadFile(url)
+    val wheel        = downloadFile(url)
     val actualSha256 = {
       val digest = java.security.MessageDigest.getInstance("SHA-256").digest(os.read.bytes(wheel))
       digest.map(b => f"$b%02x").mkString
     }
     if (actualSha256 != sha256)
       sys.error(s"Wrong SHA-256 for $url ($wheel): expected $sha256, got $actualSha256")
-    val extensionDir = "share/jupyter/labextensions/jupyterlab-plotly/"
-    val zf           = new ZipFile(wheel.toIO)
+    val extensionDir                              = "share/jupyter/labextensions/jupyterlab-plotly/"
+    val zf                                        = new ZipFile(wheel.toIO)
     def readEntry(suffix: String): Option[String] =
       zf.entries().asScala.find(_.getName.endsWith(extensionDir + suffix)).map { entry =>
         val is = zf.getInputStream(entry)
@@ -581,14 +589,19 @@ object DevTools {
       try {
         // lists the packages bundled by the renderer, plotly.js among them, up to plotly 6
         val fromLicenses = readEntry("static/third-party-licenses.json").flatMap { licenses =>
-          ujson.read(licenses)("packages").arr
+          ujson
+            .read(licenses)("packages")
+            .arr
             .find(_("name").str == "plotly.js")
             .map(_("versionInfo").str)
         }
         // from plotly 7, plotly.js isn't listed there, but its package.json depends on an exact
         // plotly.js version, the one it bundles
         def fromPackageJson = readEntry("package.json").flatMap { packageJson =>
-          ujson.read(packageJson).obj.get("dependencies")
+          ujson
+            .read(packageJson)
+            .obj
+            .get("dependencies")
             .flatMap(_.obj.get("plotly.js"))
             .map(_.str)
             .filter(_.matches("[0-9]+\\.[0-9]+\\.[0-9]+"))
@@ -599,8 +612,7 @@ object DevTools {
               s"in $url give the version of plotly.js"
           )
         }
-      }
-      finally zf.close()
+      } finally zf.close()
     (version, plotlyJs)
   }
 
@@ -611,7 +623,7 @@ object DevTools {
   def plotlyJsIncompatibility(library: String, renderer: String): Option[String] = {
     def majorMinor(v: String) = v.split('.').take(2).map(_.takeWhile(_.isDigit)) match {
       case Array(major, minor) if major.nonEmpty && minor.nonEmpty => (major.toInt, minor.toInt)
-      case _ => sys.error(s"Malformed plotly.js version: $v")
+      case _                                                       => sys.error(s"Malformed plotly.js version: $v")
     }
     val (libMajor, libMinor) = majorMinor(library)
     val (renMajor, renMinor) = majorMinor(renderer)
@@ -669,7 +681,9 @@ object DevTools {
   /** Java home for the passed JVM id (like "21"), downloaded by coursier if needed */
   def javaHome(id: String): os.Path = {
     val jvmCache = JvmCache().withDefaultIndex
-    val home     = JavaHome().withCache(jvmCache).get(id)
+    val home     = JavaHome()
+      .withCache(jvmCache)
+      .get(id)
       .unsafeRun()(using jvmCache.archiveCache.cache.ec)
     os.Path(home.getAbsoluteFile)
   }
@@ -774,10 +788,10 @@ object DevTools {
     * handled here, the rest is passed to JupyterLab.
     */
   def jupyterLabCommand(
-    workspace: os.Path,
-    localRepo: os.Path,
-    jupyterDir: os.Path,
-    args: Seq[String]
+      workspace: os.Path,
+      localRepo: os.Path,
+      jupyterDir: os.Path,
+      args: Seq[String]
   ): Command = {
     val javaEnv = javaEnvironment(javaHome(Versions.devJvm))
 
