@@ -68,6 +68,7 @@ class SettersTests extends munit.FunSuite {
     classOf[Error.Data]             -> true,
     classOf[Error.Percent]          -> true,
     classOf[Error.Constant]         -> true,
+    classOf[Error.Sqrt]             -> true,
     classOf[HoverLabel]             -> true,
     classOf[HoverLabelFont]         -> true,
     classOf[Line]                   -> true,

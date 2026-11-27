@@ -18,7 +18,14 @@ object Error {
       @since
       visible: Option[Boolean] = None,
       symmetric: Option[Boolean] = None,
-      arrayminus: Option[Seq[Double]] = None
+      arrayminus: Option[Seq[Double]] = None,
+      @since("0.8.6")
+      color: Option[Color] = None,
+      thickness: Option[Double] = None,
+      width: Option[Double] = None,
+      copy_ystyle: Option[Boolean] = None,
+      traceref: Option[Int] = None,
+      tracerefminus: Option[Int] = None
   ) extends Error("data")
 
   @data(
@@ -33,7 +40,14 @@ object Error {
       @since
       visible: Option[Boolean] = None,
       symmetric: Option[Boolean] = None,
-      valueminus: Option[Double] = None
+      valueminus: Option[Double] = None,
+      @since("0.8.6")
+      color: Option[Color] = None,
+      thickness: Option[Double] = None,
+      width: Option[Double] = None,
+      copy_ystyle: Option[Boolean] = None,
+      traceref: Option[Int] = None,
+      tracerefminus: Option[Int] = None
   ) extends Error("percent")
 
   @data(
@@ -47,6 +61,29 @@ object Error {
       value: Double,
       color: Option[String] = None,
       thickness: Option[Double] = None,
-      width: Option[Double] = None
+      width: Option[Double] = None,
+      @since("0.8.6")
+      visible: Option[Boolean] = None,
+      symmetric: Option[Boolean] = None,
+      valueminus: Option[Double] = None,
+      copy_ystyle: Option[Boolean] = None,
+      traceref: Option[Int] = None,
+      tracerefminus: Option[Int] = None
   ) extends Error("constant")
+
+  /** Error bars proportional to the square roots of the values */
+  @data(
+    optionSetters = true,
+    nullOptionBuilderMethodName = "from",
+    nullOptionCopyMethodName = "withValues",
+    deprecatedSetters = true,
+    deprecatedSettersMessage = "Use withValues instead",
+    deprecatedSettersSince = "0.8.6"
+  ) final case class Sqrt(
+      visible: Option[Boolean] = None,
+      color: Option[Color] = None,
+      thickness: Option[Double] = None,
+      width: Option[Double] = None,
+      copy_ystyle: Option[Boolean] = None
+  ) extends Error("sqrt")
 }
