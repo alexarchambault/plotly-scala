@@ -58,34 +58,47 @@ class SchemaTests extends munit.FunSuite {
     compareValues(fromSchema, fromLib)
   }
 
-  // the trace types having a case class extending Trace
-  private val traceTypes = Seq(
-    "bar",
-    "barpolar",
-    "box",
-    "candlestick",
-    "contour",
-    "funnel",
-    "funnelarea",
-    "heatmap",
-    "histogram",
-    "histogram2d",
-    "histogram2dcontour",
-    "icicle",
-    "image",
-    "ohlc",
-    "pie",
-    "sankey",
-    "scatter",
-    "scatter3d",
-    "scatterpolar",
-    "scatterpolargl",
-    "sunburst",
-    "surface",
-    "treemap",
-    "violin",
-    "waterfall"
+  // the trace types, and their case class extending Trace
+  private val traceClasses = Seq[(String, Class[_ <: Trace])](
+    "bar"                -> classOf[Bar],
+    "barpolar"           -> classOf[BarPolar],
+    "box"                -> classOf[Box],
+    "candlestick"        -> classOf[Candlestick],
+    "contour"            -> classOf[Contour],
+    "funnel"             -> classOf[Funnel],
+    "funnelarea"         -> classOf[FunnelArea],
+    "heatmap"            -> classOf[Heatmap],
+    "histogram"          -> classOf[Histogram],
+    "histogram2d"        -> classOf[Histogram2d],
+    "histogram2dcontour" -> classOf[Histogram2dContour],
+    "icicle"             -> classOf[Icicle],
+    "image"              -> classOf[Image],
+    "ohlc"               -> classOf[Ohlc],
+    "pie"                -> classOf[Pie],
+    "sankey"             -> classOf[Sankey],
+    "scatter"            -> classOf[Scatter],
+    "scatter3d"          -> classOf[Scatter3d],
+    "scatterpolar"       -> classOf[ScatterPolar],
+    "scatterpolargl"     -> classOf[ScatterPolarGl],
+    "sunburst"           -> classOf[Sunburst],
+    "surface"            -> classOf[Surface],
+    "treemap"            -> classOf[Treemap],
+    "violin"             -> classOf[Violin],
+    "waterfall"          -> classOf[Waterfall]
   )
+  private val traceTypes = traceClasses.map(_._1)
+
+  test("Trace classes should only have fields that are attributes of their trace type") {
+    for ((traceType, cls) <- traceClasses) {
+      val attributes = SchemaTests.traceAttributes(traceType).keySet
+      val fields     = cls.getDeclaredFields.toSeq
+        .filter(f => !java.lang.reflect.Modifier.isStatic(f.getModifiers))
+        .map(_.getName)
+      assert(fields.nonEmpty, s"No fields found in $cls")
+      val unknown = fields.filterNot(attributes).sorted
+      assert(unknown.isEmpty, s"Not attributes of $traceType traces: ${unknown.mkString(", ")}")
+    }
+  }
 
   test("Hover info elements should include the hoverinfo flags of all trace types") {
     val fromSchema = traceTypes
