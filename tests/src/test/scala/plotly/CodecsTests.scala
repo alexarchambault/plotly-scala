@@ -311,6 +311,20 @@ class CodecsTests extends munit.FunSuite {
     assert(Try(readFromString[Trace]("""{"y": [1], "visible": "maybe"}""")).isFailure)
   }
 
+  test("Trace codec should round-trip positioning attributes") {
+    roundTrip(
+      Bar(Seq("2025-01-01", "2025-02-01"), Seq(1.0, 2.0)).withValues(
+        xperiod = "M1",
+        xperiodalignment = PeriodAlignment.Middle,
+        xcalendar = Calendar.Gregorian,
+        xhoverformat = "%b %Y",
+        offsetgroup = "a",
+        cliponaxis = false
+      )
+    )
+    roundTrip(Scatter(Seq(1.0, 2.0)).withValues(x0 = 10.0, dx = 2.0, orientation = Orientation.Horizontal))
+  }
+
   test("Trace codec should reject unknown enum values") {
     assert(Try(readFromString[Trace]("""{"y": [1], "textposition": "nowhere"}""")).isFailure)
   }

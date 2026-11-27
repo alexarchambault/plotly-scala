@@ -193,6 +193,8 @@ object JsoniterCodecsInternals {
   implicit val sankeyNodeAlignCodec: JsonValueCodec[SankeyNodeAlign]     = enumCodec[SankeyNodeAlign](_.label)
   implicit val sankeySortCodec: JsonValueCodec[SankeySort]               = enumCodec[SankeySort](_.label)
   implicit val sankeyDirectionCodec: JsonValueCodec[SankeyDirection]     = enumCodec[SankeyDirection](_.label)
+  implicit val calendarCodec: JsonValueCodec[Calendar]                   = enumCodec[Calendar](_.label)
+  implicit val periodAlignmentCodec: JsonValueCodec[PeriodAlignment]     = enumCodec[PeriodAlignment](_.label)
   implicit val rotationDirectionCodec: JsonValueCodec[RotationDirection] =
     enumCodec[RotationDirection](_.label)
   implicit val insideTextOrientationCodec: JsonValueCodec[InsideTextOrientation] =

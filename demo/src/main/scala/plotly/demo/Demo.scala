@@ -90,7 +90,8 @@ import scalatags.JsDom.tags2
       Icons.timeSeries,
       ("#19d3f3", "#7fe6f8"),
       Seq(
-        timeseries.TimeSeries
+        timeseries.TimeSeries,
+        timeseries.PeriodPositioning
       )
     ),
     Category(

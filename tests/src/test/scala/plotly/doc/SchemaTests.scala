@@ -282,6 +282,17 @@ class SchemaTests extends munit.FunSuite {
       )
   }
 
+  test("Calendars and period alignments should be exhaustive") {
+    compareValues(
+      SchemaTests.enumeratedAttributeValues("scatter", "xcalendar").toSet,
+      Enumerate[Calendar].apply().map(_.label).toSet
+    )
+    compareValues(
+      SchemaTests.enumeratedAttributeValues("scatter", "xperiodalignment").toSet,
+      Enumerate[PeriodAlignment].apply().map(_.label).toSet
+    )
+  }
+
   test("Text position should be exhaustive") {
     val fromSchema = SchemaTests
       .enumeratedAttributeValues("scatter", "textposition")

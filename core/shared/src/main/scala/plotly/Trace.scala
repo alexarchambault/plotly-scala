@@ -58,7 +58,25 @@ sealed abstract class Trace extends Product with Serializable
     texttemplate: Option[OneOrSeq[String]] = None,
     texttemplatefallback: Option[Element] = None,
     zorder: Option[Int] = None,
-    selectedpoints: Option[Seq[Int]] = None
+    selectedpoints: Option[Seq[Int]] = None,
+    x0: Option[Element] = None,
+    dx: Option[Double] = None,
+    y0: Option[Element] = None,
+    dy: Option[Double] = None,
+    xperiod: Option[Element] = None,
+    xperiod0: Option[Element] = None,
+    xperiodalignment: Option[PeriodAlignment] = None,
+    yperiod: Option[Element] = None,
+    yperiod0: Option[Element] = None,
+    yperiodalignment: Option[PeriodAlignment] = None,
+    xcalendar: Option[Calendar] = None,
+    ycalendar: Option[Calendar] = None,
+    xhoverformat: Option[String] = None,
+    yhoverformat: Option[String] = None,
+    orientation: Option[Orientation] = None,
+    alignmentgroup: Option[String] = None,
+    offsetgroup: Option[String] = None,
+    cliponaxis: Option[Boolean] = None
 ) extends Trace
 
 object Scatter {
@@ -111,7 +129,25 @@ object Scatter {
     hoverlabel: Option[HoverLabel] = None,
     text: Option[OneOrSeq[String]] = None,
     zorder: Option[Int] = None,
-    selectedpoints: Option[Seq[Int]] = None
+    selectedpoints: Option[Seq[Int]] = None,
+    x0: Option[Element] = None,
+    dx: Option[Double] = None,
+    y0: Option[Element] = None,
+    dy: Option[Double] = None,
+    xperiod: Option[Element] = None,
+    xperiod0: Option[Element] = None,
+    xperiodalignment: Option[PeriodAlignment] = None,
+    yperiod: Option[Element] = None,
+    yperiod0: Option[Element] = None,
+    yperiodalignment: Option[PeriodAlignment] = None,
+    xcalendar: Option[Calendar] = None,
+    ycalendar: Option[Calendar] = None,
+    xhoverformat: Option[String] = None,
+    yhoverformat: Option[String] = None,
+    xaxis: Option[AxisReference] = None,
+    yaxis: Option[AxisReference] = None,
+    alignmentgroup: Option[String] = None,
+    offsetgroup: Option[String] = None
 ) extends Trace
 
 object Box {
@@ -207,7 +243,24 @@ object Box {
     texttemplate: Option[OneOrSeq[String]] = None,
     texttemplatefallback: Option[Element] = None,
     zorder: Option[Int] = None,
-    selectedpoints: Option[Seq[Int]] = None
+    selectedpoints: Option[Seq[Int]] = None,
+    x0: Option[Element] = None,
+    dx: Option[Double] = None,
+    y0: Option[Element] = None,
+    dy: Option[Double] = None,
+    xperiod: Option[Element] = None,
+    xperiod0: Option[Element] = None,
+    xperiodalignment: Option[PeriodAlignment] = None,
+    yperiod: Option[Element] = None,
+    yperiod0: Option[Element] = None,
+    yperiodalignment: Option[PeriodAlignment] = None,
+    xcalendar: Option[Calendar] = None,
+    ycalendar: Option[Calendar] = None,
+    xhoverformat: Option[String] = None,
+    yhoverformat: Option[String] = None,
+    alignmentgroup: Option[String] = None,
+    offsetgroup: Option[String] = None,
+    cliponaxis: Option[Boolean] = None
 ) extends Trace
 
 @data(
@@ -253,7 +306,16 @@ object Box {
     texttemplate: Option[String] = None,
     texttemplatefallback: Option[Element] = None,
     zorder: Option[Int] = None,
-    selectedpoints: Option[Seq[Int]] = None
+    selectedpoints: Option[Seq[Int]] = None,
+    xcalendar: Option[Calendar] = None,
+    ycalendar: Option[Calendar] = None,
+    xhoverformat: Option[String] = None,
+    yhoverformat: Option[String] = None,
+    xaxis: Option[AxisReference] = None,
+    orientation: Option[Orientation] = None,
+    alignmentgroup: Option[String] = None,
+    offsetgroup: Option[String] = None,
+    cliponaxis: Option[Boolean] = None
 ) extends Trace
 
 object Histogram {
@@ -297,7 +359,13 @@ object Histogram {
     hovertemplatefallback: Option[Element] = None,
     hovertext: Option[OneOrSeq[String]] = None,
     hoverlabel: Option[HoverLabel] = None,
-    text: Option[OneOrSeq[String]] = None
+    text: Option[OneOrSeq[String]] = None,
+    xcalendar: Option[Calendar] = None,
+    ycalendar: Option[Calendar] = None,
+    zcalendar: Option[Calendar] = None,
+    xhoverformat: Option[String] = None,
+    yhoverformat: Option[String] = None,
+    zhoverformat: Option[String] = None
 ) extends Trace
 
 @data(
@@ -350,7 +418,22 @@ object Histogram {
     text: Option[Sequence] = None,
     texttemplate: Option[String] = None,
     texttemplatefallback: Option[Element] = None,
-    zorder: Option[Int] = None
+    zorder: Option[Int] = None,
+    x0: Option[Element] = None,
+    dx: Option[Double] = None,
+    y0: Option[Element] = None,
+    dy: Option[Double] = None,
+    xperiod: Option[Element] = None,
+    xperiod0: Option[Element] = None,
+    xperiodalignment: Option[PeriodAlignment] = None,
+    yperiod: Option[Element] = None,
+    yperiod0: Option[Element] = None,
+    yperiodalignment: Option[PeriodAlignment] = None,
+    xcalendar: Option[Calendar] = None,
+    ycalendar: Option[Calendar] = None,
+    xhoverformat: Option[String] = None,
+    yhoverformat: Option[String] = None,
+    zhoverformat: Option[String] = None
 ) extends Trace
 
 object Heatmap {
@@ -401,7 +484,13 @@ object Heatmap {
     hoverlabel: Option[HoverLabel] = None,
     text: Option[OneOrSeq[String]] = None,
     zorder: Option[Int] = None,
-    selectedpoints: Option[Seq[Int]] = None
+    selectedpoints: Option[Seq[Int]] = None,
+    xperiod: Option[Element] = None,
+    xperiod0: Option[Element] = None,
+    xperiodalignment: Option[PeriodAlignment] = None,
+    xcalendar: Option[Calendar] = None,
+    xhoverformat: Option[String] = None,
+    yhoverformat: Option[String] = None
 ) extends Trace
 
 @data(
@@ -510,7 +599,18 @@ object Heatmap {
     hoverlabel: Option[HoverLabel] = None,
     texttemplate: Option[String] = None,
     texttemplatefallback: Option[Element] = None,
-    zorder: Option[Int] = None
+    zorder: Option[Int] = None,
+    xperiod: Option[Element] = None,
+    xperiod0: Option[Element] = None,
+    xperiodalignment: Option[PeriodAlignment] = None,
+    yperiod: Option[Element] = None,
+    yperiod0: Option[Element] = None,
+    yperiodalignment: Option[PeriodAlignment] = None,
+    xcalendar: Option[Calendar] = None,
+    ycalendar: Option[Calendar] = None,
+    xhoverformat: Option[String] = None,
+    yhoverformat: Option[String] = None,
+    zhoverformat: Option[String] = None
 ) extends Trace
 
 object Contour {
@@ -573,7 +673,12 @@ object Contour {
     uirevision: Option[Element] = None,
     hovertemplatefallback: Option[Element] = None,
     texttemplate: Option[String] = None,
-    texttemplatefallback: Option[Element] = None
+    texttemplatefallback: Option[Element] = None,
+    xcalendar: Option[Calendar] = None,
+    ycalendar: Option[Calendar] = None,
+    xhoverformat: Option[String] = None,
+    yhoverformat: Option[String] = None,
+    zhoverformat: Option[String] = None
 ) extends Trace
 
 object Histogram2d {
@@ -634,7 +739,12 @@ object Histogram2d {
     uirevision: Option[Element] = None,
     hovertemplatefallback: Option[Element] = None,
     texttemplate: Option[String] = None,
-    texttemplatefallback: Option[Element] = None
+    texttemplatefallback: Option[Element] = None,
+    xcalendar: Option[Calendar] = None,
+    ycalendar: Option[Calendar] = None,
+    xhoverformat: Option[String] = None,
+    yhoverformat: Option[String] = None,
+    zhoverformat: Option[String] = None
 ) extends Trace
 
 object Histogram2dContour {
@@ -695,7 +805,9 @@ object Histogram2dContour {
     hovertext: Option[OneOrSeq[String]] = None,
     hoverlabel: Option[HoverLabel] = None,
     zorder: Option[Int] = None,
-    selectedpoints: Option[Seq[Int]] = None
+    selectedpoints: Option[Seq[Int]] = None,
+    xhoverformat: Option[String] = None,
+    yhoverformat: Option[String] = None
 ) extends Trace
 
 object Violin {
@@ -757,7 +869,20 @@ object Violin {
     hoverlabel: Option[HoverLabel] = None,
     texttemplatefallback: Option[Element] = None,
     zorder: Option[Int] = None,
-    selectedpoints: Option[Seq[Int]] = None
+    selectedpoints: Option[Seq[Int]] = None,
+    x0: Option[Element] = None,
+    dx: Option[Double] = None,
+    y0: Option[Element] = None,
+    dy: Option[Double] = None,
+    xperiod: Option[Element] = None,
+    xperiod0: Option[Element] = None,
+    xperiodalignment: Option[PeriodAlignment] = None,
+    yperiod: Option[Element] = None,
+    yperiod0: Option[Element] = None,
+    yperiodalignment: Option[PeriodAlignment] = None,
+    xhoverformat: Option[String] = None,
+    yhoverformat: Option[String] = None,
+    cliponaxis: Option[Boolean] = None
 ) extends Trace
 
 object Waterfall {
@@ -815,7 +940,20 @@ object Waterfall {
     hoverlabel: Option[HoverLabel] = None,
     texttemplatefallback: Option[Element] = None,
     zorder: Option[Int] = None,
-    selectedpoints: Option[Seq[Int]] = None
+    selectedpoints: Option[Seq[Int]] = None,
+    x0: Option[Element] = None,
+    dx: Option[Double] = None,
+    y0: Option[Element] = None,
+    dy: Option[Double] = None,
+    xperiod: Option[Element] = None,
+    xperiod0: Option[Element] = None,
+    xperiodalignment: Option[PeriodAlignment] = None,
+    yperiod: Option[Element] = None,
+    yperiod0: Option[Element] = None,
+    yperiodalignment: Option[PeriodAlignment] = None,
+    xhoverformat: Option[String] = None,
+    yhoverformat: Option[String] = None,
+    cliponaxis: Option[Boolean] = None
 ) extends Trace
 
 object Funnel {
@@ -916,7 +1054,13 @@ object FunnelArea {
     hovertemplatefallback: Option[Element] = None,
     hoverlabel: Option[HoverLabel] = None,
     zorder: Option[Int] = None,
-    selectedpoints: Option[Seq[Int]] = None
+    selectedpoints: Option[Seq[Int]] = None,
+    xperiod: Option[Element] = None,
+    xperiod0: Option[Element] = None,
+    xperiodalignment: Option[PeriodAlignment] = None,
+    xcalendar: Option[Calendar] = None,
+    xhoverformat: Option[String] = None,
+    yhoverformat: Option[String] = None
 ) extends Trace
 
 object Ohlc {
@@ -964,7 +1108,13 @@ object Ohlc {
     hovertemplatefallback: Option[Element] = None,
     hoverlabel: Option[HoverLabel] = None,
     texttemplate: Option[OneOrSeq[String]] = None,
-    texttemplatefallback: Option[Element] = None
+    texttemplatefallback: Option[Element] = None,
+    xcalendar: Option[Calendar] = None,
+    ycalendar: Option[Calendar] = None,
+    zcalendar: Option[Calendar] = None,
+    xhoverformat: Option[String] = None,
+    yhoverformat: Option[String] = None,
+    zhoverformat: Option[String] = None
 ) extends Trace
 
 object Scatter3d {
@@ -1020,7 +1170,8 @@ object Scatter3d {
     hoverlabel: Option[HoverLabel] = None,
     texttemplate: Option[OneOrSeq[String]] = None,
     texttemplatefallback: Option[Element] = None,
-    selectedpoints: Option[Seq[Int]] = None
+    selectedpoints: Option[Seq[Int]] = None,
+    cliponaxis: Option[Boolean] = None
 ) extends Trace
 
 object ScatterPolar {
