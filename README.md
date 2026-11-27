@@ -142,7 +142,24 @@ plotly-scala supports the features illustrated in the following sections of the 
 - [Multiple Axes](https://plot.ly/javascript/multiple-axes/),
 - [Histograms](https://plot.ly/javascript/histograms/),
 - [Log Plots](https://plot.ly/javascript/log-plot/), 
-- [Image](https://plotly.com/javascript/reference/image/).
+- [Image](https://plotly.com/javascript/reference/image/),
+- [Pie Charts](https://plotly.com/javascript/pie-charts/),
+- [Sunburst Charts](https://plotly.com/javascript/sunburst-charts/),
+- [Treemaps](https://plotly.com/javascript/treemaps/),
+- [Sankey Diagrams](https://plotly.com/javascript/sankey-diagram/),
+- [Contour Plots](https://plotly.com/javascript/contour-plots/),
+- [2D Histograms](https://plotly.com/javascript/2D-Histogram/),
+- [2D Histogram Contour Plots](https://plotly.com/javascript/2d-histogram-contour/),
+- [Waterfall Charts](https://plotly.com/javascript/waterfall-charts/),
+- [Funnel Charts](https://plotly.com/javascript/funnel-charts/),
+- [OHLC Charts](https://plotly.com/javascript/ohlc-charts/),
+- [Polar Charts](https://plotly.com/javascript/polar-chart/),
+- [Radar Charts](https://plotly.com/javascript/radar-chart/),
+- [Wind Rose Charts](https://plotly.com/javascript/wind-rose-charts/),
+- [3D Scatter Plots](https://plotly.com/javascript/3d-scatter-plots/),
+- [3D Line Plots](https://plotly.com/javascript/3d-line-plots/).
+
+It also supports [violin](https://plotly.com/javascript/violin/) and [icicle](https://plotly.com/javascript/icicle-charts/) traces, whose examples in the plotly.js documentation load their data from external files, so that the tests can't run them.
 
 Some of these are illustrated in the [demo](https://alexarchambault.github.io/plotly-scala/) page.
 
