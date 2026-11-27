@@ -459,6 +459,25 @@ class CodecsTests extends munit.FunSuite {
     roundTrip(Candlestick().withValues(whiskerwidth = 0.2, name = "candles"))
   }
 
+  test("Trace codec should round-trip surface attributes") {
+    val surface = Surface().withValues(
+      z = Seq(Seq(1.0, 2.0), Seq(3.0, 4.0)),
+      colorscale = ColorScale.NamedScale("Viridis"),
+      contours = SurfaceContours().withValues(
+        z = SurfaceContour().withValues(show = true, usecolormap = true, project = Projection().withValues(z = true))
+      ),
+      lighting = Lighting().withValues(specular = 0.5),
+      lightposition = LightPosition().withValues(x = 100.0, y = 100.0, z = 1000.0),
+      opacityscale = OpacityScale.CustomScale(Seq(0.0 -> 1.0, 1.0 -> 0.5))
+    )
+    roundTrip(surface)
+    assertEquals(
+      ujson.read(writeToString[Trace](surface))("opacityscale"),
+      ujson.Arr(ujson.Arr(0.0, 1.0), ujson.Arr(1.0, 0.5))
+    )
+    roundTrip(Surface().withValues(opacityscale = OpacityScale.NamedScale("extremes")))
+  }
+
   test("Trace codec should reject unknown enum values") {
     assert(Try(readFromString[Trace]("""{"y": [1], "textposition": "nowhere"}""")).isFailure)
   }

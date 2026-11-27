@@ -415,7 +415,24 @@ object Histogram {
     zcalendar: Option[Calendar] = None,
     xhoverformat: Option[String] = None,
     yhoverformat: Option[String] = None,
-    zhoverformat: Option[String] = None
+    zhoverformat: Option[String] = None,
+    colorscale: Option[ColorScale] = None,
+    autocolorscale: Option[Boolean] = None,
+    cauto: Option[Boolean] = None,
+    cmin: Option[Double] = None,
+    cmax: Option[Double] = None,
+    cmid: Option[Double] = None,
+    reversescale: Option[Boolean] = None,
+    colorbar: Option[ColorBar] = None,
+    connectgaps: Option[Boolean] = None,
+    contours: Option[SurfaceContours] = None,
+    hidesurface: Option[Boolean] = None,
+    lighting: Option[Lighting] = None,
+    lightposition: Option[LightPosition] = None,
+    opacityscale: Option[OpacityScale] = None,
+    surfacecolor: Option[Sequence] = None,
+    scene: Option[String] = None,
+    coloraxis: Option[String] = None
 ) extends Trace
 
 @data(

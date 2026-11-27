@@ -487,6 +487,24 @@ object JsoniterCodecsInternals {
       def nullValue: ColorScale = null
     }
 
+  private val customOpacityScaleValuesCodec: JsonValueCodec[Seq[(Double, Double)]] =
+    JsonCodecMaker.make
+
+  implicit val opacityScaleCodec: JsonValueCodec[OpacityScale] =
+    new JsonValueCodec[OpacityScale] {
+      def decodeValue(in: JsonReader, default: OpacityScale): OpacityScale =
+        if (peekToken(in) == '"')
+          OpacityScale.NamedScale(in.readString(null))
+        else
+          OpacityScale.CustomScale(customOpacityScaleValuesCodec.decodeValue(in, null))
+      def encodeValue(x: OpacityScale, out: JsonWriter): Unit =
+        x match {
+          case s: OpacityScale.NamedScale  => out.writeVal(s.name)
+          case s: OpacityScale.CustomScale => customOpacityScaleValuesCodec.encodeValue(s.values, out)
+        }
+      def nullValue: OpacityScale = null
+    }
+
   implicit val elementCodec: JsonValueCodec[Element] =
     new JsonValueCodec[Element] {
       def decodeValue(in: JsonReader, default: Element): Element =

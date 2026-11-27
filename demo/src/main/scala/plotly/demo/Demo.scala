@@ -189,7 +189,8 @@ import scalatags.JsDom.tags2
       ("#19d3f3", "#636efa"),
       Seq(
         threed.ClusteredScatterPlot,
-        threed.ConicalHelixLinePlot
+        threed.ConicalHelixLinePlot,
+        threed.SurfaceWithContours
       )
     ),
     Category(
