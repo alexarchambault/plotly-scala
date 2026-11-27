@@ -74,25 +74,25 @@ val y1 = x.map(d => 2.0 * d + util.Random.nextGaussian())
 val y2 = x.map(math.exp)
 
 val plot = Seq(
-  Scatter(x, y1).withValues(name = "Approx twice"),
-  Scatter(x, y2).withValues(name = "Exp")
+  Scatter(x, y1).updated(name = "Approx twice"),
+  Scatter(x, y2).updated(name = "Exp")
 )
 ```
 and plot them with
 
 ```scala
-val lay = Layout().withValues(title = "Curves")
+val lay = Layout().updated(title = "Curves")
 plot.plot("plot", lay)  // attaches to div element with id 'plot'
 ```
 
-`withValues`, available on Scala 2 and Scala 3, returns a copy of a trace or layout element with the fields passed to it updated, and the other ones left unchanged. Unlike `copy`, it takes the values of optional fields as is, without wrapping them in `Some(…)`, and several fields can be set at once, like
+`updated`, available on Scala 2 and Scala 3, returns a copy of a trace or layout element with the fields passed to it updated, and the other ones left unchanged. Unlike `copy`, it takes the values of optional fields as is, without wrapping them in `Some(…)`, and several fields can be set at once, like
 ```scala
-Layout().withValues(title = "Curves", width = 600, height = 400)
+Layout().updated(title = "Curves", width = 600, height = 400)
 ```
 
-Titles (`title` of `Layout` and `Axis`) are `Title` objects, written as `{"text": …}`, as plotly.js >= 3 expects them. A `String` gets converted to a `Title` with that text, like above. Their font or position can be set via `Title.from`, like `Axis().withValues(title = Title.from(text = "Count", font = Font(18)))`.
+Titles (`title` of `Layout` and `Axis`) are `Title` objects, written as `{"text": …}`, as plotly.js >= 3 expects them. A `String` gets converted to a `Title` with that text, like above. Their font or position can be set via `Title.from`, like `Axis().updated(title = Title.from(text = "Count", font = Font(18)))`.
 
-The `with*` setters (`withName`, `withTitle`, …) are deprecated, and only available on Scala 2. Use `withValues` instead. The few classes with no `withValues` method (colors, `Bins`, …) can be updated with `copy`.
+The `with*` setters (`withName`, `withTitle`, …) are deprecated, and only available on Scala 2. Use `updated` instead. The few classes with no `updated` method (colors, `Bins`, …) can be updated with `copy`.
 
 
 ### From Ammonite
@@ -110,9 +110,9 @@ val valuesA = labels.map(_ => util.Random.nextGaussian())
 val valuesB = labels.map(_ => 0.5 + util.Random.nextGaussian())
 
 Seq(
-  Bar(labels, valuesA).withValues(name = "A"),
-  Bar(labels, valuesB).withValues(name = "B")
-).plot("plot.html", Layout().withValues(title = "Level"))
+  Bar(labels, valuesA).updated(name = "A"),
+  Bar(labels, valuesB).updated(name = "B")
+).plot("plot.html", Layout().updated(title = "Level"))
 ```
 
 ### Raw plotly.js figures
@@ -208,7 +208,7 @@ The classes of plotly-scala are defined with the `@data` annotation of [data-cla
     b: Option[String] = None
 )
 ```
-When adding fields to an existing class, put them at the end, with default values, and annotate the first one added in a given version with `@since`, so that binary compatibility is maintained. On Scala 2, data-class generates the binary-compatible overloads and the deprecated `with*` setters (`withA`, `withB`) of these classes. On Scala 3, the data-class compiler plugin generates the binary-compatible overloads, but no setters. On both, the classes with `nullOptionCopyMethodName = "withValues"` in their `@data` annotation also get a `withValues` method. So code shared by Scala 2 and Scala 3 (in `src/main/scala`, or in the tests) shouldn't use the `with*` setters, but `withValues`, or `copy` on the classes that don't have it.
+When adding fields to an existing class, put them at the end, with default values, and annotate the first one added in a given version with `@since`, so that binary compatibility is maintained. On Scala 2, data-class generates the binary-compatible overloads and the deprecated `with*` setters (`withA`, `withB`) of these classes. On Scala 3, the data-class compiler plugin generates the binary-compatible overloads, but no setters. On both, the classes with `nullOptionCopyMethodName = "updated"` in their `@data` annotation also get an `updated` method. So code shared by Scala 2 and Scala 3 (in `src/main/scala`, or in the tests) shouldn't use the `with*` setters, but `updated`, or `copy` on the classes that don't have it.
 
 ## About
 

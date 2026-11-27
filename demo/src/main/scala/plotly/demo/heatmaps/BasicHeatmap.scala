@@ -20,10 +20,10 @@ object BasicHeatmap extends DemoChart {
   }
 
   val data = Seq(
-    Heatmap().withValues(z = z, colorscale = ColorScale.NamedScale("Viridis"))
+    Heatmap().updated(z = z, colorscale = ColorScale.NamedScale("Viridis"))
   )
 
-  val layout = Layout().withValues(title = "Ripples")
+  val layout = Layout().updated(title = "Ripples")
 
   // demo source end
 

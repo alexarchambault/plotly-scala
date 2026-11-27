@@ -32,27 +32,27 @@ object LineAndScatterPlot extends DemoChart {
   val forecastDays = (30 to 40).map(_.toDouble)
 
   val data = Seq(
-    Scatter(days, signups).withValues(
+    Scatter(days, signups).updated(
       name = "Daily sign-ups",
       mode = ScatterMode(ScatterMode.Markers),
-      marker = Marker().withValues(size = 9, color = Color.StringColor("#636efa"), opacity = 0.75)
+      marker = Marker().updated(size = 9, color = Color.StringColor("#636efa"), opacity = 0.75)
     ),
-    Scatter(days, days.map(fit)).withValues(
+    Scatter(days, days.map(fit)).updated(
       name = "Trend",
       mode = ScatterMode(ScatterMode.Lines),
-      line = Line().withValues(color = Color.StringColor("#00cc96"), width = 3.0)
+      line = Line().updated(color = Color.StringColor("#00cc96"), width = 3.0)
     ),
-    Scatter(forecastDays, forecastDays.map(fit)).withValues(
+    Scatter(forecastDays, forecastDays.map(fit)).updated(
       name = "Forecast",
       mode = ScatterMode(ScatterMode.Lines, ScatterMode.Markers),
-      line = Line().withValues(color = Color.StringColor("#ef553b"), dash = Dash.Dot, width = 2.0)
+      line = Line().updated(color = Color.StringColor("#ef553b"), dash = Dash.Dot, width = 2.0)
     )
   )
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Daily Sign-ups, Trend and Forecast",
-    xaxis = Axis().withValues(title = "Day"),
-    yaxis = Axis().withValues(title = "Sign-ups")
+    xaxis = Axis().updated(title = "Day"),
+    yaxis = Axis().updated(title = "Sign-ups")
   )
 
   // demo source end

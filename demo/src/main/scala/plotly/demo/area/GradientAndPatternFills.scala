@@ -21,36 +21,36 @@ object GradientAndPatternFills extends DemoChart {
     hours.map(h => 0.8 + 1.2 * math.exp(-math.pow(h - 8, 2) / 4) + 1.8 * math.exp(-math.pow(h - 19.5, 2) / 6))
 
   val data = Seq(
-    Scatter(hours, produced).withValues(
+    Scatter(hours, produced).updated(
       name = "produced",
       fill = Fill.ToZeroY,
       // the higher the power, the more saturated the fill
-      fillgradient = FillGradient().withValues(
+      fillgradient = FillGradient().updated(
         `type` = GradientType.Vertical,
         colorscale = ColorScale.CustomScale(
           Seq(0.0 -> Color.RGBA(254, 203, 82, 0.1), 1.0 -> Color.RGBA(254, 160, 40, 0.9))
         )
       ),
-      line = Line().withValues(color = Color.RGB(254, 160, 40), shape = LineShape.Spline)
+      line = Line().updated(color = Color.RGB(254, 160, 40), shape = LineShape.Spline)
     ),
-    Scatter(hours, consumed).withValues(
+    Scatter(hours, consumed).updated(
       name = "consumed",
       fill = Fill.ToZeroY,
       fillcolor = Color.RGBA(99, 110, 250, 0.15),
-      fillpattern = FillPattern().withValues(
+      fillpattern = FillPattern().updated(
         shape = PatternShape.DiagonalUp,
         fgcolor = Color.RGB(99, 110, 250),
         size = 8.0,
         solidity = 0.15
       ),
-      line = Line().withValues(color = Color.RGB(99, 110, 250), shape = LineShape.Spline)
+      line = Line().updated(color = Color.RGB(99, 110, 250), shape = LineShape.Spline)
     )
   )
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Solar Power Over a Day",
-    xaxis = Axis().withValues(title = "hour", dtick = 3.0),
-    yaxis = Axis().withValues(title = "kW")
+    xaxis = Axis().updated(title = "hour", dtick = 3.0),
+    yaxis = Axis().updated(title = "kW")
   )
 
   // demo source end

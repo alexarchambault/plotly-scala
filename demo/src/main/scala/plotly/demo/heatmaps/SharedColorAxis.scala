@@ -28,8 +28,8 @@ object SharedColorAxis extends DemoChart {
   // both heatmaps use the color scale and bounds of the same color axis, so that their colors
   // compare, and share its color bar
   val data = Seq(
-    Heatmap(temperatures(8.0, 5.0, 1), hours, days).withValues(name = "Oslo", coloraxis = "coloraxis"),
-    Heatmap(temperatures(24.0, 6.0, 2), hours, days).withValues(
+    Heatmap(temperatures(8.0, 5.0, 1), hours, days).updated(name = "Oslo", coloraxis = "coloraxis"),
+    Heatmap(temperatures(24.0, 6.0, 2), hours, days).updated(
       name = "Seville",
       coloraxis = "coloraxis",
       xaxis = AxisReference.X2,
@@ -37,15 +37,15 @@ object SharedColorAxis extends DemoChart {
     )
   )
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Temperatures in Oslo and Seville",
-    coloraxis = ColorAxis().withValues(
+    coloraxis = ColorAxis().updated(
       colorscale = ColorScale.NamedScale("RdBu"),
-      colorbar = ColorBar().withValues(ticksuffix = "°C", thickness = 15.0)
+      colorbar = ColorBar().updated(ticksuffix = "°C", thickness = 15.0)
     ),
-    grid = Grid().withValues(rows = 1, columns = 2, pattern = Pattern.Independent),
-    xaxis = Axis().withValues(title = "Oslo", dtick = 6.0),
-    xaxis2 = Axis().withValues(title = "Seville", dtick = 6.0)
+    grid = Grid().updated(rows = 1, columns = 2, pattern = Pattern.Independent),
+    xaxis = Axis().updated(title = "Oslo", dtick = 6.0),
+    xaxis2 = Axis().updated(title = "Seville", dtick = 6.0)
   )
 
   // demo source end

@@ -22,10 +22,10 @@ object BasicHistogram extends DemoChart {
 
   val data = Seq(Histogram(heights))
 
-  val layout = new Layout().withValues(
+  val layout = new Layout().updated(
     title = "Heights of 2,000 Adults (simulated)",
-    xaxis = new Axis().withValues(title = "Height (cm)"),
-    yaxis = new Axis().withValues(title = "Count")
+    xaxis = new Axis().updated(title = "Height (cm)"),
+    yaxis = new Axis().updated(title = "Count")
   )
 
   // demo source end

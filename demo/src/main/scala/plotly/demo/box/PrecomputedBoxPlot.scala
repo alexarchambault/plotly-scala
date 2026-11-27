@@ -17,7 +17,7 @@ object PrecomputedBoxPlot extends DemoChart {
   val months = Seq("Jan", "Apr", "Jul", "Oct")
 
   val data = Seq(
-    Box().withValues(
+    Box().updated(
       x = months,
       lowerfence = Seq(-18.0, -2.0, 12.0, -1.0),
       q1 = Seq(-12.0, 3.0, 17.0, 5.0),
@@ -26,13 +26,13 @@ object PrecomputedBoxPlot extends DemoChart {
       upperfence = Seq(2.0, 19.0, 31.0, 20.0),
       mean = Seq(-8.6, 6.4, 20.6, 8.3),
       name = "Montréal",
-      marker = Marker().withValues(color = Color.RGB(99, 110, 250))
+      marker = Marker().updated(color = Color.RGB(99, 110, 250))
     )
   )
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Daily Temperatures in Montréal",
-    yaxis = Axis().withValues(ticksuffix = "°C")
+    yaxis = Axis().updated(ticksuffix = "°C")
   )
 
   // demo source end

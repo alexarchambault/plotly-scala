@@ -44,22 +44,22 @@ object EnergyFlowSankey extends DemoChart {
 
   val data = Seq(
     Sankey(
-      SankeyNode().withValues(
+      SankeyNode().updated(
         label = nodes.map(_._1),
         color = nodes.map(_._2: Color),
         pad = 20.0,
         thickness = 20.0
       ),
-      SankeyLink().withValues(
+      SankeyLink().updated(
         source = flows.map(f => index(f._1)),
         target = flows.map(f => index(f._2)),
         value = flows.map(_._3),
         color = flows.map(f => lighter(nodes(index(f._1))._2): Color)
       )
-    ).withValues(valuesuffix = " TWh")
+    ).updated(valuesuffix = " TWh")
   )
 
-  val layout = Layout().withValues(title = "Energy Flows", font = Font(13))
+  val layout = Layout().updated(title = "Energy Flows", font = Font(13))
 
   // demo source end
 

@@ -26,13 +26,13 @@ object MultiCategoryWaterfallChart extends DemoChart {
     ("Account A", Seq(10.0, 2.0, 3.0, -1.0, 0.0, 1.0, 2.0, -4.0, 0.0)),
     ("Account B", Seq(8.0, 3.0, -2.0, 2.0, 0.0, -1.0, 4.0, 1.0, 0.0))
   ).map { case (name, values) =>
-    Waterfall(Seq(years, quarters), values, measures).withValues(name = name)
+    Waterfall(Seq(years, quarters), values, measures).updated(name = name)
   }
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Balances by Quarter",
     waterfallgroupgap = 0.4,
-    xaxis = Axis().withValues(`type` = AxisType.MultiCategory)
+    xaxis = Axis().updated(`type` = AxisType.MultiCategory)
   )
 
   // demo source end

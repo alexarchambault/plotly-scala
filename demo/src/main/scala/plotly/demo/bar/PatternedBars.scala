@@ -20,11 +20,11 @@ object PatternedBars extends DemoChart {
     ("Product A", Seq(12.0, 15.0, 14.0, 18.0), Color.RGB(99, 110, 250)),
     ("Product B", Seq(8.0, 9.0, 11.0, 13.0), Color.RGB(0, 204, 150))
   ).map { case (name, revenue, color) =>
-    Bar(quarters, revenue).withValues(
+    Bar(quarters, revenue).updated(
       name = name,
-      marker = Marker().withValues(
+      marker = Marker().updated(
         color = color,
-        pattern = FillPattern().withValues(
+        pattern = FillPattern().updated(
           shape =
             Seq[PatternShape](PatternShape.None, PatternShape.None, PatternShape.DiagonalUp, PatternShape.DiagonalUp),
           fillmode = PatternFillMode.Overlay,
@@ -35,10 +35,10 @@ object PatternedBars extends DemoChart {
     )
   }
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Revenue (Q3 and Q4 Forecasted)",
     barmode = BarMode.Group,
-    yaxis = Axis().withValues(tickprefix = "$", ticksuffix = "M")
+    yaxis = Axis().updated(tickprefix = "$", ticksuffix = "M")
   )
 
   // demo source end

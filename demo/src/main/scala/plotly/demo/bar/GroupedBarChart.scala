@@ -17,16 +17,16 @@ object GroupedBarChart extends DemoChart {
 
   // revenue of a fictional company, in thousands of dollars
   val trace1 = Bar(quarters, Seq(420, 465, 440, 580))
-    .withValues(name = "2024", marker = Marker().withValues(color = Color.StringColor("#b4b9fc")))
+    .updated(name = "2024", marker = Marker().updated(color = Color.StringColor("#b4b9fc")))
 
   val trace2 = Bar(quarters, Seq(510, 545, 590, 720))
-    .withValues(name = "2025", marker = Marker().withValues(color = Color.StringColor("#636efa")))
+    .updated(name = "2025", marker = Marker().updated(color = Color.StringColor("#636efa")))
 
   val data = Seq(trace1, trace2)
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Quarterly Revenue",
-    yaxis = Axis().withValues(tickprefix = "$", ticksuffix = "K"),
+    yaxis = Axis().updated(tickprefix = "$", ticksuffix = "K"),
     barmode = BarMode.Group,
     bargroupgap = 0.1
   )

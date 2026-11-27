@@ -31,7 +31,7 @@ object CandlestickChart extends DemoChart {
   val lows  = prices.map { case (open, close) => math.min(open, close) * (1 - 0.012 * random.nextDouble()) }
 
   val data = Seq(
-    Candlestick().withValues(
+    Candlestick().updated(
       x = days,
       open = prices.map(_._1),
       high = highs,
@@ -43,9 +43,9 @@ object CandlestickChart extends DemoChart {
     )
   )
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "ACME Stock Price",
-    yaxis = Axis().withValues(tickprefix = "$")
+    yaxis = Axis().updated(tickprefix = "$")
   )
 
   // demo source end

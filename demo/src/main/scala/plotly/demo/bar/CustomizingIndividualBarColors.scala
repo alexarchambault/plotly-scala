@@ -25,15 +25,15 @@ object CustomizingIndividualBarColors extends DemoChart {
   val colors = usage.map(u => if (u == usage.min) highlightColor else defaultColor)
 
   val trace1 = Bar(features, usage)
-    .withValues(marker = Marker().withValues(color = colors))
+    .updated(marker = Marker().updated(color = colors))
 
   val data = Seq(trace1)
 
   val leastUsed = features(usage.indexOf(usage.min))
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = s"Least Used Feature: $leastUsed",
-    yaxis = Axis().withValues(title = "Weekly active users", ticksuffix = "%")
+    yaxis = Axis().updated(title = "Weekly active users", ticksuffix = "%")
   )
 
   // demo source end

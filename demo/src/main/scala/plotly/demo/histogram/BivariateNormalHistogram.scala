@@ -27,19 +27,19 @@ object BivariateNormalHistogram extends DemoChart {
   }
 
   val data = Seq(
-    Histogram2d(xs, ys).withValues(
+    Histogram2d(xs, ys).updated(
       xbins = Bins(-4.0, 4.0, 0.25),
       ybins = Bins(-4.0, 4.0, 0.25),
       colorscale = ColorScale.NamedScale("Blues"),
       reversescale = true,
-      colorbar = ColorBar().withValues(title = "Points")
+      colorbar = ColorBar().updated(title = "Points")
     )
   )
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Bivariate Normal Distribution",
-    xaxis = Axis().withValues(title = "x"),
-    yaxis = Axis().withValues(title = "y")
+    xaxis = Axis().updated(title = "x"),
+    yaxis = Axis().updated(title = "y")
   )
 
   // demo source end

@@ -9,9 +9,9 @@ object Error {
   @data(
     optionSetters = true,
     nullOptionBuilderMethodName = "from",
-    nullOptionCopyMethodName = "withValues",
+    nullOptionCopyMethodName = "updated",
     deprecatedSetters = true,
-    deprecatedSettersMessage = "Use withValues instead",
+    deprecatedSettersMessage = "Use updated instead",
     deprecatedSettersSince = "0.8.6"
   ) final case class Data(
       array: Seq[Double],
@@ -31,9 +31,9 @@ object Error {
   @data(
     optionSetters = true,
     nullOptionBuilderMethodName = "from",
-    nullOptionCopyMethodName = "withValues",
+    nullOptionCopyMethodName = "updated",
     deprecatedSetters = true,
-    deprecatedSettersMessage = "Use withValues instead",
+    deprecatedSettersMessage = "Use updated instead",
     deprecatedSettersSince = "0.8.6"
   ) final case class Percent(
       value: Double,
@@ -53,9 +53,9 @@ object Error {
   @data(
     optionSetters = true,
     nullOptionBuilderMethodName = "from",
-    nullOptionCopyMethodName = "withValues",
+    nullOptionCopyMethodName = "updated",
     deprecatedSetters = true,
-    deprecatedSettersMessage = "Use withValues instead",
+    deprecatedSettersMessage = "Use updated instead",
     deprecatedSettersSince = "0.8.6"
   ) final case class Constant(
       value: Double,
@@ -75,9 +75,9 @@ object Error {
   @data(
     optionSetters = true,
     nullOptionBuilderMethodName = "from",
-    nullOptionCopyMethodName = "withValues",
+    nullOptionCopyMethodName = "updated",
     deprecatedSetters = true,
-    deprecatedSettersMessage = "Use withValues instead",
+    deprecatedSettersMessage = "Use updated instead",
     deprecatedSettersSince = "0.8.6"
   ) final case class Sqrt(
       visible: Option[Boolean] = None,

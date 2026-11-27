@@ -463,7 +463,7 @@ import scalatags.JsDom.tags2
     }
 
     // Charts are rendered when they're about to scroll into view, rather than all at once on page load
-    val config                      = Config().withValues(responsive = true)
+    val config                      = Config().updated(responsive = true)
     def render(divId: String): Unit =
       for (demo <- plotsToRender.remove(divId)) {
         Console.println(s"Rendering demo ${demo.id}")

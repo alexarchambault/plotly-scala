@@ -11,9 +11,9 @@ sealed abstract class Trace extends Product with Serializable
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Scatter(
     x: Option[Sequence] = None,
@@ -95,9 +95,9 @@ object Scatter {
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Box(
     y: Option[Sequence] = None,
@@ -184,9 +184,9 @@ object Box {
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Image(
     z: Seq[Seq[Seq[Double]]],
@@ -226,9 +226,9 @@ object Box {
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Bar(
     x: Sequence,
@@ -300,9 +300,9 @@ object Box {
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Histogram(
     x: Option[Sequence] = None,
@@ -379,9 +379,9 @@ object Histogram {
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Surface(
     x: Option[Sequence] = None,
@@ -438,9 +438,9 @@ object Histogram {
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Heatmap(
     y: Option[Sequence] = None,
@@ -520,9 +520,9 @@ object Heatmap {
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Candlestick(
     x: Option[Sequence] = None,
@@ -570,9 +570,9 @@ object Heatmap {
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Pie(
     values: Option[Sequence] = None,
@@ -620,9 +620,9 @@ object Heatmap {
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Contour(
     z: Option[Sequence] = None,
@@ -703,9 +703,9 @@ object Contour {
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Histogram2d(
     x: Option[Sequence] = None,
@@ -771,9 +771,9 @@ object Histogram2d {
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Histogram2dContour(
     x: Option[Sequence] = None,
@@ -839,9 +839,9 @@ object Histogram2dContour {
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Violin(
     y: Option[Sequence] = None,
@@ -908,9 +908,9 @@ object Violin {
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Waterfall(
     x: Option[Sequence] = None,
@@ -986,9 +986,9 @@ object Waterfall {
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Funnel(
     x: Option[Sequence] = None,
@@ -1057,9 +1057,9 @@ object Funnel {
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class FunnelArea(
     values: Option[Sequence] = None,
@@ -1109,9 +1109,9 @@ object FunnelArea {
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Ohlc(
     x: Option[Sequence] = None,
@@ -1164,9 +1164,9 @@ object Ohlc {
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Scatter3d(
     x: Option[Sequence] = None,
@@ -1219,9 +1219,9 @@ object Scatter3d {
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class ScatterPolar(
     r: Option[Sequence] = None,
@@ -1278,9 +1278,9 @@ object ScatterPolar {
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class ScatterPolarGl(
     r: Option[Sequence] = None,
@@ -1336,9 +1336,9 @@ object ScatterPolarGl {
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class BarPolar(
     r: Option[Sequence] = None,
@@ -1389,9 +1389,9 @@ object BarPolar {
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Sunburst(
     labels: Option[Sequence] = None,
@@ -1448,9 +1448,9 @@ object Sunburst {
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Treemap(
     labels: Option[Sequence] = None,
@@ -1506,9 +1506,9 @@ object Treemap {
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Icicle(
     labels: Option[Sequence] = None,
@@ -1565,9 +1565,9 @@ object Icicle {
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Sankey(
     node: Option[SankeyNode] = None,

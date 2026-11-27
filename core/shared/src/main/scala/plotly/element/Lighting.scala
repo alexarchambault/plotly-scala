@@ -7,9 +7,9 @@ import dataclass.data
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Lighting(
     ambient: Option[Double] = None,
@@ -23,9 +23,9 @@ import dataclass.data
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class LightPosition(
     x: Option[Double] = None,

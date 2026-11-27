@@ -20,13 +20,13 @@ object BasicLinePlot extends DemoChart {
   val sydney   = Seq(23.5, 23.4, 22.1, 19.6, 16.8, 14.2, 13.4, 14.4, 16.8, 18.9, 20.6, 22.2)
 
   val data = Seq(
-    Scatter(months, montreal).withValues(name = "Montréal"),
-    Scatter(months, sydney).withValues(name = "Sydney")
+    Scatter(months, montreal).updated(name = "Montréal"),
+    Scatter(months, sydney).updated(name = "Sydney")
   )
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Average Monthly Temperature",
-    yaxis = Axis().withValues(title = "Temperature (°C)")
+    yaxis = Axis().updated(title = "Temperature (°C)")
   )
 
   // demo source end

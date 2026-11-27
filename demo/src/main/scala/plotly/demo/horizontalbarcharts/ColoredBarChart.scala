@@ -25,19 +25,19 @@ object ColoredBarChart extends DemoChart {
 
   val data = activities.map { case (name, color, hours) =>
     Bar(hours, teams)
-      .withValues(
+      .updated(
         name = name,
         orientation = Orientation.Horizontal,
-        marker = Marker().withValues(
+        marker = Marker().updated(
           color = Color.StringColor(color),
-          line = Line().withValues(color = Color.StringColor("white"), width = 1.0)
+          line = Line().updated(color = Color.StringColor("white"), width = 1.0)
         )
       )
   }
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "How Each Team Spends Its Week",
-    xaxis = Axis().withValues(title = "Hours"),
+    xaxis = Axis().updated(title = "Hours"),
     barmode = BarMode.Stack
   )
 

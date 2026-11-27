@@ -6,9 +6,9 @@ import dataclass.{data, since}
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class TextFont(
     family: String,

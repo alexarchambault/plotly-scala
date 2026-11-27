@@ -20,24 +20,24 @@ object ContourLinesWithLabels extends DemoChart {
   val z = ys.map(y => xs.map(x => math.sin(x) * math.cos(y)))
 
   val data = Seq(
-    Contour(z, xs, ys).withValues(
+    Contour(z, xs, ys).updated(
       ncontours = 12,
       // only lines, colored by level, and labelled with it
-      contours = Contours().withValues(
+      contours = Contours().updated(
         coloring = ContourColoring.Lines,
         showlabels = true,
         labelfont = Font(12, "Inter, sans-serif", Color.StringColor("gray"))
       ),
-      line = Line().withValues(width = 2.0, smoothing = 0.85),
+      line = Line().updated(width = 2.0, smoothing = 0.85),
       colorscale = ColorScale.NamedScale("RdBu"),
       showscale = false
     )
   )
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "sin(x) cos(y)",
-    xaxis = Axis().withValues(showgrid = false, zeroline = false),
-    yaxis = Axis().withValues(showgrid = false, zeroline = false)
+    xaxis = Axis().updated(showgrid = false, zeroline = false),
+    yaxis = Axis().updated(showgrid = false, zeroline = false)
   )
 
   // demo source end

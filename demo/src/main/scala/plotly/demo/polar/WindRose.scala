@@ -23,20 +23,19 @@ object WindRose extends DemoChart {
   )
 
   val data = speeds.map { case (name, shares, color) =>
-    BarPolar(shares, directions).withValues(
+    BarPolar(shares, directions).updated(
       name = name,
-      marker =
-        Marker().withValues(color = color, line = Line().withValues(color = Color.StringColor("white"), width = 1.0))
+      marker = Marker().updated(color = color, line = Line().updated(color = Color.StringColor("white"), width = 1.0))
     )
   }
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Wind Directions and Speeds",
-    polar = Polar().withValues(
+    polar = Polar().updated(
       barmode = BarMode.Stack,
       bargap = 0.05,
-      radialaxis = RadialAxis().withValues(ticksuffix = "%", angle = 45.0),
-      angularaxis = AngularAxis().withValues(direction = RotationDirection.Clockwise)
+      radialaxis = RadialAxis().updated(ticksuffix = "%", angle = 45.0),
+      angularaxis = AngularAxis().updated(direction = RotationDirection.Clockwise)
     )
   )
 

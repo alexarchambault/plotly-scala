@@ -22,7 +22,7 @@ object CustomColorScaleHeatmap extends DemoChart {
   val coords = (-30 to 30).map(_ / 10.0)
 
   val data = Seq(
-    Heatmap().withValues(
+    Heatmap().updated(
       z = coords.map(y => coords.map(x => peaks(x, y))),
       x = coords,
       y = coords,
@@ -38,7 +38,7 @@ object CustomColorScaleHeatmap extends DemoChart {
     )
   )
 
-  val layout = Layout().withValues(title = "The Peaks Function")
+  val layout = Layout().updated(title = "The Peaks Function")
 
   // demo source end
 

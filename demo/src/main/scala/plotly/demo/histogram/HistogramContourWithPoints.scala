@@ -26,29 +26,29 @@ object HistogramContourWithPoints extends DemoChart {
       .unzip
   }
 
-  val points = Scatter(xs, ys).withValues(
+  val points = Scatter(xs, ys).updated(
     name = "points",
     mode = ScatterMode(ScatterMode.Markers),
-    marker = Marker().withValues(size = 3, color = Color.RGBA(30, 30, 30, 0.35))
+    marker = Marker().updated(size = 3, color = Color.RGBA(30, 30, 30, 0.35))
   )
 
-  val density = Histogram2dContour(xs, ys).withValues(
+  val density = Histogram2dContour(xs, ys).updated(
     name = "density",
     ncontours = 15,
     colorscale = ColorScale.NamedScale("Hot"),
     reversescale = true,
     showscale = false,
-    contours = Contours().withValues(coloring = ContourColoring.Fill)
+    contours = Contours().updated(coloring = ContourColoring.Fill)
   )
 
   // the density below, the points above
   val data = Seq(density, points)
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Density of Two Clusters",
     showlegend = false,
-    xaxis = Axis().withValues(showgrid = false, zeroline = false),
-    yaxis = Axis().withValues(showgrid = false, zeroline = false)
+    xaxis = Axis().updated(showgrid = false, zeroline = false),
+    yaxis = Axis().updated(showgrid = false, zeroline = false)
   )
 
   // demo source end
