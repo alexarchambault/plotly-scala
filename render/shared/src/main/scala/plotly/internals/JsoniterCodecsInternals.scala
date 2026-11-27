@@ -195,6 +195,9 @@ object JsoniterCodecsInternals {
   implicit val sankeyDirectionCodec: JsonValueCodec[SankeyDirection]     = enumCodec[SankeyDirection](_.label)
   implicit val calendarCodec: JsonValueCodec[Calendar]                   = enumCodec[Calendar](_.label)
   implicit val periodAlignmentCodec: JsonValueCodec[PeriodAlignment]     = enumCodec[PeriodAlignment](_.label)
+  implicit val fontStyleCodec: JsonValueCodec[FontStyle]                 = enumCodec[FontStyle](_.label)
+  implicit val fontVariantCodec: JsonValueCodec[FontVariant]             = enumCodec[FontVariant](_.label)
+  implicit val textCaseCodec: JsonValueCodec[TextCase]                   = enumCodec[TextCase](_.label)
   implicit val rotationDirectionCodec: JsonValueCodec[RotationDirection] =
     enumCodec[RotationDirection](_.label)
   implicit val insideTextOrientationCodec: JsonValueCodec[InsideTextOrientation] =
@@ -247,6 +250,26 @@ object JsoniterCodecsInternals {
           case l: ZSmooth.Labeled => zSmoothLabeledCodec.encodeValue(l, out)
         }
       def nullValue: ZSmooth = null
+    }
+
+  implicit val fontWeightCodec: JsonValueCodec[FontWeight] =
+    new JsonValueCodec[FontWeight] {
+      def decodeValue(in: JsonReader, default: FontWeight): FontWeight =
+        if (peekToken(in) == '"')
+          in.readString(null) match {
+            case "normal" => FontWeight.Normal
+            case "bold"   => FontWeight.Bold
+            case other    => in.decodeError(s"Unrecognized font weight: '$other'")
+          }
+        else
+          FontWeight.Value(in.readInt())
+      def encodeValue(x: FontWeight, out: JsonWriter): Unit =
+        x match {
+          case FontWeight.Normal   => out.writeVal("normal")
+          case FontWeight.Bold     => out.writeVal("bold")
+          case FontWeight.Value(w) => out.writeVal(w)
+        }
+      def nullValue: FontWeight = null
     }
 
   implicit val visibleCodec: JsonValueCodec[Visible] =

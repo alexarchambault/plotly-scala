@@ -94,7 +94,7 @@ class SettersTests extends munit.FunSuite {
     classOf[Symbol.Cross]           -> false,
     classOf[Symbol.Diamond]         -> false,
     classOf[Symbol.Square]          -> false,
-    classOf[TextFont]               -> false,
+    classOf[TextFont]               -> true,
     classOf[TextInfo]               -> false
   )
 

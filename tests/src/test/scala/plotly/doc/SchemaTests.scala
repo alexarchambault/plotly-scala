@@ -293,6 +293,13 @@ class SchemaTests extends munit.FunSuite {
     )
   }
 
+  test("Font enums should be exhaustive") {
+    val font = SchemaTests.schema("layout")("layoutAttributes")("font")
+    compareValues(font("style")("values").arr.map(_.str).toSet, Enumerate[FontStyle].apply().map(_.label).toSet)
+    compareValues(font("variant")("values").arr.map(_.str).toSet, Enumerate[FontVariant].apply().map(_.label).toSet)
+    compareValues(font("textcase")("values").arr.map(_.str).toSet, Enumerate[TextCase].apply().map(_.label).toSet)
+  }
+
   test("Text position should be exhaustive") {
     val fromSchema = SchemaTests
       .enumeratedAttributeValues("scatter", "textposition")

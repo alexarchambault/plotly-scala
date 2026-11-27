@@ -325,6 +325,27 @@ class CodecsTests extends munit.FunSuite {
     roundTrip(Scatter(Seq(1.0, 2.0)).withValues(x0 = 10.0, dx = 2.0, orientation = Orientation.Horizontal))
   }
 
+  test("Codecs should round-trip font attributes") {
+    val font = Font(14).withValues(
+      weight = FontWeight.Bold,
+      style = FontStyle.Italic,
+      variant = FontVariant.SmallCaps,
+      textcase = TextCase.Upper,
+      lineposition = "under",
+      shadow = "auto"
+    )
+    val layout = Layout().withValues(font = font)
+    assertEquals(readFromString[Layout](writeToString(layout)), layout)
+    val layout600 = Layout().withValues(font = Font(14).withValues(weight = 600))
+    assertEquals(ujson.read(writeToString(layout600))("font")("weight"), ujson.Num(600))
+    assertEquals(readFromString[Layout](writeToString(layout600)), layout600)
+    roundTrip(
+      Scatter(Seq(1.0)).withValues(
+        textfont = TextFont("Arial").withValues(color = Color.StringColor("red"), size = 12.0, weight = FontWeight.Bold)
+      )
+    )
+  }
+
   test("Trace codec should reject unknown enum values") {
     assert(Try(readFromString[Trace]("""{"y": [1], "textposition": "nowhere"}""")).isFailure)
   }
