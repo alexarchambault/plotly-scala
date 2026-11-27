@@ -7,7 +7,7 @@ import plotly.layout._
 import java.nio.file.Files
 
 import com.github.plokhotnyuk.jsoniter_scala.core.writeToString
-import plotly.internals.Properties
+import plotly.internals.{Properties, RawJson}
 
 import scala.annotation.tailrec
 
@@ -15,6 +15,10 @@ object Plotly {
 
   def jsonSnippet(data: Seq[Trace], layout: Layout, config: Config): String =
     s"""{"data":${writeToString(data)},"layout":${writeToString(layout)},"config":${writeToString(config)}}"""
+
+  // JavaScript string literal for s
+  private def jsString(s: String): String =
+    "'" + s.replace("\\", "\\\\").replace("'", "\\'") + "'"
 
   def jsSnippet(div: String, data: Seq[Trace], layout: Layout, config: Config): String = {
 
@@ -35,13 +39,29 @@ object Plotly {
     b ++= writeToString(layout)
     b ++= ";\n var config = "
     b ++= writeToString(config)
-    b ++= ";\n\n  Plotly.newPlot('"
-    b ++= div.replaceAll("'", "\\'")
-    b ++= "', data, layout, config);\n"
+    b ++= ";\n\n  Plotly.newPlot("
+    b ++= jsString(div)
+    b ++= ", data, layout, config);\n"
 
     b ++= "})();"
 
     b.result()
+  }
+
+  /** JavaScript snippet plotting a "raw" plotly.js figure in the div element with id `div`
+    *
+    * @param figure
+    *   a plotly.js figure, as a JSON object (`{"data": […], "layout": {…}, "config": {…}}`), like
+    *   what `fig.to_json()` returns in plotly-python. It's passed as is to plotly.js, so it can
+    *   use any plotly.js feature, even those that plotly-scala doesn't support yet.
+    */
+  def jsSnippetFromJson(div: String, figure: String): String = {
+    RawJson.checkFigure(figure)
+    s"""(function () {
+       |  var figure = ${RawJson.escapeForScript(figure)};
+       |
+       |  Plotly.newPlot(${jsString(div)}, figure);
+       |})();""".stripMargin
   }
 
   private def readFully(is: InputStream): Array[Byte] = {
@@ -85,6 +105,51 @@ object Plotly {
       useCdn: Boolean = true,
       openInBrowser: Boolean = true,
       addSuffixIfExists: Boolean = true
+  ): File =
+    writeHtml(
+      path,
+      layout.title.flatMap(_.text).getOrElse("plotly chart"),
+      jsSnippet(_, traces, layout, config),
+      useCdn = useCdn,
+      openInBrowser = openInBrowser,
+      addSuffixIfExists = addSuffixIfExists
+    )
+
+  /** Writes an HTML file plotting a "raw" plotly.js figure, and optionally opens it in a browser
+    *
+    * @param figure
+    *   a plotly.js figure, as a JSON object (`{"data": […], "layout": {…}, "config": {…}}`), like
+    *   what `fig.to_json()` returns in plotly-python
+    * @param title
+    *   title of the HTML page
+    */
+  def plotJson(
+      path: String,
+      figure: String,
+      title: String = "plotly chart",
+      useCdn: Boolean = true,
+      openInBrowser: Boolean = true,
+      addSuffixIfExists: Boolean = true
+  ): File =
+    writeHtml(
+      path,
+      title,
+      jsSnippetFromJson(_, figure),
+      useCdn = useCdn,
+      openInBrowser = openInBrowser,
+      addSuffixIfExists = addSuffixIfExists
+    )
+
+  private def htmlEscape(s: String): String =
+    s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+  private def writeHtml(
+      path: String,
+      title: String,
+      jsSnippet: String => String,
+      useCdn: Boolean,
+      openInBrowser: Boolean,
+      addSuffixIfExists: Boolean
   ): File = {
 
     val f0 = new File(path)
@@ -134,13 +199,13 @@ object Plotly {
          |<html>
          |<head>
          |<meta charset="UTF-8">
-         |<title>${layout.title.flatMap(_.text).getOrElse("plotly chart")}</title>
+         |<title>${htmlEscape(title)}</title>
          |$plotlyHeader
          |</head>
          |<body>
          |<div id="$divId"></div>
          |<script>
-         |${jsSnippet(divId, traces, layout, config)}
+         |${jsSnippet(divId)}
          |</script>
          |</body>
          |</html>

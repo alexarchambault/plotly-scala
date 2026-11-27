@@ -3,6 +3,7 @@ package plotly
 import almond.interpreter.api.{DisplayData, OutputHandler}
 
 import scala.util.Random
+import plotly.internals.RawJson
 import plotly.layout._
 
 object Almond {
@@ -101,6 +102,26 @@ object Almond {
       div: String = ""
   )(implicit
       publish: OutputHandler
+  ): String =
+    display(div, Plotly.jsSnippet(_, data, layout, config), Plotly.jsonSnippet(data, layout, config))
+
+  /** Displays a "raw" plotly.js figure, without loading plotly.js beforehand (see [[plotJson]])
+    */
+  def plotJsonJs(
+      figure: String,
+      div: String = ""
+  )(implicit
+      publish: OutputHandler
+  ): String =
+    // jsSnippetFromJson checks that figure is valid JSON, before it's passed to addStringifiedJson
+    display(div, Plotly.jsSnippetFromJson(_, figure), figure)
+
+  private def display(
+      div: String,
+      jsSnippet: String => String,
+      json: String
+  )(implicit
+      publish: OutputHandler
   ): String = {
 
     val (div0, divPart) =
@@ -110,8 +131,7 @@ object Almond {
       } else
         (div, "")
 
-    val baseJs = Plotly.jsSnippet(div0, data, layout, config)
-    val json   = Plotly.jsonSnippet(data, layout, config)
+    val baseJs = jsSnippet(div0)
 
     val js = withPlotly(
       s"""function(Plotly) {
@@ -136,15 +156,7 @@ object Almond {
   def randomDiv(): String =
     almond.display.UpdatableDisplay.generateDiv("plot-")
 
-  def plot(
-      data: Seq[Trace],
-      layout: Layout = Layout(),
-      config: Config = Config(),
-      div: String = ""
-  )(implicit
-      publish: OutputHandler
-  ): String = {
-
+  private def ensureInitialized()(implicit publish: OutputHandler): Unit =
     if (!Internal.initialized)
       Internal.synchronized {
         if (!Internal.initialized) {
@@ -153,7 +165,38 @@ object Almond {
         }
       }
 
+  def plot(
+      data: Seq[Trace],
+      layout: Layout = Layout(),
+      config: Config = Config(),
+      div: String = ""
+  )(implicit
+      publish: OutputHandler
+  ): String = {
+    ensureInitialized()
     plotJs(data, layout, config)
+  }
+
+  /** Plots a "raw" plotly.js figure
+    *
+    * @param figure
+    *   a plotly.js figure, as a JSON object (`{"data": […], "layout": {…}, "config": {…}}`), like
+    *   what `fig.to_json()` returns in plotly-python. It's passed as is to plotly.js, so it can
+    *   use any plotly.js feature, even those that plotly-scala doesn't support yet.
+    * @param div
+    *   id of an existing div element to plot into, or empty to create a new one
+    * @return
+    *   the id of the div element the figure is plotted into
+    */
+  def plotJson(
+      figure: String,
+      div: String = ""
+  )(implicit
+      publish: OutputHandler
+  ): String = {
+    RawJson.checkFigure(figure)
+    ensureInitialized()
+    plotJsonJs(figure, div)
   }
 
   implicit class DataOps(val data: Trace) extends AnyVal {
