@@ -795,6 +795,146 @@ object BarPolar {
     BarPolar().copy(r = Some(r), theta = Some(theta))
 }
 
+/** Hierarchical data as rings of sectors, the root at the center */
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues",
+  deprecatedSetters = true,
+  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersSince = "0.8.6"
+) final case class Sunburst(
+    labels: Option[Sequence] = None,
+    parents: Option[Sequence] = None,
+    values: Option[Sequence] = None,
+    ids: Option[Sequence] = None,
+    branchvalues: Option[BranchValues] = None,
+    // the id of the sector the trace starts from (its root by default)
+    level: Option[String] = None,
+    // the number of levels shown at once
+    maxdepth: Option[Int] = None,
+    name: Option[String] = None,
+    text: Option[OneOrSeq[String]] = None,
+    textinfo: Option[TextInfo] = None,
+    texttemplate: Option[OneOrSeq[String]] = None,
+    textfont: Option[Font] = None,
+    insidetextfont: Option[Font] = None,
+    outsidetextfont: Option[Font] = None,
+    hovertext: Option[OneOrSeq[String]] = None,
+    hoverinfo: Option[HoverInfo] = None,
+    hovertemplate: Option[OneOrSeq[String]] = None,
+    marker: Option[Marker] = None,
+    root: Option[Root] = None,
+    domain: Option[Domain] = None,
+    sort: Option[Boolean] = None,
+    opacity: Option[Double] = None,
+    leaf: Option[Leaf] = None,
+    insidetextorientation: Option[InsideTextOrientation] = None,
+    // the angle the first sector starts at, in degrees
+    rotation: Option[Double] = None
+) extends Trace
+
+object Sunburst {
+  def apply(labels: Sequence, parents: Sequence): Sunburst =
+    Sunburst().copy(labels = Some(labels), parents = Some(parents))
+
+  def apply(labels: Sequence, parents: Sequence, values: Sequence): Sunburst =
+    Sunburst().copy(labels = Some(labels), parents = Some(parents), values = Some(values))
+}
+
+/** Hierarchical data as nested rectangles */
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues",
+  deprecatedSetters = true,
+  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersSince = "0.8.6"
+) final case class Treemap(
+    labels: Option[Sequence] = None,
+    parents: Option[Sequence] = None,
+    values: Option[Sequence] = None,
+    ids: Option[Sequence] = None,
+    branchvalues: Option[BranchValues] = None,
+    // the id of the sector the trace starts from (its root by default)
+    level: Option[String] = None,
+    // the number of levels shown at once
+    maxdepth: Option[Int] = None,
+    name: Option[String] = None,
+    text: Option[OneOrSeq[String]] = None,
+    textinfo: Option[TextInfo] = None,
+    texttemplate: Option[OneOrSeq[String]] = None,
+    textfont: Option[Font] = None,
+    insidetextfont: Option[Font] = None,
+    outsidetextfont: Option[Font] = None,
+    hovertext: Option[OneOrSeq[String]] = None,
+    hoverinfo: Option[HoverInfo] = None,
+    hovertemplate: Option[OneOrSeq[String]] = None,
+    marker: Option[Marker] = None,
+    root: Option[Root] = None,
+    domain: Option[Domain] = None,
+    sort: Option[Boolean] = None,
+    opacity: Option[Double] = None,
+    tiling: Option[Tiling] = None,
+    pathbar: Option[PathBar] = None,
+    textposition: Option[TextPosition] = None
+) extends Trace
+
+object Treemap {
+  def apply(labels: Sequence, parents: Sequence): Treemap =
+    Treemap().copy(labels = Some(labels), parents = Some(parents))
+
+  def apply(labels: Sequence, parents: Sequence, values: Sequence): Treemap =
+    Treemap().copy(labels = Some(labels), parents = Some(parents), values = Some(values))
+}
+
+/** Hierarchical data as adjacent rectangles, each level in a row (or column) of its own */
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues",
+  deprecatedSetters = true,
+  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersSince = "0.8.6"
+) final case class Icicle(
+    labels: Option[Sequence] = None,
+    parents: Option[Sequence] = None,
+    values: Option[Sequence] = None,
+    ids: Option[Sequence] = None,
+    branchvalues: Option[BranchValues] = None,
+    // the id of the sector the trace starts from (its root by default)
+    level: Option[String] = None,
+    // the number of levels shown at once
+    maxdepth: Option[Int] = None,
+    name: Option[String] = None,
+    text: Option[OneOrSeq[String]] = None,
+    textinfo: Option[TextInfo] = None,
+    texttemplate: Option[OneOrSeq[String]] = None,
+    textfont: Option[Font] = None,
+    insidetextfont: Option[Font] = None,
+    outsidetextfont: Option[Font] = None,
+    hovertext: Option[OneOrSeq[String]] = None,
+    hoverinfo: Option[HoverInfo] = None,
+    hovertemplate: Option[OneOrSeq[String]] = None,
+    marker: Option[Marker] = None,
+    root: Option[Root] = None,
+    domain: Option[Domain] = None,
+    sort: Option[Boolean] = None,
+    opacity: Option[Double] = None,
+    leaf: Option[Leaf] = None,
+    tiling: Option[Tiling] = None,
+    pathbar: Option[PathBar] = None,
+    textposition: Option[TextPosition] = None
+) extends Trace
+
+object Icicle {
+  def apply(labels: Sequence, parents: Sequence): Icicle =
+    Icicle().copy(labels = Some(labels), parents = Some(parents))
+
+  def apply(labels: Sequence, parents: Sequence, values: Sequence): Icicle =
+    Icicle().copy(labels = Some(labels), parents = Some(parents), values = Some(values))
+}
+
 object Pie {
   def apply(values: Sequence, labels: Sequence): Pie =
     Pie().copy(values = Some(values), labels = Some(labels))

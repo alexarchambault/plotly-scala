@@ -87,6 +87,11 @@ object Icons {
     """<path d="M12 2c1 3 4 5 4 9s-3 5-3 7 1 3-1 4c-2-1-1-2-1-4s-3-3-3-7 3-6 4-9z"/>"""
   )
 
+  val hierarchical = filled(
+    """<rect x="2" y="2" width="11" height="20" rx="1"/><rect x="14.5" y="2" width="7.5" height="11" rx="1" opacity="0.75"/>""" +
+      """<rect x="14.5" y="14.5" width="7.5" height="7.5" rx="1" opacity="0.5"/>"""
+  )
+
   val polar = stroked(
     """<polygon points="12 2 21.5 8.9 17.9 20.1 6.1 20.1 2.5 8.9"/><polygon points="12 7 17 10 15 16 8 15 7 10"/>"""
   )

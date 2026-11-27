@@ -71,6 +71,7 @@ class SchemaTests extends munit.FunSuite {
     "histogram",
     "histogram2d",
     "histogram2dcontour",
+    "icicle",
     "image",
     "ohlc",
     "pie",
@@ -78,7 +79,9 @@ class SchemaTests extends munit.FunSuite {
     "scatter3d",
     "scatterpolar",
     "scatterpolargl",
+    "sunburst",
     "surface",
+    "treemap",
     "violin",
     "waterfall"
   )
@@ -230,6 +233,17 @@ class SchemaTests extends munit.FunSuite {
     compareValues(
       polar("angularaxis")("direction")("values").arr.map(_.str).toSet,
       Enumerate[RotationDirection].apply().map(_.label).toSet
+    )
+  }
+
+  test("Hierarchical trace enums should be exhaustive") {
+    compareValues(
+      SchemaTests.enumeratedAttributeValues("sunburst", "branchvalues").toSet,
+      Enumerate[BranchValues].apply().map(_.label).toSet
+    )
+    compareValues(
+      SchemaTests.traceAttributes("treemap")("tiling")("packing")("values").arr.map(_.str).toSet,
+      Enumerate[TreemapPacking].apply().map(_.label).toSet
     )
   }
 

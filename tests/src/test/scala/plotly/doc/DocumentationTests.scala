@@ -235,6 +235,8 @@ class DocumentationTests extends munit.FunSuite {
     "basic/bar",
     "basic/horizontal-bar",
     "basic/pie",
+    "basic/sunburst",
+    "basic/treemap",
     "financial/time-series",
     "financial/candlestick-charts",
     "financial/ohlc",
@@ -317,8 +319,18 @@ class DocumentationTests extends munit.FunSuite {
           ""
         )
 
+      // the pages of the documentation (rather than its examples) have a permalink, like the index
+      // pages of each chart type, that list their examples
+      val isPage = rawContent.linesIterator
+        .drop(1)
+        .takeWhile(_ != "---")
+        .exists(
+          _.startsWith("permalink:")
+        )
       if (ignoreReason.nonEmpty)
         println(s"Ignoring $post (${ignoreReason.get})")
+      else if (isPage)
+        println(s"Ignoring $post (documentation page)")
       else if (content.contains("d3.csv"))
         println(s"Ignoring $post (d3.csv not implemented)")
       else {

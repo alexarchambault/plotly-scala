@@ -260,6 +260,29 @@ class CodecsTests extends munit.FunSuite {
     assertEquals(readFromString[Layout](writeToString(layout)), layout)
   }
 
+  test("Trace codec should round-trip hierarchical traces") {
+    val labels   = Seq("root", "a", "b", "a1")
+    val parents  = Seq("", "root", "root", "a")
+    val values   = Seq(10.0, 6.0, 4.0, 6.0)
+    val sunburst = Sunburst(labels, parents, values).withValues(
+      branchvalues = BranchValues.Total,
+      leaf = Leaf().withValues(opacity = 0.6),
+      textinfo = TextInfo(TextInfo.Label, TextInfo.PercentParent)
+    )
+    roundTrip(sunburst)
+    assertEquals(ujson.read(writeToString[Trace](sunburst)).obj.get("type"), Some(ujson.Str("sunburst")))
+    val treemap = Treemap(labels, parents, values).withValues(
+      tiling = Tiling().withValues(packing = TreemapPacking.SliceDice),
+      pathbar = PathBar().withValues(visible = false),
+      root = Root().withValues(color = Color.StringColor("lightgray"))
+    )
+    roundTrip(treemap)
+    assertEquals(ujson.read(writeToString[Trace](treemap)).obj.get("type"), Some(ujson.Str("treemap")))
+    val icicle = Icicle(labels, parents).withValues(tiling = Tiling().withValues(orientation = Orientation.Horizontal))
+    roundTrip(icicle)
+    assertEquals(ujson.read(writeToString[Trace](icicle)).obj.get("type"), Some(ujson.Str("icicle")))
+  }
+
   test("Trace codec should reject unknown enum values") {
     assert(Try(readFromString[Trace]("""{"y": [1], "textposition": "nowhere"}""")).isFailure)
   }

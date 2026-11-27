@@ -141,6 +141,16 @@ import scalatags.JsDom.tags2
       )
     ),
     Category(
+      "Hierarchical Charts",
+      Icons.hierarchical,
+      ("#fecb52", "#ef553b"),
+      Seq(
+        hierarchical.SunburstChart,
+        hierarchical.TreemapChart,
+        hierarchical.IcicleChart
+      )
+    ),
+    Category(
       "Polar Charts",
       Icons.polar,
       ("#ff6692", "#ab63fa"),

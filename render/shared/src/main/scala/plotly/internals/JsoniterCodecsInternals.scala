@@ -186,6 +186,8 @@ object JsoniterCodecsInternals {
   implicit val categoryOrderCodec: JsonValueCodec[CategoryOrder]         = enumCodec[CategoryOrder](_.label)
   implicit val thetaUnitCodec: JsonValueCodec[ThetaUnit]                 = enumCodec[ThetaUnit](_.label)
   implicit val polarGridShapeCodec: JsonValueCodec[PolarGridShape]       = enumCodec[PolarGridShape](_.label)
+  implicit val branchValuesCodec: JsonValueCodec[BranchValues]           = enumCodec[BranchValues](_.label)
+  implicit val treemapPackingCodec: JsonValueCodec[TreemapPacking]       = enumCodec[TreemapPacking](_.label)
   implicit val rotationDirectionCodec: JsonValueCodec[RotationDirection] =
     enumCodec[RotationDirection](_.label)
   implicit val insideTextOrientationCodec: JsonValueCodec[InsideTextOrientation] =

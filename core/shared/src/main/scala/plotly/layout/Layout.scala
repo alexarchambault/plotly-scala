@@ -65,5 +65,13 @@ import plotly.element._
     polar: Option[Polar] = None,
     polar2: Option[Polar] = None,
     polar3: Option[Polar] = None,
-    polar4: Option[Polar] = None
+    polar4: Option[Polar] = None,
+    sunburstcolorway: Option[Seq[Color]] = None,
+    treemapcolorway: Option[Seq[Color]] = None,
+    iciclecolorway: Option[Seq[Color]] = None,
+    extendsunburstcolors: Option[Boolean] = None,
+    extendtreemapcolors: Option[Boolean] = None,
+    extendiciclecolors: Option[Boolean] = None,
+    extendpiecolors: Option[Boolean] = None,
+    extendfunnelareacolors: Option[Boolean] = None
 )
