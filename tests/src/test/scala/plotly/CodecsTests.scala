@@ -487,6 +487,10 @@ class CodecsTests extends munit.FunSuite {
     assertEquals(readFromString[Layout](writeToString(layout)), layout)
   }
 
+  test("Trace codec should round-trip hover labels") {
+    roundTrip(Scatter(Seq(1.0)).withValues(hoverlabel = HoverLabel().withValues(showarrow = false, namelength = -1)))
+  }
+
   test("Trace codec should reject unknown enum values") {
     assert(Try(readFromString[Trace]("""{"y": [1], "textposition": "nowhere"}""")).isFailure)
   }
