@@ -75,6 +75,7 @@ class SchemaTests extends munit.FunSuite {
     "image",
     "ohlc",
     "pie",
+    "sankey",
     "scatter",
     "scatter3d",
     "scatterpolar",
@@ -245,6 +246,27 @@ class SchemaTests extends munit.FunSuite {
       SchemaTests.traceAttributes("treemap")("tiling")("packing")("values").arr.map(_.str).toSet,
       Enumerate[TreemapPacking].apply().map(_.label).toSet
     )
+  }
+
+  test("Sankey enums should be exhaustive") {
+    val sankey = SchemaTests.traceAttributes("sankey")
+    compareValues(
+      sankey("arrangement")("values").arr.map(_.str).toSet,
+      Enumerate[SankeyArrangement].apply().map(_.label).toSet
+    )
+    compareValues(
+      sankey("direction")("values").arr.map(_.str).toSet,
+      Enumerate[SankeyDirection].apply().map(_.label).toSet
+    )
+    compareValues(
+      sankey("node")("align")("values").arr.map(_.str).toSet,
+      Enumerate[SankeyNodeAlign].apply().map(_.label).toSet
+    )
+    for (elem <- Seq("node", "link"))
+      compareValues(
+        sankey(elem)("sort")("values").arr.map(_.str).toSet,
+        Enumerate[SankeySort].apply().map(_.label).toSet
+      )
   }
 
   test("Text position should be exhaustive") {

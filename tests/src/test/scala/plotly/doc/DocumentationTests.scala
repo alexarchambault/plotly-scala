@@ -236,6 +236,7 @@ class DocumentationTests extends munit.FunSuite {
     "basic/horizontal-bar",
     "basic/pie",
     "basic/sunburst",
+    "basic/sankey",
     "basic/treemap",
     "financial/time-series",
     "financial/candlestick-charts",
@@ -331,8 +332,8 @@ class DocumentationTests extends munit.FunSuite {
         println(s"Ignoring $post (${ignoreReason.get})")
       else if (isPage)
         println(s"Ignoring $post (documentation page)")
-      else if (content.contains("d3.csv"))
-        println(s"Ignoring $post (d3.csv not implemented)")
+      else if (content.contains("d3.csv") || content.contains("d3.json"))
+        println(s"Ignoring $post (d3.csv and d3.json not implemented)")
       else {
 
         val lines = content.linesIterator.toVector

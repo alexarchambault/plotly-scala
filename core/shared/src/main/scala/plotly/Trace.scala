@@ -935,6 +935,34 @@ object Icicle {
     Icicle().copy(labels = Some(labels), parents = Some(parents), values = Some(values))
 }
 
+/** Flows between nodes, drawn as links whose widths are proportional to the flows */
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues",
+  deprecatedSetters = true,
+  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersSince = "0.8.6"
+) final case class Sankey(
+    node: Option[SankeyNode] = None,
+    link: Option[SankeyLink] = None,
+    name: Option[String] = None,
+    orientation: Option[Orientation] = None,
+    arrangement: Option[SankeyArrangement] = None,
+    direction: Option[SankeyDirection] = None,
+    valueformat: Option[String] = None,
+    valuesuffix: Option[String] = None,
+    textfont: Option[Font] = None,
+    hoverinfo: Option[HoverInfo] = None,
+    hoverlabel: Option[HoverLabel] = None,
+    domain: Option[Domain] = None
+) extends Trace
+
+object Sankey {
+  def apply(node: SankeyNode, link: SankeyLink): Sankey =
+    Sankey().copy(node = Some(node), link = Some(link))
+}
+
 object Pie {
   def apply(values: Sequence, labels: Sequence): Pie =
     Pie().copy(values = Some(values), labels = Some(labels))

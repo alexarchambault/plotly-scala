@@ -151,6 +151,14 @@ import scalatags.JsDom.tags2
       )
     ),
     Category(
+      "Sankey Diagrams",
+      Icons.sankey,
+      ("#636efa", "#19d3f3"),
+      Seq(
+        sankey.EnergyFlowSankey
+      )
+    ),
+    Category(
       "Polar Charts",
       Icons.polar,
       ("#ff6692", "#ab63fa"),

@@ -92,6 +92,10 @@ object Icons {
       """<rect x="14.5" y="14.5" width="7.5" height="7.5" rx="1" opacity="0.5"/>"""
   )
 
+  val sankey = stroked(
+    """<path d="M3 5h4c6 0 6 9 14 9M3 5h4c5 0 7-1 14-1M3 19h5c5 0 6-5 13-5"/>"""
+  )
+
   val polar = stroked(
     """<polygon points="12 2 21.5 8.9 17.9 20.1 6.1 20.1 2.5 8.9"/><polygon points="12 7 17 10 15 16 8 15 7 10"/>"""
   )

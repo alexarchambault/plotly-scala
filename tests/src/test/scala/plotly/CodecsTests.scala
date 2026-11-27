@@ -283,6 +283,15 @@ class CodecsTests extends munit.FunSuite {
     assertEquals(ujson.read(writeToString[Trace](icicle)).obj.get("type"), Some(ujson.Str("icicle")))
   }
 
+  test("Trace codec should round-trip sankey traces") {
+    val sankey = Sankey(
+      SankeyNode().withValues(label = Seq("a", "b", "c"), pad = 15.0, align = SankeyNodeAlign.Left),
+      SankeyLink().withValues(source = Seq(0, 0), target = Seq(1, 2), value = Seq(3.0, 4.0), sort = SankeySort.Input)
+    ).withValues(arrangement = SankeyArrangement.Snap, valuesuffix = " TWh")
+    roundTrip(sankey)
+    assertEquals(ujson.read(writeToString[Trace](sankey)).obj.get("type"), Some(ujson.Str("sankey")))
+  }
+
   test("Trace codec should reject unknown enum values") {
     assert(Try(readFromString[Trace]("""{"y": [1], "textposition": "nowhere"}""")).isFailure)
   }
