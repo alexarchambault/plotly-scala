@@ -28,7 +28,7 @@ object Versions {
   def scalaJs       = "1.23.0"
   // a snapshot, for the nullOptionBuilderMethodName and nullOptionCopyMethodName @data arguments
   def dataClass     = "0.3.2-SNAPSHOT"
-  def plotlyJs      = "4.1.0"
+  def plotlyJs      = "4.3.0"
   def jsoniterScala = "2.43.0"
 
   // Used by the dev.* commands
