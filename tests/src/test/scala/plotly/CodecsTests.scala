@@ -292,6 +292,25 @@ class CodecsTests extends munit.FunSuite {
     assertEquals(ujson.read(writeToString[Trace](sankey)).obj.get("type"), Some(ujson.Str("sankey")))
   }
 
+  test("Trace codec should read and write the common trace attributes") {
+    def scatter(visible: Visible) = Scatter(Seq(1.0, 2.0)).withValues(
+      visible = visible,
+      legendgroup = "group",
+      legendgrouptitle = LegendGroupTitle().withValues(text = "Group"),
+      legendrank = 2.0,
+      ids = Seq("a", "b"),
+      customdata = Seq(3.0, 4.0),
+      meta = "some meta",
+      uid = "id",
+      zorder = 1
+    )
+    for (visible <- Seq[Visible](Visible.True, Visible.False, Visible.LegendOnly))
+      roundTrip(scatter(visible))
+    assertEquals(ujson.read(writeToString[Trace](scatter(Visible.LegendOnly)))("visible"), ujson.Str("legendonly"))
+    assertEquals(ujson.read(writeToString[Trace](scatter(false)))("visible"), ujson.False)
+    assert(Try(readFromString[Trace]("""{"y": [1], "visible": "maybe"}""")).isFailure)
+  }
+
   test("Trace codec should reject unknown enum values") {
     assert(Try(readFromString[Trace]("""{"y": [1], "textposition": "nowhere"}""")).isFailure)
   }

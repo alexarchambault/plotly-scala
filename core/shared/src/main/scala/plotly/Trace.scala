@@ -38,7 +38,27 @@ sealed abstract class Trace extends Product with Serializable
     stackgroup: Option[String] = None,
     groupnorm: Option[GroupNorm] = None,
     @since("0.8.2")
-    hovertemplate: Option[OneOrSeq[String]] = None
+    hovertemplate: Option[OneOrSeq[String]] = None,
+    @since("0.8.6")
+    visible: Option[Visible] = None,
+    legend: Option[String] = None,
+    legendgroup: Option[String] = None,
+    legendrank: Option[Double] = None,
+    legendwidth: Option[Double] = None,
+    legendgrouptitle: Option[LegendGroupTitle] = None,
+    uid: Option[String] = None,
+    ids: Option[Seq[String]] = None,
+    customdata: Option[Sequence] = None,
+    meta: Option[Element] = None,
+    uirevision: Option[Element] = None,
+    opacity: Option[Double] = None,
+    hovertemplatefallback: Option[Element] = None,
+    hovertext: Option[OneOrSeq[String]] = None,
+    hoverlabel: Option[HoverLabel] = None,
+    texttemplate: Option[OneOrSeq[String]] = None,
+    texttemplatefallback: Option[Element] = None,
+    zorder: Option[Int] = None,
+    selectedpoints: Option[Seq[Int]] = None
 ) extends Trace
 
 object Scatter {
@@ -71,7 +91,27 @@ object Scatter {
     line: Option[Line] = None,
     showlegend: Option[Boolean] = None,
     @since("0.8.2")
-    hovertemplate: Option[OneOrSeq[String]] = None
+    hovertemplate: Option[OneOrSeq[String]] = None,
+    @since("0.8.6")
+    visible: Option[Visible] = None,
+    legend: Option[String] = None,
+    legendgroup: Option[String] = None,
+    legendrank: Option[Double] = None,
+    legendwidth: Option[Double] = None,
+    legendgrouptitle: Option[LegendGroupTitle] = None,
+    uid: Option[String] = None,
+    ids: Option[Seq[String]] = None,
+    customdata: Option[Sequence] = None,
+    meta: Option[Element] = None,
+    uirevision: Option[Element] = None,
+    opacity: Option[Double] = None,
+    hoverinfo: Option[HoverInfo] = None,
+    hovertemplatefallback: Option[Element] = None,
+    hovertext: Option[OneOrSeq[String]] = None,
+    hoverlabel: Option[HoverLabel] = None,
+    text: Option[OneOrSeq[String]] = None,
+    zorder: Option[Int] = None,
+    selectedpoints: Option[Seq[Int]] = None
 ) extends Trace
 
 object Box {
@@ -109,7 +149,18 @@ object Box {
     colormodel: Option[ColorModel] = None,
     zmax: Option[Seq[Double]] = None,
     zmin: Option[Seq[Double]] = None,
-    hoverlabel: Option[HoverLabel] = None
+    hoverlabel: Option[HoverLabel] = None,
+    @since("0.8.6")
+    visible: Option[Visible] = None,
+    legend: Option[String] = None,
+    legendrank: Option[Double] = None,
+    legendwidth: Option[Double] = None,
+    legendgrouptitle: Option[LegendGroupTitle] = None,
+    uid: Option[String] = None,
+    uirevision: Option[Element] = None,
+    hovertemplatefallback: Option[Element] = None,
+    hovertext: Option[Sequence] = None,
+    zorder: Option[Int] = None
 ) extends Trace
 
 @data(
@@ -137,7 +188,26 @@ object Box {
     width: Option[OneOrSeq[Double]] = None,
     base: Option[OneOrSeq[Double]] = None,
     @since("0.8.2")
-    hovertemplate: Option[OneOrSeq[String]] = None
+    hovertemplate: Option[OneOrSeq[String]] = None,
+    @since("0.8.6")
+    visible: Option[Visible] = None,
+    legend: Option[String] = None,
+    legendgroup: Option[String] = None,
+    legendrank: Option[Double] = None,
+    legendwidth: Option[Double] = None,
+    legendgrouptitle: Option[LegendGroupTitle] = None,
+    uid: Option[String] = None,
+    ids: Option[Seq[String]] = None,
+    customdata: Option[Sequence] = None,
+    meta: Option[Element] = None,
+    uirevision: Option[Element] = None,
+    hovertemplatefallback: Option[Element] = None,
+    hovertext: Option[OneOrSeq[String]] = None,
+    hoverlabel: Option[HoverLabel] = None,
+    texttemplate: Option[OneOrSeq[String]] = None,
+    texttemplatefallback: Option[Element] = None,
+    zorder: Option[Int] = None,
+    selectedpoints: Option[Seq[Int]] = None
 ) extends Trace
 
 @data(
@@ -163,7 +233,27 @@ object Box {
     hovertemplate: Option[OneOrSeq[String]] = None,
     @since("0.8.5")
     yaxis: Option[String] = None,
-    hovertext: Option[OneOrSeq[String]] = None
+    hovertext: Option[OneOrSeq[String]] = None,
+    @since("0.8.6")
+    visible: Option[Visible] = None,
+    legend: Option[String] = None,
+    legendgroup: Option[String] = None,
+    legendrank: Option[Double] = None,
+    legendwidth: Option[Double] = None,
+    legendgrouptitle: Option[LegendGroupTitle] = None,
+    uid: Option[String] = None,
+    ids: Option[Seq[String]] = None,
+    customdata: Option[Sequence] = None,
+    meta: Option[Element] = None,
+    uirevision: Option[Element] = None,
+    hoverinfo: Option[HoverInfo] = None,
+    hovertemplatefallback: Option[Element] = None,
+    hoverlabel: Option[HoverLabel] = None,
+    text: Option[OneOrSeq[String]] = None,
+    texttemplate: Option[String] = None,
+    texttemplatefallback: Option[Element] = None,
+    zorder: Option[Int] = None,
+    selectedpoints: Option[Seq[Int]] = None
 ) extends Trace
 
 object Histogram {
@@ -188,7 +278,26 @@ object Histogram {
     showscale: Option[Boolean] = None,
     opacity: Option[Double] = None,
     @since("0.8.2")
-    hovertemplate: Option[OneOrSeq[String]] = None
+    hovertemplate: Option[OneOrSeq[String]] = None,
+    @since("0.8.6")
+    visible: Option[Visible] = None,
+    legend: Option[String] = None,
+    legendgroup: Option[String] = None,
+    legendrank: Option[Double] = None,
+    legendwidth: Option[Double] = None,
+    legendgrouptitle: Option[LegendGroupTitle] = None,
+    uid: Option[String] = None,
+    ids: Option[Seq[String]] = None,
+    customdata: Option[Sequence] = None,
+    meta: Option[Element] = None,
+    uirevision: Option[Element] = None,
+    name: Option[String] = None,
+    showlegend: Option[Boolean] = None,
+    hoverinfo: Option[HoverInfo] = None,
+    hovertemplatefallback: Option[Element] = None,
+    hovertext: Option[OneOrSeq[String]] = None,
+    hoverlabel: Option[HoverLabel] = None,
+    text: Option[OneOrSeq[String]] = None
 ) extends Trace
 
 @data(
@@ -220,7 +329,28 @@ object Histogram {
     xgap: Option[Double] = None,
     ygap: Option[Double] = None,
     xaxis: Option[AxisReference] = None,
-    yaxis: Option[AxisReference] = None
+    yaxis: Option[AxisReference] = None,
+    visible: Option[Visible] = None,
+    legend: Option[String] = None,
+    legendgroup: Option[String] = None,
+    legendrank: Option[Double] = None,
+    legendwidth: Option[Double] = None,
+    legendgrouptitle: Option[LegendGroupTitle] = None,
+    uid: Option[String] = None,
+    ids: Option[Seq[String]] = None,
+    customdata: Option[Sequence] = None,
+    meta: Option[Element] = None,
+    uirevision: Option[Element] = None,
+    showlegend: Option[Boolean] = None,
+    opacity: Option[Double] = None,
+    hoverinfo: Option[HoverInfo] = None,
+    hovertemplatefallback: Option[Element] = None,
+    hovertext: Option[Sequence] = None,
+    hoverlabel: Option[HoverLabel] = None,
+    text: Option[Sequence] = None,
+    texttemplate: Option[String] = None,
+    texttemplatefallback: Option[Element] = None,
+    zorder: Option[Int] = None
 ) extends Trace
 
 object Heatmap {
@@ -248,7 +378,30 @@ object Heatmap {
     increasing: Option[Marker] = None,
     line: Option[Marker] = None,
     xaxis: Option[AxisReference] = None,
-    yaxis: Option[AxisReference] = None
+    yaxis: Option[AxisReference] = None,
+    @since("0.8.6")
+    visible: Option[Visible] = None,
+    legend: Option[String] = None,
+    legendgroup: Option[String] = None,
+    legendrank: Option[Double] = None,
+    legendwidth: Option[Double] = None,
+    legendgrouptitle: Option[LegendGroupTitle] = None,
+    uid: Option[String] = None,
+    ids: Option[Seq[String]] = None,
+    customdata: Option[Sequence] = None,
+    meta: Option[Element] = None,
+    uirevision: Option[Element] = None,
+    name: Option[String] = None,
+    showlegend: Option[Boolean] = None,
+    opacity: Option[Double] = None,
+    hoverinfo: Option[HoverInfo] = None,
+    hovertemplate: Option[OneOrSeq[String]] = None,
+    hovertemplatefallback: Option[Element] = None,
+    hovertext: Option[OneOrSeq[String]] = None,
+    hoverlabel: Option[HoverLabel] = None,
+    text: Option[OneOrSeq[String]] = None,
+    zorder: Option[Int] = None,
+    selectedpoints: Option[Seq[Int]] = None
 ) extends Trace
 
 @data(
@@ -285,7 +438,20 @@ object Heatmap {
     legendgroup: Option[String] = None,
     opacity: Option[Double] = None,
     scalegroup: Option[String] = None,
-    title: Option[Title] = None
+    title: Option[Title] = None,
+    visible: Option[Visible] = None,
+    legend: Option[OneOrSeq[String]] = None,
+    legendrank: Option[OneOrSeq[Double]] = None,
+    legendwidth: Option[Double] = None,
+    legendgrouptitle: Option[LegendGroupTitle] = None,
+    uid: Option[String] = None,
+    ids: Option[Seq[String]] = None,
+    customdata: Option[Sequence] = None,
+    meta: Option[Element] = None,
+    uirevision: Option[Element] = None,
+    hovertemplatefallback: Option[Element] = None,
+    hoverlabel: Option[HoverLabel] = None,
+    texttemplatefallback: Option[Element] = None
 ) extends Trace
 
 @data(
@@ -327,7 +493,24 @@ object Heatmap {
     opacity: Option[Double] = None,
     showlegend: Option[Boolean] = None,
     xaxis: Option[AxisReference] = None,
-    yaxis: Option[AxisReference] = None
+    yaxis: Option[AxisReference] = None,
+    visible: Option[Visible] = None,
+    legend: Option[String] = None,
+    legendgroup: Option[String] = None,
+    legendrank: Option[Double] = None,
+    legendwidth: Option[Double] = None,
+    legendgrouptitle: Option[LegendGroupTitle] = None,
+    uid: Option[String] = None,
+    ids: Option[Seq[String]] = None,
+    customdata: Option[Sequence] = None,
+    meta: Option[Element] = None,
+    uirevision: Option[Element] = None,
+    hovertemplatefallback: Option[Element] = None,
+    hovertext: Option[Sequence] = None,
+    hoverlabel: Option[HoverLabel] = None,
+    texttemplate: Option[String] = None,
+    texttemplatefallback: Option[Element] = None,
+    zorder: Option[Int] = None
 ) extends Trace
 
 object Contour {
@@ -376,7 +559,21 @@ object Contour {
     opacity: Option[Double] = None,
     showlegend: Option[Boolean] = None,
     xaxis: Option[AxisReference] = None,
-    yaxis: Option[AxisReference] = None
+    yaxis: Option[AxisReference] = None,
+    visible: Option[Visible] = None,
+    legend: Option[String] = None,
+    legendgroup: Option[String] = None,
+    legendrank: Option[Double] = None,
+    legendwidth: Option[Double] = None,
+    legendgrouptitle: Option[LegendGroupTitle] = None,
+    uid: Option[String] = None,
+    ids: Option[Seq[String]] = None,
+    customdata: Option[Sequence] = None,
+    meta: Option[Element] = None,
+    uirevision: Option[Element] = None,
+    hovertemplatefallback: Option[Element] = None,
+    texttemplate: Option[String] = None,
+    texttemplatefallback: Option[Element] = None
 ) extends Trace
 
 object Histogram2d {
@@ -423,7 +620,21 @@ object Histogram2d {
     opacity: Option[Double] = None,
     showlegend: Option[Boolean] = None,
     xaxis: Option[AxisReference] = None,
-    yaxis: Option[AxisReference] = None
+    yaxis: Option[AxisReference] = None,
+    visible: Option[Visible] = None,
+    legend: Option[String] = None,
+    legendgroup: Option[String] = None,
+    legendrank: Option[Double] = None,
+    legendwidth: Option[Double] = None,
+    legendgrouptitle: Option[LegendGroupTitle] = None,
+    uid: Option[String] = None,
+    ids: Option[Seq[String]] = None,
+    customdata: Option[Sequence] = None,
+    meta: Option[Element] = None,
+    uirevision: Option[Element] = None,
+    hovertemplatefallback: Option[Element] = None,
+    texttemplate: Option[String] = None,
+    texttemplatefallback: Option[Element] = None
 ) extends Trace
 
 object Histogram2dContour {
@@ -469,7 +680,22 @@ object Histogram2dContour {
     offsetgroup: Option[String] = None,
     alignmentgroup: Option[String] = None,
     xaxis: Option[AxisReference] = None,
-    yaxis: Option[AxisReference] = None
+    yaxis: Option[AxisReference] = None,
+    visible: Option[Visible] = None,
+    legend: Option[String] = None,
+    legendrank: Option[Double] = None,
+    legendwidth: Option[Double] = None,
+    legendgrouptitle: Option[LegendGroupTitle] = None,
+    uid: Option[String] = None,
+    ids: Option[Seq[String]] = None,
+    customdata: Option[Sequence] = None,
+    meta: Option[Element] = None,
+    uirevision: Option[Element] = None,
+    hovertemplatefallback: Option[Element] = None,
+    hovertext: Option[OneOrSeq[String]] = None,
+    hoverlabel: Option[HoverLabel] = None,
+    zorder: Option[Int] = None,
+    selectedpoints: Option[Seq[Int]] = None
 ) extends Trace
 
 object Violin {
@@ -516,7 +742,22 @@ object Violin {
     showlegend: Option[Boolean] = None,
     legendgroup: Option[String] = None,
     xaxis: Option[AxisReference] = None,
-    yaxis: Option[AxisReference] = None
+    yaxis: Option[AxisReference] = None,
+    visible: Option[Visible] = None,
+    legend: Option[String] = None,
+    legendrank: Option[Double] = None,
+    legendwidth: Option[Double] = None,
+    legendgrouptitle: Option[LegendGroupTitle] = None,
+    uid: Option[String] = None,
+    ids: Option[Seq[String]] = None,
+    customdata: Option[Sequence] = None,
+    meta: Option[Element] = None,
+    uirevision: Option[Element] = None,
+    hovertemplatefallback: Option[Element] = None,
+    hoverlabel: Option[HoverLabel] = None,
+    texttemplatefallback: Option[Element] = None,
+    zorder: Option[Int] = None,
+    selectedpoints: Option[Seq[Int]] = None
 ) extends Trace
 
 object Waterfall {
@@ -559,7 +800,22 @@ object Waterfall {
     showlegend: Option[Boolean] = None,
     legendgroup: Option[String] = None,
     xaxis: Option[AxisReference] = None,
-    yaxis: Option[AxisReference] = None
+    yaxis: Option[AxisReference] = None,
+    visible: Option[Visible] = None,
+    legend: Option[String] = None,
+    legendrank: Option[Double] = None,
+    legendwidth: Option[Double] = None,
+    legendgrouptitle: Option[LegendGroupTitle] = None,
+    uid: Option[String] = None,
+    ids: Option[Seq[String]] = None,
+    customdata: Option[Sequence] = None,
+    meta: Option[Element] = None,
+    uirevision: Option[Element] = None,
+    hovertemplatefallback: Option[Element] = None,
+    hoverlabel: Option[HoverLabel] = None,
+    texttemplatefallback: Option[Element] = None,
+    zorder: Option[Int] = None,
+    selectedpoints: Option[Seq[Int]] = None
 ) extends Trace
 
 object Funnel {
@@ -595,7 +851,20 @@ object Funnel {
     scalegroup: Option[String] = None,
     opacity: Option[Double] = None,
     showlegend: Option[Boolean] = None,
-    legendgroup: Option[String] = None
+    legendgroup: Option[String] = None,
+    visible: Option[Visible] = None,
+    legend: Option[String] = None,
+    legendrank: Option[Double] = None,
+    legendwidth: Option[Double] = None,
+    legendgrouptitle: Option[LegendGroupTitle] = None,
+    uid: Option[String] = None,
+    ids: Option[Seq[String]] = None,
+    customdata: Option[Sequence] = None,
+    meta: Option[Element] = None,
+    uirevision: Option[Element] = None,
+    hovertemplatefallback: Option[Element] = None,
+    hoverlabel: Option[HoverLabel] = None,
+    texttemplatefallback: Option[Element] = None
 ) extends Trace
 
 object FunnelArea {
@@ -633,7 +902,21 @@ object FunnelArea {
     showlegend: Option[Boolean] = None,
     legendgroup: Option[String] = None,
     xaxis: Option[AxisReference] = None,
-    yaxis: Option[AxisReference] = None
+    yaxis: Option[AxisReference] = None,
+    visible: Option[Visible] = None,
+    legend: Option[String] = None,
+    legendrank: Option[Double] = None,
+    legendwidth: Option[Double] = None,
+    legendgrouptitle: Option[LegendGroupTitle] = None,
+    uid: Option[String] = None,
+    ids: Option[Seq[String]] = None,
+    customdata: Option[Sequence] = None,
+    meta: Option[Element] = None,
+    uirevision: Option[Element] = None,
+    hovertemplatefallback: Option[Element] = None,
+    hoverlabel: Option[HoverLabel] = None,
+    zorder: Option[Int] = None,
+    selectedpoints: Option[Seq[Int]] = None
 ) extends Trace
 
 object Ohlc {
@@ -667,7 +950,21 @@ object Ohlc {
     showlegend: Option[Boolean] = None,
     legendgroup: Option[String] = None,
     // the 3D scene the trace is drawn in, like "scene" (the default) or "scene2"
-    scene: Option[String] = None
+    scene: Option[String] = None,
+    visible: Option[Visible] = None,
+    legend: Option[String] = None,
+    legendrank: Option[Double] = None,
+    legendwidth: Option[Double] = None,
+    legendgrouptitle: Option[LegendGroupTitle] = None,
+    uid: Option[String] = None,
+    ids: Option[Seq[String]] = None,
+    customdata: Option[Sequence] = None,
+    meta: Option[Element] = None,
+    uirevision: Option[Element] = None,
+    hovertemplatefallback: Option[Element] = None,
+    hoverlabel: Option[HoverLabel] = None,
+    texttemplate: Option[OneOrSeq[String]] = None,
+    texttemplatefallback: Option[Element] = None
 ) extends Trace
 
 object Scatter3d {
@@ -708,7 +1005,22 @@ object Scatter3d {
     showlegend: Option[Boolean] = None,
     legendgroup: Option[String] = None,
     // the polar subplot the trace is drawn in, like "polar" (the default) or "polar2"
-    subplot: Option[String] = None
+    subplot: Option[String] = None,
+    visible: Option[Visible] = None,
+    legend: Option[String] = None,
+    legendrank: Option[Double] = None,
+    legendwidth: Option[Double] = None,
+    legendgrouptitle: Option[LegendGroupTitle] = None,
+    uid: Option[String] = None,
+    ids: Option[Seq[String]] = None,
+    customdata: Option[Sequence] = None,
+    meta: Option[Element] = None,
+    uirevision: Option[Element] = None,
+    hovertemplatefallback: Option[Element] = None,
+    hoverlabel: Option[HoverLabel] = None,
+    texttemplate: Option[OneOrSeq[String]] = None,
+    texttemplatefallback: Option[Element] = None,
+    selectedpoints: Option[Seq[Int]] = None
 ) extends Trace
 
 object ScatterPolar {
@@ -749,7 +1061,22 @@ object ScatterPolar {
     showlegend: Option[Boolean] = None,
     legendgroup: Option[String] = None,
     // the polar subplot the trace is drawn in, like "polar" (the default) or "polar2"
-    subplot: Option[String] = None
+    subplot: Option[String] = None,
+    visible: Option[Visible] = None,
+    legend: Option[String] = None,
+    legendrank: Option[Double] = None,
+    legendwidth: Option[Double] = None,
+    legendgrouptitle: Option[LegendGroupTitle] = None,
+    uid: Option[String] = None,
+    ids: Option[Seq[String]] = None,
+    customdata: Option[Sequence] = None,
+    meta: Option[Element] = None,
+    uirevision: Option[Element] = None,
+    hovertemplatefallback: Option[Element] = None,
+    hoverlabel: Option[HoverLabel] = None,
+    texttemplate: Option[OneOrSeq[String]] = None,
+    texttemplatefallback: Option[Element] = None,
+    selectedpoints: Option[Seq[Int]] = None
 ) extends Trace
 
 object ScatterPolarGl {
@@ -787,7 +1114,20 @@ object ScatterPolarGl {
     showlegend: Option[Boolean] = None,
     legendgroup: Option[String] = None,
     // the polar subplot the trace is drawn in, like "polar" (the default) or "polar2"
-    subplot: Option[String] = None
+    subplot: Option[String] = None,
+    visible: Option[Visible] = None,
+    legend: Option[String] = None,
+    legendrank: Option[Double] = None,
+    legendwidth: Option[Double] = None,
+    legendgrouptitle: Option[LegendGroupTitle] = None,
+    uid: Option[String] = None,
+    ids: Option[Seq[String]] = None,
+    customdata: Option[Sequence] = None,
+    meta: Option[Element] = None,
+    uirevision: Option[Element] = None,
+    hovertemplatefallback: Option[Element] = None,
+    hoverlabel: Option[HoverLabel] = None,
+    selectedpoints: Option[Seq[Int]] = None
 ) extends Trace
 
 object BarPolar {
@@ -831,7 +1171,19 @@ object BarPolar {
     leaf: Option[Leaf] = None,
     insidetextorientation: Option[InsideTextOrientation] = None,
     // the angle the first sector starts at, in degrees
-    rotation: Option[Double] = None
+    rotation: Option[Double] = None,
+    visible: Option[Visible] = None,
+    legend: Option[String] = None,
+    legendrank: Option[Double] = None,
+    legendwidth: Option[Double] = None,
+    legendgrouptitle: Option[LegendGroupTitle] = None,
+    uid: Option[String] = None,
+    customdata: Option[Sequence] = None,
+    meta: Option[Element] = None,
+    uirevision: Option[Element] = None,
+    hovertemplatefallback: Option[Element] = None,
+    hoverlabel: Option[HoverLabel] = None,
+    texttemplatefallback: Option[Element] = None
 ) extends Trace
 
 object Sunburst {
@@ -877,7 +1229,19 @@ object Sunburst {
     opacity: Option[Double] = None,
     tiling: Option[Tiling] = None,
     pathbar: Option[PathBar] = None,
-    textposition: Option[TextPosition] = None
+    textposition: Option[TextPosition] = None,
+    visible: Option[Visible] = None,
+    legend: Option[String] = None,
+    legendrank: Option[Double] = None,
+    legendwidth: Option[Double] = None,
+    legendgrouptitle: Option[LegendGroupTitle] = None,
+    uid: Option[String] = None,
+    customdata: Option[Sequence] = None,
+    meta: Option[Element] = None,
+    uirevision: Option[Element] = None,
+    hovertemplatefallback: Option[Element] = None,
+    hoverlabel: Option[HoverLabel] = None,
+    texttemplatefallback: Option[Element] = None
 ) extends Trace
 
 object Treemap {
@@ -924,7 +1288,19 @@ object Treemap {
     leaf: Option[Leaf] = None,
     tiling: Option[Tiling] = None,
     pathbar: Option[PathBar] = None,
-    textposition: Option[TextPosition] = None
+    textposition: Option[TextPosition] = None,
+    visible: Option[Visible] = None,
+    legend: Option[String] = None,
+    legendrank: Option[Double] = None,
+    legendwidth: Option[Double] = None,
+    legendgrouptitle: Option[LegendGroupTitle] = None,
+    uid: Option[String] = None,
+    customdata: Option[Sequence] = None,
+    meta: Option[Element] = None,
+    uirevision: Option[Element] = None,
+    hovertemplatefallback: Option[Element] = None,
+    hoverlabel: Option[HoverLabel] = None,
+    texttemplatefallback: Option[Element] = None
 ) extends Trace
 
 object Icicle {
@@ -955,7 +1331,18 @@ object Icicle {
     textfont: Option[Font] = None,
     hoverinfo: Option[HoverInfo] = None,
     hoverlabel: Option[HoverLabel] = None,
-    domain: Option[Domain] = None
+    domain: Option[Domain] = None,
+    visible: Option[Visible] = None,
+    legend: Option[String] = None,
+    legendrank: Option[Double] = None,
+    legendwidth: Option[Double] = None,
+    legendgrouptitle: Option[LegendGroupTitle] = None,
+    uid: Option[String] = None,
+    ids: Option[Seq[String]] = None,
+    customdata: Option[Sequence] = None,
+    meta: Option[Element] = None,
+    uirevision: Option[Element] = None,
+    selectedpoints: Option[Seq[Int]] = None
 ) extends Trace
 
 object Sankey {

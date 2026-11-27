@@ -247,6 +247,25 @@ object JsoniterCodecsInternals {
       def nullValue: ZSmooth = null
     }
 
+  implicit val visibleCodec: JsonValueCodec[Visible] =
+    new JsonValueCodec[Visible] {
+      def decodeValue(in: JsonReader, default: Visible): Visible =
+        peekToken(in) match {
+          case 't' | 'f' => Visible.fromBoolean(in.readBoolean())
+          case _         =>
+            val s = in.readString(null)
+            if (s == "legendonly") Visible.LegendOnly
+            else in.decodeError(s"Unrecognized visible value: '$s'")
+        }
+      def encodeValue(x: Visible, out: JsonWriter): Unit =
+        x match {
+          case Visible.True       => out.writeVal(true)
+          case Visible.False      => out.writeVal(false)
+          case Visible.LegendOnly => out.writeVal("legendonly")
+        }
+      def nullValue: Visible = null
+    }
+
   implicit val boxPointsCodec: JsonValueCodec[BoxPoints] =
     new JsonValueCodec[BoxPoints] {
       def decodeValue(in: JsonReader, default: BoxPoints): BoxPoints =
