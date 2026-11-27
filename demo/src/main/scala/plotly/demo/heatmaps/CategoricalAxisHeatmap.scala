@@ -35,7 +35,7 @@ object CategoricalAxisHeatmap extends DemoChart {
   }
 
   val data = Seq(
-    Heatmap().withValues(
+    Heatmap().updated(
       z = visits.reverse, // rows are drawn from the bottom up
       x = hours,
       y = days.reverse,
@@ -43,10 +43,10 @@ object CategoricalAxisHeatmap extends DemoChart {
     )
   )
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Website Visits per Hour (simulated)",
-    xaxis = Axis().withValues(dtick = 3.0),
-    yaxis = Axis().withValues(automargin = true)
+    xaxis = Axis().updated(dtick = 3.0),
+    yaxis = Axis().updated(automargin = true)
   )
 
   // demo source end

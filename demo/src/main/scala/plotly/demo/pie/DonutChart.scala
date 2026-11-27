@@ -23,20 +23,20 @@ object DonutChart extends DemoChart {
 
   // one donut per year, side by side, with the year in its hole
   val data = years.zipWithIndex.map { case ((year, shares), idx) =>
-    Pie(shares, platforms).withValues(
+    Pie(shares, platforms).updated(
       name = year,
       hole = 0.5,
       textinfo = TextInfo(TextInfo.Percent),
       hoverinfo = HoverInfo(HoverInfo.Label, HoverInfo.Percent, HoverInfo.Name),
-      domain = Domain().withValues(column = idx)
+      domain = Domain().updated(column = idx)
     )
   }
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Website Visits by Platform",
-    grid = Grid().withValues(rows = 1, columns = 2),
+    grid = Grid().updated(rows = 1, columns = 2),
     annotations = years.zipWithIndex.map { case ((year, _), idx) =>
-      Annotation().withValues(
+      Annotation().updated(
         text = year,
         x = 0.225 + idx * 0.55,
         y = 0.5,

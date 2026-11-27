@@ -25,13 +25,13 @@ object StyledBasicHistogram extends DemoChart {
 
   def histogram(name: String, values: Seq[Double], color: String) =
     Histogram(values)
-      .withValues(
+      .updated(
         name = name,
         opacity = 0.65,
         xbins = Bins(135, 210, 2.5),
-        marker = new Marker().withValues(
+        marker = new Marker().updated(
           color = Color.StringColor(color),
-          line = Line().withValues(color = Color.StringColor("white"), width = 0.5)
+          line = Line().updated(color = Color.StringColor("white"), width = 0.5)
         )
       )
 
@@ -40,11 +40,11 @@ object StyledBasicHistogram extends DemoChart {
     histogram("Men", men, "#19d3f3")
   )
 
-  val xAxis = new Axis().withValues(title = "Height (cm)", rangeslider = RangeSlider())
+  val xAxis = new Axis().updated(title = "Height (cm)", rangeslider = RangeSlider())
 
-  val yAxis = new Axis().withValues(title = "Count", fixedrange = true)
+  val yAxis = new Axis().updated(title = "Count", fixedrange = true)
 
-  val layout = new Layout().withValues(
+  val layout = new Layout().updated(
     xaxis = xAxis,
     yaxis = yAxis,
     title = "Heights of Women and Men (simulated)",

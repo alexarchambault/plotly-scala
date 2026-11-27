@@ -32,17 +32,17 @@ object IcicleChart extends DemoChart {
 
   // the budget and its categories have no amount of their own: they're the sum of their children
   val data = Seq(
-    Icicle(budget.map(_._1), budget.map(_._2), budget.map(_._3)).withValues(
+    Icicle(budget.map(_._1), budget.map(_._2), budget.map(_._3)).updated(
       branchvalues = BranchValues.Remainder,
       textinfo = TextInfo(TextInfo.Label, TextInfo.PercentRoot),
       // the levels from left to right, rather than from top to bottom
-      tiling = Tiling().withValues(orientation = Orientation.Horizontal),
-      root = Root().withValues(color = Color.StringColor("lightgray")),
-      marker = Marker().withValues(line = Line().withValues(color = Color.StringColor("white"), width = 2.0))
+      tiling = Tiling().updated(orientation = Orientation.Horizontal),
+      root = Root().updated(color = Color.StringColor("lightgray")),
+      marker = Marker().updated(line = Line().updated(color = Color.StringColor("white"), width = 2.0))
     )
   )
 
-  val layout = Layout().withValues(title = "Household Budget", margin = Margin(10, 10, 60, 10))
+  val layout = Layout().updated(title = "Household Budget", margin = Margin(10, 10, 60, 10))
 
   // demo source end
 

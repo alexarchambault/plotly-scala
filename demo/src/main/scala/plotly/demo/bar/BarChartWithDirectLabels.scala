@@ -21,13 +21,13 @@ object BarChartWithDirectLabels extends DemoChart {
   val marketShares = sales.map(s => f"${100.0 * s / sales.sum}%.0f%% share")
 
   val trace1 = Bar(products, sales)
-    .withValues(
+    .updated(
       text = marketShares,
       textposition = BarTextPosition.Inside,
-      marker = Marker().withValues(
+      marker = Marker().updated(
         color = Color.RGB(99, 110, 250),
         opacity = 0.85,
-        line = Line().withValues(color = Color.RGB(46, 54, 160), width = 1.5)
+        line = Line().updated(color = Color.RGB(46, 54, 160), width = 1.5)
       )
     )
 
@@ -35,7 +35,7 @@ object BarChartWithDirectLabels extends DemoChart {
 
   // unit counts, right above each bar
   val annotations = products.zip(sales).map { case (x, y) =>
-    Annotation().withValues(
+    Annotation().updated(
       x = x,
       y = y,
       text = y.toString,
@@ -45,9 +45,9 @@ object BarChartWithDirectLabels extends DemoChart {
     )
   }
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "January 2025 Sales Report",
-    yaxis = Axis().withValues(title = "Units sold"),
+    yaxis = Axis().updated(title = "Units sold"),
     annotations = annotations
   )
 

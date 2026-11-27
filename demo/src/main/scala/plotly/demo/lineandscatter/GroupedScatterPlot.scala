@@ -24,20 +24,20 @@ object GroupedScatterPlot extends DemoChart {
 
   val data = medals.map { case (name, color, counts) =>
     Scatter(countries, counts)
-      .withValues(
+      .updated(
         name = name,
         mode = ScatterMode(ScatterMode.Markers),
-        marker = Marker().withValues(
+        marker = Marker().updated(
           size = 14,
           color = Color.StringColor(color),
-          line = Line().withValues(color = Color.StringColor("white"), width = 1.5)
+          line = Line().updated(color = Color.StringColor("white"), width = 1.5)
         )
       )
   }
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Paris 2024 Olympics Medals",
-    yaxis = Axis().withValues(title = "Medals"),
+    yaxis = Axis().updated(title = "Medals"),
     scattermode = ScatterLayoutMode.Group,
     scattergap = 0.6
   )

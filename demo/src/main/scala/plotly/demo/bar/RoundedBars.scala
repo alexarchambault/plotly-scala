@@ -24,12 +24,12 @@ object RoundedBars extends DemoChart {
 
   val data = medals.map { case (name, color, counts) =>
     Bar(countries, counts)
-      .withValues(name = name, marker = Marker().withValues(color = Color.StringColor(color)))
+      .updated(name = name, marker = Marker().updated(color = Color.StringColor(color)))
   }
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Paris 2024 Olympics Medals",
-    yaxis = Axis().withValues(title = "Medals"),
+    yaxis = Axis().updated(title = "Medals"),
     bargap = 0.25,
     barcornerradius = 8
   )

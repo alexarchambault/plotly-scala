@@ -24,14 +24,14 @@ object BasicContourPlot extends DemoChart {
   }
 
   val data = Seq(
-    Contour(ys.map(y => xs.map(x => height(x, y))), xs, ys).withValues(
+    Contour(ys.map(y => xs.map(x => height(x, y))), xs, ys).updated(
       colorscale = ColorScale.NamedScale("Earth"),
-      contours = Contours().withValues(start = -1.5, end = 3.0, size = 0.25),
-      colorbar = ColorBar().withValues(title = Title.from(text = "Altitude", side = Side.Right))
+      contours = Contours().updated(start = -1.5, end = 3.0, size = 0.25),
+      colorbar = ColorBar().updated(title = Title.from(text = "Altitude", side = Side.Right))
     )
   )
 
-  val layout = Layout().withValues(title = "Two Hills and a Valley")
+  val layout = Layout().updated(title = "Two Hills and a Valley")
 
   // demo source end
 

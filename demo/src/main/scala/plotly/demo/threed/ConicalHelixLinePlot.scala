@@ -20,20 +20,20 @@ object ConicalHelixLinePlot extends DemoChart {
   val zs = ts
 
   val data = Seq(
-    Scatter3d(xs, ys, zs).withValues(
+    Scatter3d(xs, ys, zs).updated(
       mode = ScatterMode(ScatterMode.Lines),
-      line = Line().withValues(
+      line = Line().updated(
         width = 8.0,
         // numeric colors, mapped to colors by the color scale
         color = zs.map(Color.Number(_)),
         colorscale = ColorScale.NamedScale("Viridis"),
         showscale = true,
-        colorbar = ColorBar().withValues(title = "height", thickness = 15.0)
+        colorbar = ColorBar().updated(title = "height", thickness = 15.0)
       )
     )
   )
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Conical Helix",
     margin = Margin(0, 0, 80, 0)
   )

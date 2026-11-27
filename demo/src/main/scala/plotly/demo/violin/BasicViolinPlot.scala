@@ -26,18 +26,18 @@ object BasicViolinPlot extends DemoChart {
   )
 
   val data = services.map { case (name, times) =>
-    Violin(times).withValues(
+    Violin(times).updated(
       name = name,
-      box = ViolinBox().withValues(visible = true, width = 0.15),
-      meanline = MeanLine().withValues(visible = true),
+      box = ViolinBox().updated(visible = true, width = 0.15),
+      meanline = MeanLine().updated(visible = true),
       points = BoxPoints.Outliers,
       spanmode = SpanMode.Hard
     )
   }
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Response Times",
-    yaxis = Axis().withValues(title = "ms", zeroline = false),
+    yaxis = Axis().updated(title = "ms", zeroline = false),
     showlegend = false
   )
 

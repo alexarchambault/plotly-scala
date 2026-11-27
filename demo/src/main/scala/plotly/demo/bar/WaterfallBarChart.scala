@@ -34,20 +34,20 @@ object WaterfallBarChart extends DemoChart {
 
   // each bar floats between the running totals before and after its step
   val trace1 = Bar(steps.map(_._1) :+ "Profit", steps.map(s => math.abs(s._2)) :+ profit)
-    .withValues(
+    .updated(
       base = totals.zip(totals.tail).map { case (before, after) => math.min(before, after).toDouble } :+ 0.0,
       text = steps.map(s => amount(s._2)) :+ s"$$${profit}K",
       textposition = BarTextPosition.Outside,
-      marker = Marker().withValues(
+      marker = Marker().updated(
         color = steps.map(s => if (s._2 >= 0) revenueColor else costColor) :+ profitColor
       )
     )
 
   val data = Seq(trace1)
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Annual Profit 2025",
-    yaxis = Axis().withValues(tickprefix = "$", ticksuffix = "K", range = (0.0, 800.0)),
+    yaxis = Axis().updated(tickprefix = "$", ticksuffix = "K", range = (0.0, 800.0)),
     showlegend = false
   )
 

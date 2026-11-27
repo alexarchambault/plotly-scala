@@ -373,7 +373,7 @@ class DocumentationTests extends munit.FunSuite {
     assertEquals(
       maybeLayout,
       Some(
-        Layout().withValues(
+        Layout().updated(
           width = 400,
           height = 400,
           title = "image with opacity 0.1"
@@ -386,7 +386,7 @@ class DocumentationTests extends munit.FunSuite {
         val colors = Seq(
           Seq(Seq(255d, 0d, 0d), Seq(0d, 255, 0), Seq(0d, 0, 255))
         )
-        val expected = Image(z = colors).withValues(
+        val expected = Image(z = colors).updated(
           opacity = 0.1,
           x0 = 0.05,
           y0 = 0.05,

@@ -30,19 +30,19 @@ object BasicOverlaidAreaChart extends DemoChart {
 
   val data = cities.map { case (city, latitude, (r, g, b)) =>
     Scatter(days, days.map(daylight(latitude)))
-      .withValues(
+      .updated(
         name = city,
         fill = Fill.ToZeroY,
         // light fills, so that overlapping areas remain readable
         fillcolor = Color.RGBA(r, g, b, 0.15),
-        line = Line().withValues(color = Color.RGB(r, g, b), width = 2.5)
+        line = Line().updated(color = Color.RGB(r, g, b), width = 2.5)
       )
   }
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Hours of Daylight Over the Year",
-    xaxis = Axis().withValues(title = "Day of the year"),
-    yaxis = Axis().withValues(title = "Hours", range = (0.0, 24.0), dtick = 6.0)
+    xaxis = Axis().updated(title = "Day of the year"),
+    yaxis = Axis().updated(title = "Hours", range = (0.0, 24.0), dtick = 6.0)
   )
 
   // demo source end

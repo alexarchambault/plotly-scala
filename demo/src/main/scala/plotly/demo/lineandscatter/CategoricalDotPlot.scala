@@ -36,12 +36,12 @@ object CategoricalDotPlot extends DemoChart {
 
   def dots(values: Seq[Double], name: String, color: Color) =
     Scatter(values, country)
-      .withValues(
+      .updated(
         mode = ScatterMode(ScatterMode.Markers),
         name = name,
-        marker = Marker().withValues(
+        marker = Marker().updated(
           color = color,
-          line = Line().withValues(color = Color.StringColor("white"), width = 1.5),
+          line = Line().updated(color = Color.StringColor("white"), width = 1.5),
           symbol = Symbol.Circle(),
           size = 14
         )
@@ -52,9 +52,9 @@ object CategoricalDotPlot extends DemoChart {
     dots(regVoters, "% of registered voters", Color.RGBA(255, 161, 90, 0.95))
   )
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Votes Cast in the Ten Lowest-Turnout OECD Countries",
-    xaxis = Axis().withValues(
+    xaxis = Axis().updated(
       showgrid = false,
       showline = true,
       linecolor = Color.RGB(102, 102, 102),
@@ -65,8 +65,8 @@ object CategoricalDotPlot extends DemoChart {
       tickcolor = Color.RGB(102, 102, 102),
       ticksuffix = "%"
     ),
-    yaxis = Axis().withValues(automargin = true, gridcolor = Color.RGB(230, 232, 240)),
-    legend = Legend().withValues(
+    yaxis = Axis().updated(automargin = true, gridcolor = Color.RGB(230, 232, 240)),
+    legend = Legend().updated(
       font = Font(size = 11),
       orientation = Orientation.Horizontal,
       xanchor = Anchor.Center,

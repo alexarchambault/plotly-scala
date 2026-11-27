@@ -23,20 +23,20 @@ object NotchedBoxPlot extends DemoChart {
   )
 
   val data = classes.map { case (name, scores) =>
-    Box(scores).withValues(
+    Box(scores).updated(
       name = name,
       notched = true,
       boxmean = BoxMean.True,
       boxpoints = BoxPoints.All,
       jitter = 0.4,
       pointpos = -1.8,
-      marker = Marker().withValues(size = 4)
+      marker = Marker().updated(size = 4)
     )
   }
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Test Scores",
-    yaxis = Axis().withValues(title = "score"),
+    yaxis = Axis().updated(title = "score"),
     showlegend = false
   )
 

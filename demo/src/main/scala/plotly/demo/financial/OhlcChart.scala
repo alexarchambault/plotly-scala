@@ -34,17 +34,17 @@ object OhlcChart extends DemoChart {
   val lows  = prices.map { case (open, close) => math.min(open, close) * (1 - 0.01 * random.nextDouble()) }
 
   val data = Seq(
-    Ohlc(days, prices.map(_._1), highs, lows, prices.map(_._2)).withValues(
+    Ohlc(days, prices.map(_._1), highs, lows, prices.map(_._2)).updated(
       name = "ACME",
-      increasing = DirectionStyle().withValues(line = Line().withValues(color = Color.RGB(0, 204, 150))),
-      decreasing = DirectionStyle().withValues(line = Line().withValues(color = Color.RGB(239, 85, 59))),
-      line = Line().withValues(width = 2.0)
+      increasing = DirectionStyle().updated(line = Line().updated(color = Color.RGB(0, 204, 150))),
+      decreasing = DirectionStyle().updated(line = Line().updated(color = Color.RGB(239, 85, 59))),
+      line = Line().updated(width = 2.0)
     )
   )
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "ACME Stock Price",
-    yaxis = Axis().withValues(tickprefix = "$")
+    yaxis = Axis().updated(tickprefix = "$")
   )
 
   // demo source end

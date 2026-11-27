@@ -21,14 +21,14 @@ object StackedFunnel extends DemoChart {
     "Social" -> Seq(900.0, 410.0, 180.0, 60.0),
     "Email"  -> Seq(400.0, 300.0, 210.0, 120.0)
   ).map { case (channel, users) =>
-    Funnel(users, stages).withValues(
+    Funnel(users, stages).updated(
       name = channel,
       orientation = Orientation.Horizontal,
       textinfo = TextInfo(TextInfo.Value, TextInfo.PercentInitial)
     )
   }
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Sales Funnel by Channel",
     funnelmode = BarMode.Stack,
     margin = Margin(100, 20, 90, 40)

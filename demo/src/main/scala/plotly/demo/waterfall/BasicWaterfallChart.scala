@@ -25,23 +25,23 @@ object BasicWaterfallChart extends DemoChart {
   )
 
   val data = Seq(
-    Waterfall(steps.map(_._1), steps.map(_._3), steps.map(_._2)).withValues(
+    Waterfall(steps.map(_._1), steps.map(_._3), steps.map(_._2)).updated(
       textposition = BarTextPosition.Outside,
       text = steps.map { case (_, measure, value) =>
         if (measure == WaterfallMeasure.Total) "" else f"$value%+.0f"
       },
-      connector = Connector().withValues(
-        line = Line().withValues(color = Color.RGB(63, 63, 63), dash = Dash.Dot)
+      connector = Connector().updated(
+        line = Line().updated(color = Color.RGB(63, 63, 63), dash = Dash.Dot)
       ),
-      increasing = BarStyle().withValues(marker = Marker().withValues(color = Color.RGB(0, 204, 150))),
-      decreasing = BarStyle().withValues(marker = Marker().withValues(color = Color.RGB(239, 85, 59))),
-      totals = BarStyle().withValues(marker = Marker().withValues(color = Color.RGB(99, 110, 250)))
+      increasing = BarStyle().updated(marker = Marker().updated(color = Color.RGB(0, 204, 150))),
+      decreasing = BarStyle().updated(marker = Marker().updated(color = Color.RGB(239, 85, 59))),
+      totals = BarStyle().updated(marker = Marker().updated(color = Color.RGB(99, 110, 250)))
     )
   )
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Profit and Loss Statement",
-    yaxis = Axis().withValues(tickprefix = "$", ticksuffix = "K"),
+    yaxis = Axis().updated(tickprefix = "$", ticksuffix = "K"),
     showlegend = false
   )
 

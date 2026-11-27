@@ -20,26 +20,26 @@ object SurfaceWithContours extends DemoChart {
   val z = ys.map(y => xs.map(x => math.cos(math.hypot(x, y) * 2) * math.exp(-math.hypot(x, y) / 2)))
 
   val data = Seq(
-    Surface().withValues(
+    Surface().updated(
       x = xs,
       y = ys,
       z = z,
       colorscale = ColorScale.NamedScale("Viridis"),
       // the contour lines along z, drawn on the surface and projected on the floor of the scene
-      contours = SurfaceContours().withValues(
-        z = SurfaceContour().withValues(
+      contours = SurfaceContours().updated(
+        z = SurfaceContour().updated(
           show = true,
           usecolormap = true,
           highlightcolor = Color.StringColor("white"),
-          project = Projection().withValues(z = true)
+          project = Projection().updated(z = true)
         )
       ),
-      lighting = Lighting().withValues(specular = 0.6, roughness = 0.4),
-      colorbar = ColorBar().withValues(thickness = 15.0)
+      lighting = Lighting().updated(specular = 0.6, roughness = 0.4),
+      colorbar = ColorBar().updated(thickness = 15.0)
     )
   )
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Damped Wave",
     margin = Margin(0, 0, 80, 0)
   )

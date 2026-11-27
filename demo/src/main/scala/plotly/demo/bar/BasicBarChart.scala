@@ -20,9 +20,9 @@ object BasicBarChart extends DemoChart {
 
   val data = Seq(Bar(planets, radius))
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Size of the Planets",
-    yaxis = Axis().withValues(title = "Mean radius (km)")
+    yaxis = Axis().updated(title = "Mean radius (km)")
   )
 
   // demo source end

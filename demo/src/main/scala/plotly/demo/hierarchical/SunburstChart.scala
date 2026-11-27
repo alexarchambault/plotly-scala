@@ -32,15 +32,15 @@ object SunburstChart extends DemoChart {
 
   // the budget and its categories have no amount of their own: they're the sum of their children
   val data = Seq(
-    Sunburst(budget.map(_._1), budget.map(_._2), budget.map(_._3)).withValues(
+    Sunburst(budget.map(_._1), budget.map(_._2), budget.map(_._3)).updated(
       branchvalues = BranchValues.Remainder,
       textinfo = TextInfo(TextInfo.Label, TextInfo.PercentRoot),
       insidetextorientation = InsideTextOrientation.Radial,
-      marker = Marker().withValues(line = Line().withValues(color = Color.StringColor("white"), width = 2.0))
+      marker = Marker().updated(line = Line().updated(color = Color.StringColor("white"), width = 2.0))
     )
   )
 
-  val layout = Layout().withValues(title = "Household Budget", margin = Margin(10, 10, 60, 10))
+  val layout = Layout().updated(title = "Household Budget", margin = Margin(10, 10, 60, 10))
 
   // demo source end
 

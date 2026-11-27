@@ -26,13 +26,13 @@ object BasicHorizontalBarChart extends DemoChart {
 
   val data = Seq(
     Bar(rivers.map(_._2), rivers.map(_._1))
-      .withValues(orientation = Orientation.Horizontal)
+      .updated(orientation = Orientation.Horizontal)
   )
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Longest Rivers in the World",
-    xaxis = Axis().withValues(title = "Length (km)"),
-    yaxis = Axis().withValues(automargin = true)
+    xaxis = Axis().updated(title = "Length (km)"),
+    yaxis = Axis().updated(automargin = true)
   )
 
   // demo source end

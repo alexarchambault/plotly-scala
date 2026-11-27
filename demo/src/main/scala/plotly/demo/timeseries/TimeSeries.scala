@@ -34,20 +34,20 @@ object TimeSeries extends DemoChart {
   }
 
   val data = Seq(
-    Scatter(dates, prices).withValues(
+    Scatter(dates, prices).updated(
       name = "Daily close",
-      line = Line().withValues(color = Color.StringColor("#636efa"), width = 1.5)
+      line = Line().updated(color = Color.StringColor("#636efa"), width = 1.5)
     ),
-    Scatter(dates, movingAverage).withValues(
+    Scatter(dates, movingAverage).updated(
       name = "30-day average",
-      line = Line().withValues(color = Color.StringColor("#ef553b"), width = 2.5)
+      line = Line().updated(color = Color.StringColor("#ef553b"), width = 2.5)
     )
   )
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Simulated Stock Price, 2025",
-    xaxis = Axis().withValues(rangeslider = RangeSlider()),
-    yaxis = Axis().withValues(tickprefix = "$")
+    xaxis = Axis().updated(rangeslider = RangeSlider()),
+    yaxis = Axis().updated(tickprefix = "$")
   )
 
   // demo source end

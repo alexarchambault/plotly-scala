@@ -23,19 +23,19 @@ object ClusteredScatterPlot extends DemoChart {
 
   val data = clusters.map { case (name, (cx, cy, cz), color) =>
     val points = Seq.fill(80)((cx + random.nextGaussian(), cy + random.nextGaussian(), cz + random.nextGaussian()))
-    Scatter3d(points.map(_._1), points.map(_._2), points.map(_._3)).withValues(
+    Scatter3d(points.map(_._1), points.map(_._2), points.map(_._3)).updated(
       name = s"cluster $name",
       mode = ScatterMode(ScatterMode.Markers),
-      marker = Marker().withValues(
+      marker = Marker().updated(
         size = 4,
         color = color,
         opacity = 0.8,
-        line = Line().withValues(color = Color.StringColor("white"), width = 0.5)
+        line = Line().updated(color = Color.StringColor("white"), width = 0.5)
       )
     )
   }
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Three Clusters",
     margin = Margin(0, 0, 80, 0)
   )

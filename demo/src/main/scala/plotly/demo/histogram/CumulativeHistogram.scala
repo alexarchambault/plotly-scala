@@ -22,20 +22,20 @@ object CumulativeHistogram extends DemoChart {
 
   // for each duration, the share of the calls lasting longer: the bins are summed from the right
   val data = Seq(
-    Histogram(durations).withValues(
+    Histogram(durations).updated(
       xbins = Bins(0.0, 20.0, 2.0),
       histnorm = HistNorm.Percent,
-      cumulative = Cumulative(true).withValues(direction = CumulativeDirection.Decreasing),
+      cumulative = Cumulative(true).updated(direction = CumulativeDirection.Decreasing),
       texttemplate = "%{y:.0f}%",
       textposition = BarTextPosition.Outside,
-      marker = Marker().withValues(color = Color.RGB(25, 211, 243))
+      marker = Marker().updated(color = Color.RGB(25, 211, 243))
     )
   )
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Calls Lasting Longer Than…",
-    xaxis = Axis().withValues(title = "minutes", dtick = 2.0),
-    yaxis = Axis().withValues(ticksuffix = "%", range = (0.0, 110.0)),
+    xaxis = Axis().updated(title = "minutes", dtick = 2.0),
+    yaxis = Axis().updated(ticksuffix = "%", range = (0.0, 110.0)),
     bargap = 0.05
   )
 

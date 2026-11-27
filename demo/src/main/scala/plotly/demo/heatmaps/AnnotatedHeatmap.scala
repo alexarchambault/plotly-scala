@@ -28,7 +28,7 @@ object AnnotatedHeatmap extends DemoChart {
 
   val data = Seq(
     Heatmap(counts.reverse, classes, classes.reverse) // rows are drawn from the bottom up
-      .withValues(
+      .updated(
         showscale = false,
         colorscale = ColorScale.CustomScale(
           Seq(
@@ -39,16 +39,16 @@ object AnnotatedHeatmap extends DemoChart {
       )
   )
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = f"Classifier Confusion Matrix (accuracy: $accuracy%.1f%%)",
-    xaxis = Axis().withValues(title = "Predicted", ticks = Ticks.Empty),
-    yaxis = Axis().withValues(title = "Actual", ticks = Ticks.Empty, ticksuffix = " "),
+    xaxis = Axis().updated(title = "Predicted", ticks = Ticks.Empty),
+    yaxis = Axis().updated(title = "Actual", ticks = Ticks.Empty, ticksuffix = " "),
     annotations =
       for {
         (actual, row)       <- classes.zipWithIndex
         (predicted, column) <- classes.zipWithIndex
         count = counts(row)(column)
-      } yield Annotation().withValues(
+      } yield Annotation().updated(
         x = predicted,
         y = actual,
         xref = Ref.Axis(AxisReference.X1),

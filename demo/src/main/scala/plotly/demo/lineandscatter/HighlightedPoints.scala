@@ -23,22 +23,22 @@ object HighlightedPoints extends DemoChart {
   val selected = bmis.zipWithIndex.collect { case (bmi, idx) if bmi > 27 => idx }
 
   val data = Seq(
-    Scatter(heights, weights).withValues(
+    Scatter(heights, weights).updated(
       mode = ScatterMode(ScatterMode.Markers),
-      marker = Marker().withValues(size = 8, color = Color.RGB(99, 110, 250)),
+      marker = Marker().updated(size = 8, color = Color.RGB(99, 110, 250)),
       selectedpoints = selected,
-      selected = Selection().withValues(
-        marker = SelectionMarker().withValues(color = Color.RGB(239, 85, 59), size = 11.0)
+      selected = Selection().updated(
+        marker = SelectionMarker().updated(color = Color.RGB(239, 85, 59), size = 11.0)
       ),
-      unselected = Selection().withValues(marker = SelectionMarker().withValues(opacity = 0.3)),
+      unselected = Selection().updated(marker = SelectionMarker().updated(opacity = 0.3)),
       hovertemplate = "%{x:.0f} cm, %{y:.0f} kg<extra></extra>"
     )
   )
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "People With a BMI Above 27",
-    xaxis = Axis().withValues(title = "height (cm)"),
-    yaxis = Axis().withValues(title = "weight (kg)")
+    xaxis = Axis().updated(title = "height (cm)"),
+    yaxis = Axis().updated(title = "weight (kg)")
   )
 
   // demo source end

@@ -28,7 +28,7 @@ object HeatmapWithText extends DemoChart {
 
   // the values are written in their cells, rather than added as annotations
   val data = Seq(
-    Heatmap(visitors, days, hours).withValues(
+    Heatmap(visitors, days, hours).updated(
       colorscale = ColorScale.NamedScale("YlGnBu"),
       reversescale = true,
       texttemplate = "%{z:.0f}",
@@ -39,9 +39,9 @@ object HeatmapWithText extends DemoChart {
     )
   )
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Museum Visitors (Closed on Mondays)",
-    yaxis = Axis().withValues(autorange = true)
+    yaxis = Axis().updated(autorange = true)
   )
 
   // demo source end

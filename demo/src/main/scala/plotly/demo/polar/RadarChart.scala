@@ -23,18 +23,18 @@ object RadarChart extends DemoChart {
 
   // the first point is repeated at the end, to close the shapes
   val data = candidates.map { case (name, levels) =>
-    ScatterPolar(levels :+ levels.head, skills :+ skills.head).withValues(
+    ScatterPolar(levels :+ levels.head, skills :+ skills.head).updated(
       name = name,
       fill = Fill.ToSelf,
       opacity = 0.7
     )
   }
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Skills",
-    polar = Polar().withValues(
+    polar = Polar().updated(
       gridshape = PolarGridShape.Linear,
-      radialaxis = RadialAxis().withValues(visible = true, range = (0.0, 5.0), dtick = 1.0)
+      radialaxis = RadialAxis().updated(visible = true, range = (0.0, 5.0), dtick = 1.0)
     )
   )
 

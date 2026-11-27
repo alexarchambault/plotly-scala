@@ -30,21 +30,21 @@ object SplitViolinPlot extends DemoChart {
     ("Dinner", ViolinSide.Positive, Color.RGB(239, 85, 59), Seq(3.0, 3.1, 3.6, 3.8))
   ).map { case (meal, side, color, means) =>
     val (x, y) = sample(means)
-    Violin(y, x).withValues(
+    Violin(y, x).updated(
       name = meal,
       legendgroup = meal,
       scalegroup = meal,
       side = side,
       width = 0.9,
-      line = Line().withValues(color = color),
-      meanline = MeanLine().withValues(visible = true),
+      line = Line().updated(color = color),
+      meanline = MeanLine().updated(visible = true),
       points = BoxPoints.False
     )
   }
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Tips by Day and Meal",
-    yaxis = Axis().withValues(title = "tip ($)", zeroline = false),
+    yaxis = Axis().updated(title = "tip ($)", zeroline = false),
     violinmode = BoxMode.Overlay
   )
 

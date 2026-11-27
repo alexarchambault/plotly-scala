@@ -20,12 +20,12 @@ object PeriodPositioning extends DemoChart {
   val average = sales.scanLeft(0.0)(_ + _).tail.zipWithIndex.map { case (sum, i) => sum / (i + 1) }
 
   val data = Seq(
-    Bar(months, sales).withValues(
+    Bar(months, sales).updated(
       name = "sales",
       xperiod = "M1",
       xperiodalignment = PeriodAlignment.Middle
     ),
-    Scatter(months, average).withValues(
+    Scatter(months, average).updated(
       name = "running average",
       mode = ScatterMode(ScatterMode.Lines, ScatterMode.Markers),
       xperiod = "M1",
@@ -33,10 +33,10 @@ object PeriodPositioning extends DemoChart {
     )
   )
 
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Monthly Sales",
-    yaxis = Axis().withValues(ticksuffix = "K"),
-    xaxis = Axis().withValues(tickformat = "%b")
+    yaxis = Axis().updated(ticksuffix = "K"),
+    xaxis = Axis().updated(tickformat = "%b")
   )
 
   // demo source end

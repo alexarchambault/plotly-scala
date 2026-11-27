@@ -24,18 +24,18 @@ object BasicPieChart extends DemoChart {
   )
 
   val data = Seq(
-    Pie(sources.map(_._2), sources.map(_._1)).withValues(
+    Pie(sources.map(_._2), sources.map(_._1)).updated(
       textinfo = TextInfo(TextInfo.Label, TextInfo.Percent),
       hoverinfo = HoverInfo(HoverInfo.Label, HoverInfo.Value),
       // pull the renewable sources out of the pie
       pull = sources.map(s => if (Set("Wind", "Solar", "Hydro")(s._1)) 0.06 else 0.0),
       sort = false,
       direction = RotationDirection.Clockwise,
-      marker = Marker().withValues(line = Line().withValues(color = Color.StringColor("white"), width = 2.0))
+      marker = Marker().updated(line = Line().updated(color = Color.StringColor("white"), width = 2.0))
     )
   )
 
-  val layout = Layout().withValues(title = "Electricity Generation", showlegend = false)
+  val layout = Layout().updated(title = "Electricity Generation", showlegend = false)
 
   // demo source end
 

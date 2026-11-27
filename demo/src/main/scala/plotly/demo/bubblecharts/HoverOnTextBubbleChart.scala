@@ -22,23 +22,23 @@ object HoverOnTextBubbleChart extends DemoChart {
   val colors = Seq("#9e9e9e", "#e3bb76", "#4f8fdc", "#c1440e", "#d39c6a", "#e3cf96", "#7de3f4", "#4b70dd")
 
   val trace1 = Scatter(distance, period)
-    .withValues(
+    .updated(
       text = planets.zip(radius).map { case (planet, r) => s"<b>$planet</b><br>radius: $r km" },
       mode = ScatterMode(ScatterMode.Markers),
-      marker = Marker().withValues(
+      marker = Marker().updated(
         color = colors.map(Color.StringColor(_)),
         size = radius.map(r => 10 + r / 1400),
-        line = Line().withValues(color = Color.StringColor("white"), width = 1.0)
+        line = Line().updated(color = Color.StringColor("white"), width = 1.0)
       )
     )
 
   val data = Seq(trace1)
 
   // on log-log axes, Kepler's third law shows up as a straight line
-  val layout = Layout().withValues(
+  val layout = Layout().updated(
     title = "Orbits of the Planets (hover on the bubbles)",
-    xaxis = Axis().withValues(title = "Distance from the Sun (AU)", `type` = AxisType.Log, dtick = 1.0),
-    yaxis = Axis().withValues(title = "Orbital period (years)", `type` = AxisType.Log, dtick = 1.0),
+    xaxis = Axis().updated(title = "Distance from the Sun (AU)", `type` = AxisType.Log, dtick = 1.0),
+    yaxis = Axis().updated(title = "Orbital period (years)", `type` = AxisType.Log, dtick = 1.0),
     showlegend = false
   )
 

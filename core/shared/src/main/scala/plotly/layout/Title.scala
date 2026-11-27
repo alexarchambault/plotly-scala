@@ -10,7 +10,7 @@ import scala.language.implicitConversions
   *
   * Since plotly.js 3, titles are objects, with their text in `text`, rather than strings. A `String`
   * is implicitly converted to a `Title` having it as text, so that one can write
-  * `Layout().withValues(title = "My plot")`. Other fields can be set with `from`, like
+  * `Layout().updated(title = "My plot")`. Other fields can be set with `from`, like
   * `Title.from(text = "My plot", font = Font(18))`.
   *
   * @param standoff
@@ -33,9 +33,9 @@ import scala.language.implicitConversions
 @data(
   optionSetters = true,
   nullOptionBuilderMethodName = "from",
-  nullOptionCopyMethodName = "withValues",
+  nullOptionCopyMethodName = "updated",
   deprecatedSetters = true,
-  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersMessage = "Use updated instead",
   deprecatedSettersSince = "0.8.6"
 ) final case class Title(
     text: Option[String] = None,
