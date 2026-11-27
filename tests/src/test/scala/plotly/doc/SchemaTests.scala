@@ -323,6 +323,18 @@ class SchemaTests extends munit.FunSuite {
     compareValues(values(histogram("cumulative")("currentbin")), Enumerate[CurrentBin].apply().map(_.label).toSet)
   }
 
+  test("Box enums should be exhaustive") {
+    val box = SchemaTests.traceAttributes("box")
+    compareValues(
+      box("quartilemethod")("values").arr.map(_.str).toSet,
+      Enumerate[QuartileMethod].apply().map(_.label).toSet
+    )
+    compareValues(box("sizemode")("values").arr.map(_.str).toSet, Enumerate[BoxSizeMode].apply().map(_.label).toSet)
+    // the flags, and their combination
+    val flags = box("hoveron")("flags").arr.map(_.str)
+    compareValues((flags :+ flags.mkString("+")).toSet, Enumerate[BoxHoverOn].apply().map(_.label).toSet)
+  }
+
   test("Text position should be exhaustive") {
     val fromSchema = SchemaTests
       .enumeratedAttributeValues("scatter", "textposition")

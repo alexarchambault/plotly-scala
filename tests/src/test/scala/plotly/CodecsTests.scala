@@ -426,6 +426,23 @@ class CodecsTests extends munit.FunSuite {
     )
   }
 
+  test("Trace codec should round-trip box statistics") {
+    roundTrip(
+      Box().withValues(
+        x = Seq("a", "b"),
+        q1 = Seq(1.0, 2.0),
+        median = Seq(2.0, 3.0),
+        q3 = Seq(3.0, 4.0),
+        lowerfence = Seq(0.0, 1.0),
+        upperfence = Seq(5.0, 6.0),
+        notched = true,
+        quartilemethod = QuartileMethod.Inclusive,
+        sizemode = BoxSizeMode.StandardDeviation,
+        hoveron = BoxHoverOn.BoxesPoints
+      )
+    )
+  }
+
   test("Trace codec should reject unknown enum values") {
     assert(Try(readFromString[Trace]("""{"y": [1], "textposition": "nowhere"}""")).isFailure)
   }

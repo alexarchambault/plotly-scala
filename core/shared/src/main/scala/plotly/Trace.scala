@@ -154,7 +154,23 @@ object Scatter {
     alignmentgroup: Option[String] = None,
     offsetgroup: Option[String] = None,
     selected: Option[Selection] = None,
-    unselected: Option[Selection] = None
+    unselected: Option[Selection] = None,
+    q1: Option[Sequence] = None,
+    median: Option[Sequence] = None,
+    q3: Option[Sequence] = None,
+    lowerfence: Option[Sequence] = None,
+    upperfence: Option[Sequence] = None,
+    mean: Option[Sequence] = None,
+    sd: Option[Sequence] = None,
+    sdmultiple: Option[Double] = None,
+    notched: Option[Boolean] = None,
+    notchspan: Option[Sequence] = None,
+    notchwidth: Option[Double] = None,
+    quartilemethod: Option[QuartileMethod] = None,
+    showwhiskers: Option[Boolean] = None,
+    sizemode: Option[BoxSizeMode] = None,
+    width: Option[Double] = None,
+    hoveron: Option[BoxHoverOn] = None
 ) extends Trace
 
 object Box {
@@ -842,7 +858,8 @@ object Histogram2dContour {
     xhoverformat: Option[String] = None,
     yhoverformat: Option[String] = None,
     selected: Option[Selection] = None,
-    unselected: Option[Selection] = None
+    unselected: Option[Selection] = None,
+    quartilemethod: Option[QuartileMethod] = None
 ) extends Trace
 
 object Violin {

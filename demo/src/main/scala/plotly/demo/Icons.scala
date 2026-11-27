@@ -83,6 +83,10 @@ object Icons {
       """<rect x="8" y="15" width="8" height="4" rx="1" opacity="0.6"/>"""
   )
 
+  val box = stroked(
+    """<path d="M12 2v5M12 17v5M9 2h6M9 22h6"/><rect x="6" y="7" width="12" height="10" rx="1"/><path d="M6 12h12"/>"""
+  )
+
   val violin = filled(
     """<path d="M12 2c1 3 4 5 4 9s-3 5-3 7 1 3-1 4c-2-1-1-2-1-4s-3-3-3-7 3-6 4-9z"/>"""
   )

@@ -137,6 +137,15 @@ import scalatags.JsDom.tags2
       )
     ),
     Category(
+      "Box Plots",
+      Icons.box,
+      ("#ab63fa", "#636efa"),
+      Seq(
+        box.NotchedBoxPlot,
+        box.PrecomputedBoxPlot
+      )
+    ),
+    Category(
       "Violin Plots",
       Icons.violin,
       ("#ab63fa", "#ff6692"),
