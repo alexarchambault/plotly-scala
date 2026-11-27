@@ -31,5 +31,15 @@ import dataclass.{data, since}
     cmax: Option[Double] = None,
     cmid: Option[Double] = None,
     showscale: Option[Boolean] = None,
-    colorbar: Option[ColorBar] = None
+    colorbar: Option[ColorBar] = None,
+    angle: Option[OneOrSeq[Double]] = None,
+    angleref: Option[MarkerAngleRef] = None,
+    standoff: Option[OneOrSeq[Double]] = None,
+    gradient: Option[MarkerGradient] = None,
+    maxdisplayed: Option[Int] = None,
+    sizemin: Option[Double] = None,
+    cauto: Option[Boolean] = None,
+    coloraxis: Option[String] = None,
+    pattern: Option[FillPattern] = None,
+    cornerradius: Option[Element] = None
 )

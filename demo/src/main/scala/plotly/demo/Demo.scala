@@ -48,7 +48,8 @@ import scalatags.JsDom.tags2
         bar.BarChartWithDirectLabels,
         bar.CustomizingIndividualBarColors,
         bar.WaterfallBarChart,
-        bar.RoundedBars
+        bar.RoundedBars,
+        bar.PatternedBars
       )
     ),
     Category(
@@ -108,7 +109,8 @@ import scalatags.JsDom.tags2
       Icons.area,
       ("#00cc96", "#5ee8c0"),
       Seq(
-        area.BasicOverlaidAreaChart
+        area.BasicOverlaidAreaChart,
+        area.GradientAndPatternFills
       )
     ),
     Category(

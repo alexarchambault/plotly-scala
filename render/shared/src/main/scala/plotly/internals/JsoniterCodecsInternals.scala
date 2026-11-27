@@ -198,6 +198,11 @@ object JsoniterCodecsInternals {
   implicit val fontStyleCodec: JsonValueCodec[FontStyle]                 = enumCodec[FontStyle](_.label)
   implicit val fontVariantCodec: JsonValueCodec[FontVariant]             = enumCodec[FontVariant](_.label)
   implicit val textCaseCodec: JsonValueCodec[TextCase]                   = enumCodec[TextCase](_.label)
+  implicit val patternShapeCodec: JsonValueCodec[PatternShape]           = enumCodec[PatternShape](_.label)
+  implicit val patternFillModeCodec: JsonValueCodec[PatternFillMode]     = enumCodec[PatternFillMode](_.label)
+  implicit val gradientTypeCodec: JsonValueCodec[GradientType]           = enumCodec[GradientType](_.label)
+  implicit val stackGapsCodec: JsonValueCodec[StackGaps]                 = enumCodec[StackGaps](_.label)
+  implicit val markerAngleRefCodec: JsonValueCodec[MarkerAngleRef]       = enumCodec[MarkerAngleRef](_.label)
   implicit val rotationDirectionCodec: JsonValueCodec[RotationDirection] =
     enumCodec[RotationDirection](_.label)
   implicit val insideTextOrientationCodec: JsonValueCodec[InsideTextOrientation] =
@@ -549,12 +554,16 @@ object JsoniterCodecsInternals {
       def nullValue: OneOrSeq[T] = null
     }
 
-  implicit val oneOrSeqAlignmentCodec: JsonValueCodec[OneOrSeq[Alignment]] = oneOrSeqCodec(alignmentCodec)
-  implicit val oneOrSeqColorCodec: JsonValueCodec[OneOrSeq[Color]]         = oneOrSeqCodec(colorCodec)
-  implicit val oneOrSeqDoubleCodec: JsonValueCodec[OneOrSeq[Double]]       = oneOrSeqCodec(doubleCodec)
-  implicit val oneOrSeqIntCodec: JsonValueCodec[OneOrSeq[Int]]             = oneOrSeqCodec(intValueCodec)
-  implicit val oneOrSeqStringCodec: JsonValueCodec[OneOrSeq[String]]       = oneOrSeqCodec(stringValueCodec)
-  implicit val oneOrSeqSymbolCodec: JsonValueCodec[OneOrSeq[Symbol]]       = oneOrSeqCodec(symbolCodec)
+  implicit val oneOrSeqAlignmentCodec: JsonValueCodec[OneOrSeq[Alignment]]       = oneOrSeqCodec(alignmentCodec)
+  implicit val oneOrSeqColorCodec: JsonValueCodec[OneOrSeq[Color]]               = oneOrSeqCodec(colorCodec)
+  implicit val oneOrSeqDoubleCodec: JsonValueCodec[OneOrSeq[Double]]             = oneOrSeqCodec(doubleCodec)
+  implicit val oneOrSeqIntCodec: JsonValueCodec[OneOrSeq[Int]]                   = oneOrSeqCodec(intValueCodec)
+  implicit val oneOrSeqStringCodec: JsonValueCodec[OneOrSeq[String]]             = oneOrSeqCodec(stringValueCodec)
+  implicit val oneOrSeqSymbolCodec: JsonValueCodec[OneOrSeq[Symbol]]             = oneOrSeqCodec(symbolCodec)
+  implicit val oneOrSeqPatternShapeCodec: JsonValueCodec[OneOrSeq[PatternShape]] =
+    oneOrSeqCodec(patternShapeCodec)
+  implicit val oneOrSeqGradientTypeCodec: JsonValueCodec[OneOrSeq[GradientType]] =
+    oneOrSeqCodec(gradientTypeCodec)
 
   implicit val errorCodec: JsonValueCodec[Error] =
     JsonCodecMaker.make(

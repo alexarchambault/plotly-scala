@@ -78,7 +78,10 @@ sealed abstract class Trace extends Product with Serializable
     offsetgroup: Option[String] = None,
     cliponaxis: Option[Boolean] = None,
     selected: Option[Selection] = None,
-    unselected: Option[Selection] = None
+    unselected: Option[Selection] = None,
+    fillpattern: Option[FillPattern] = None,
+    fillgradient: Option[FillGradient] = None,
+    stackgaps: Option[StackGaps] = None
 ) extends Trace
 
 object Scatter {

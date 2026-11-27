@@ -300,6 +300,17 @@ class SchemaTests extends munit.FunSuite {
     compareValues(font("textcase")("values").arr.map(_.str).toSet, Enumerate[TextCase].apply().map(_.label).toSet)
   }
 
+  test("Scatter fill and marker enums should be exhaustive") {
+    val scatter                = SchemaTests.traceAttributes("scatter")
+    def values(v: ujson.Value) = v("values").arr.map(_.str).toSet
+    compareValues(values(scatter("fillpattern")("shape")), Enumerate[PatternShape].apply().map(_.label).toSet)
+    compareValues(values(scatter("fillpattern")("fillmode")), Enumerate[PatternFillMode].apply().map(_.label).toSet)
+    compareValues(values(scatter("fillgradient")("type")), Enumerate[GradientType].apply().map(_.label).toSet)
+    compareValues(values(scatter("marker")("gradient")("type")), Enumerate[GradientType].apply().map(_.label).toSet)
+    compareValues(values(scatter("stackgaps")), Enumerate[StackGaps].apply().map(_.label).toSet)
+    compareValues(values(scatter("marker")("angleref")), Enumerate[MarkerAngleRef].apply().map(_.label).toSet)
+  }
+
   test("Text position should be exhaustive") {
     val fromSchema = SchemaTests
       .enumeratedAttributeValues("scatter", "textposition")

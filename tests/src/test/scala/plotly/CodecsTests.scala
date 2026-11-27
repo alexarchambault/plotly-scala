@@ -360,6 +360,35 @@ class CodecsTests extends munit.FunSuite {
     )
   }
 
+  test("Trace codec should round-trip fill patterns and gradients") {
+    roundTrip(
+      Scatter(Seq(1.0, 2.0)).withValues(
+        fill = Fill.ToZeroY,
+        fillpattern = FillPattern().withValues(shape = PatternShape.DiagonalDown, solidity = 0.4),
+        stackgaps = StackGaps.Interpolate,
+        marker = Marker().withValues(
+          angle = Seq(10.0, 20.0),
+          angleref = MarkerAngleRef.Previous,
+          gradient = MarkerGradient().withValues(`type` = GradientType.Radial, color = Color.StringColor("white"))
+        ),
+        line = Line().withValues(backoff = 4.0, simplify = false)
+      )
+    )
+    roundTrip(
+      Scatter(Seq(1.0, 2.0)).withValues(
+        fillgradient =
+          FillGradient().withValues(`type` = GradientType.Vertical, colorscale = ColorScale.NamedScale("Blues"))
+      )
+    )
+    val bar = Bar(Seq(1.0, 2.0), Seq(3.0, 4.0)).withValues(
+      marker = Marker().withValues(pattern =
+        FillPattern().withValues(shape = Seq[PatternShape](PatternShape.Cross, PatternShape.Dots))
+      )
+    )
+    roundTrip(bar)
+    assertEquals(ujson.read(writeToString[Trace](bar))("marker")("pattern")("shape"), ujson.Arr("x", "."))
+  }
+
   test("Trace codec should reject unknown enum values") {
     assert(Try(readFromString[Trace]("""{"y": [1], "textposition": "nowhere"}""")).isFailure)
   }

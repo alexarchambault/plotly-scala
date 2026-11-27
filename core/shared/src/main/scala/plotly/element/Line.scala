@@ -28,5 +28,7 @@ import dataclass.{data, since}
     cmax: Option[Double] = None,
     cmid: Option[Double] = None,
     showscale: Option[Boolean] = None,
-    colorbar: Option[ColorBar] = None
+    colorbar: Option[ColorBar] = None,
+    backoff: Option[OneOrSeq[Double]] = None,
+    simplify: Option[Boolean] = None
 )
