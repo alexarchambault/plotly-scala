@@ -61,5 +61,9 @@ import plotly.element._
     funnelmode: Option[BarMode] = None,
     funnelgap: Option[Double] = None,
     funnelgroupgap: Option[Double] = None,
-    funnelareacolorway: Option[Seq[Color]] = None
+    funnelareacolorway: Option[Seq[Color]] = None,
+    polar: Option[Polar] = None,
+    polar2: Option[Polar] = None,
+    polar3: Option[Polar] = None,
+    polar4: Option[Polar] = None
 )

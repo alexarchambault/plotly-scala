@@ -229,6 +229,37 @@ class CodecsTests extends munit.FunSuite {
     assertEquals(ujson.read(writeToString[Trace](scatter3d)).obj.get("type"), Some(ujson.Str("scatter3d")))
   }
 
+  test("Trace codec should round-trip polar traces") {
+    val scatter = ScatterPolar(Seq(1.0, 2.0, 3.0), Seq("a", "b", "c")).withValues(
+      fill = Fill.ToSelf,
+      thetaunit = ThetaUnit.Degrees,
+      subplot = "polar2"
+    )
+    roundTrip(scatter)
+    assertEquals(ujson.read(writeToString[Trace](scatter)).obj.get("type"), Some(ujson.Str("scatterpolar")))
+    val bar = BarPolar(Seq(1.0, 2.0), Seq(0.0, 90.0)).withValues(width = 30.0)
+    roundTrip(bar)
+    assertEquals(ujson.read(writeToString[Trace](bar)).obj.get("type"), Some(ujson.Str("barpolar")))
+    roundTrip(ScatterPolarGl(Seq(1.0), Seq(2.0)))
+  }
+
+  test("Layout codec should round-trip polar subplots") {
+    val layout = Layout().withValues(
+      polar = Polar().withValues(
+        sector = Seq(0.0, 180.0),
+        gridshape = PolarGridShape.Linear,
+        barmode = BarMode.Overlay,
+        radialaxis = RadialAxis().withValues(range = (0.0, 5.0), angle = 45.0, side = RotationDirection.Clockwise),
+        angularaxis = AngularAxis().withValues(
+          direction = RotationDirection.Clockwise,
+          rotation = 90.0,
+          categoryorder = CategoryOrder.CategoryAscending
+        )
+      )
+    )
+    assertEquals(readFromString[Layout](writeToString(layout)), layout)
+  }
+
   test("Trace codec should reject unknown enum values") {
     assert(Try(readFromString[Trace]("""{"y": [1], "textposition": "nowhere"}""")).isFailure)
   }

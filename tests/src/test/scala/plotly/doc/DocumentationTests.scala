@@ -258,11 +258,12 @@ class DocumentationTests extends munit.FunSuite {
     "scientific/heatmap",
     "statistical/histogram2d",
     "statistical/histogram2dcontour",
-    // TODO Wind rose charts
+    "scientific/wind-rose",
     "scientific/contour",
     // TODO Heatmaps
     // TODO Heatmap and contour colorscales
-    // TODO Polar charts
+    "scientific/scatterpolar",
+    "scientific/radar",
     "scientific/log",
     // TODO Financial charts
     // TODO Maps

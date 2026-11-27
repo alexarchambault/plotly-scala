@@ -87,6 +87,10 @@ object Icons {
     """<path d="M12 2c1 3 4 5 4 9s-3 5-3 7 1 3-1 4c-2-1-1-2-1-4s-3-3-3-7 3-6 4-9z"/>"""
   )
 
+  val polar = stroked(
+    """<polygon points="12 2 21.5 8.9 17.9 20.1 6.1 20.1 2.5 8.9"/><polygon points="12 7 17 10 15 16 8 15 7 10"/>"""
+  )
+
   val threeD = stroked(
     """<path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/>"""
   )

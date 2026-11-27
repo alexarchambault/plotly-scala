@@ -141,6 +141,15 @@ import scalatags.JsDom.tags2
       )
     ),
     Category(
+      "Polar Charts",
+      Icons.polar,
+      ("#ff6692", "#ab63fa"),
+      Seq(
+        polar.RadarChart,
+        polar.WindRose
+      )
+    ),
+    Category(
       "3D Charts",
       Icons.threeD,
       ("#19d3f3", "#636efa"),

@@ -675,6 +675,126 @@ object Scatter3d {
     Scatter3d().copy(x = Some(x), y = Some(y), z = Some(z))
 }
 
+/** Points and lines in polar coordinates */
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues",
+  deprecatedSetters = true,
+  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersSince = "0.8.6"
+) final case class ScatterPolar(
+    r: Option[Sequence] = None,
+    theta: Option[Sequence] = None,
+    r0: Option[Element] = None,
+    dr: Option[Double] = None,
+    theta0: Option[Element] = None,
+    dtheta: Option[Double] = None,
+    thetaunit: Option[ThetaUnit] = None,
+    mode: Option[ScatterMode] = None,
+    name: Option[String] = None,
+    text: Option[OneOrSeq[String]] = None,
+    textposition: Option[TextPosition] = None,
+    textfont: Option[Font] = None,
+    hovertext: Option[OneOrSeq[String]] = None,
+    hoverinfo: Option[HoverInfo] = None,
+    hovertemplate: Option[OneOrSeq[String]] = None,
+    marker: Option[Marker] = None,
+    line: Option[Line] = None,
+    fill: Option[Fill] = None,
+    fillcolor: Option[Color] = None,
+    connectgaps: Option[Boolean] = None,
+    opacity: Option[Double] = None,
+    showlegend: Option[Boolean] = None,
+    legendgroup: Option[String] = None,
+    // the polar subplot the trace is drawn in, like "polar" (the default) or "polar2"
+    subplot: Option[String] = None
+) extends Trace
+
+object ScatterPolar {
+  def apply(r: Sequence, theta: Sequence): ScatterPolar =
+    ScatterPolar().copy(r = Some(r), theta = Some(theta))
+}
+
+/** Points and lines in polar coordinates, drawn with WebGL */
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues",
+  deprecatedSetters = true,
+  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersSince = "0.8.6"
+) final case class ScatterPolarGl(
+    r: Option[Sequence] = None,
+    theta: Option[Sequence] = None,
+    r0: Option[Element] = None,
+    dr: Option[Double] = None,
+    theta0: Option[Element] = None,
+    dtheta: Option[Double] = None,
+    thetaunit: Option[ThetaUnit] = None,
+    mode: Option[ScatterMode] = None,
+    name: Option[String] = None,
+    text: Option[OneOrSeq[String]] = None,
+    textposition: Option[TextPosition] = None,
+    textfont: Option[Font] = None,
+    hovertext: Option[OneOrSeq[String]] = None,
+    hoverinfo: Option[HoverInfo] = None,
+    hovertemplate: Option[OneOrSeq[String]] = None,
+    marker: Option[Marker] = None,
+    line: Option[Line] = None,
+    fill: Option[Fill] = None,
+    fillcolor: Option[Color] = None,
+    connectgaps: Option[Boolean] = None,
+    opacity: Option[Double] = None,
+    showlegend: Option[Boolean] = None,
+    legendgroup: Option[String] = None,
+    // the polar subplot the trace is drawn in, like "polar" (the default) or "polar2"
+    subplot: Option[String] = None
+) extends Trace
+
+object ScatterPolarGl {
+  def apply(r: Sequence, theta: Sequence): ScatterPolarGl =
+    ScatterPolarGl().copy(r = Some(r), theta = Some(theta))
+}
+
+/** Bars in polar coordinates, like wind roses */
+@data(
+  optionSetters = true,
+  nullOptionBuilderMethodName = "from",
+  nullOptionCopyMethodName = "withValues",
+  deprecatedSetters = true,
+  deprecatedSettersMessage = "Use withValues instead",
+  deprecatedSettersSince = "0.8.6"
+) final case class BarPolar(
+    r: Option[Sequence] = None,
+    theta: Option[Sequence] = None,
+    r0: Option[Element] = None,
+    dr: Option[Double] = None,
+    theta0: Option[Element] = None,
+    dtheta: Option[Double] = None,
+    thetaunit: Option[ThetaUnit] = None,
+    base: Option[OneOrSeq[Double]] = None,
+    // the angular widths of the bars
+    width: Option[OneOrSeq[Double]] = None,
+    offset: Option[OneOrSeq[Double]] = None,
+    name: Option[String] = None,
+    text: Option[OneOrSeq[String]] = None,
+    hovertext: Option[OneOrSeq[String]] = None,
+    hoverinfo: Option[HoverInfo] = None,
+    hovertemplate: Option[OneOrSeq[String]] = None,
+    marker: Option[Marker] = None,
+    opacity: Option[Double] = None,
+    showlegend: Option[Boolean] = None,
+    legendgroup: Option[String] = None,
+    // the polar subplot the trace is drawn in, like "polar" (the default) or "polar2"
+    subplot: Option[String] = None
+) extends Trace
+
+object BarPolar {
+  def apply(r: Sequence, theta: Sequence): BarPolar =
+    BarPolar().copy(r = Some(r), theta = Some(theta))
+}
+
 object Pie {
   def apply(values: Sequence, labels: Sequence): Pie =
     Pie().copy(values = Some(values), labels = Some(labels))

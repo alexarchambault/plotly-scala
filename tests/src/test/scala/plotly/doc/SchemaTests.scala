@@ -61,6 +61,7 @@ class SchemaTests extends munit.FunSuite {
   // the trace types having a case class extending Trace
   private val traceTypes = Seq(
     "bar",
+    "barpolar",
     "box",
     "candlestick",
     "contour",
@@ -75,6 +76,8 @@ class SchemaTests extends munit.FunSuite {
     "pie",
     "scatter",
     "scatter3d",
+    "scatterpolar",
+    "scatterpolargl",
     "surface",
     "violin",
     "waterfall"
@@ -208,6 +211,26 @@ class SchemaTests extends munit.FunSuite {
     val fromLib    = Enumerate[plotly.layout.BarMode].apply().map(_.label).toSet
     val missing    = fromSchema.filterNot(fromLib).toVector.sorted
     assert(missing.isEmpty, s"Missing in lib: ${missing.mkString(", ")}")
+  }
+
+  test("Polar enums should be exhaustive") {
+    val polar = SchemaTests.schema("layout")("layoutAttributes")("polar")
+    compareValues(
+      polar("radialaxis")("categoryorder")("values").arr.map(_.str).toSet,
+      Enumerate[CategoryOrder].apply().map(_.label).toSet
+    )
+    compareValues(
+      polar("angularaxis")("thetaunit")("values").arr.map(_.str).toSet,
+      Enumerate[ThetaUnit].apply().map(_.label).toSet
+    )
+    compareValues(
+      polar("gridshape")("values").arr.map(_.str).toSet,
+      Enumerate[PolarGridShape].apply().map(_.label).toSet
+    )
+    compareValues(
+      polar("angularaxis")("direction")("values").arr.map(_.str).toSet,
+      Enumerate[RotationDirection].apply().map(_.label).toSet
+    )
   }
 
   test("Text position should be exhaustive") {
