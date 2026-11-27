@@ -1,7 +1,7 @@
 package plotly
 package layout
 
-import dataclass.data
+import dataclass.{data, since}
 import plotly.element._
 
 @data(
@@ -14,7 +14,14 @@ import plotly.element._
 ) final case class Font(
     size: Option[Int] = None,
     family: Option[String] = None,
-    color: Option[Color] = None
+    color: Option[Color] = None,
+    @since("0.8.6")
+    weight: Option[FontWeight] = None,
+    style: Option[FontStyle] = None,
+    variant: Option[FontVariant] = None,
+    textcase: Option[TextCase] = None,
+    lineposition: Option[String] = None,
+    shadow: Option[String] = None
 )
 
 object Font {

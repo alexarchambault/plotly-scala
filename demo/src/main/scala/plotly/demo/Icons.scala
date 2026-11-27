@@ -69,6 +69,54 @@ object Icons {
     }.mkString
   )
 
+  val financial = stroked(
+    """<path d="M6 4v16M3 8h3M6 15h3M13 2v14M10 13h3M13 5h3M20 7v14M17 18h3M20 10h3"/>"""
+  )
+
+  val waterfall = filled(
+    """<rect x="2" y="12" width="4" height="9" rx="0.8"/><rect x="7" y="7" width="4" height="5" rx="0.8" opacity="0.8"/>""" +
+      """<rect x="12" y="4" width="4" height="3" rx="0.8" opacity="0.6"/><rect x="17" y="4" width="4" height="17" rx="0.8"/>"""
+  )
+
+  val funnel = filled(
+    """<rect x="2" y="3" width="20" height="4" rx="1"/><rect x="5" y="9" width="14" height="4" rx="1" opacity="0.8"/>""" +
+      """<rect x="8" y="15" width="8" height="4" rx="1" opacity="0.6"/>"""
+  )
+
+  val box = stroked(
+    """<path d="M12 2v5M12 17v5M9 2h6M9 22h6"/><rect x="6" y="7" width="12" height="10" rx="1"/><path d="M6 12h12"/>"""
+  )
+
+  val violin = filled(
+    """<path d="M12 2c1 3 4 5 4 9s-3 5-3 7 1 3-1 4c-2-1-1-2-1-4s-3-3-3-7 3-6 4-9z"/>"""
+  )
+
+  val hierarchical = filled(
+    """<rect x="2" y="2" width="11" height="20" rx="1"/><rect x="14.5" y="2" width="7.5" height="11" rx="1" opacity="0.75"/>""" +
+      """<rect x="14.5" y="14.5" width="7.5" height="7.5" rx="1" opacity="0.5"/>"""
+  )
+
+  val sankey = stroked(
+    """<path d="M3 5h4c6 0 6 9 14 9M3 5h4c5 0 7-1 14-1M3 19h5c5 0 6-5 13-5"/>"""
+  )
+
+  val polar = stroked(
+    """<polygon points="12 2 21.5 8.9 17.9 20.1 6.1 20.1 2.5 8.9"/><polygon points="12 7 17 10 15 16 8 15 7 10"/>"""
+  )
+
+  val threeD = stroked(
+    """<path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/>"""
+  )
+
+  val contour = stroked(
+    """<ellipse cx="12" cy="12" rx="10" ry="8"/><ellipse cx="12.5" cy="12" rx="6.5" ry="5"/>""" +
+      """<ellipse cx="13" cy="12" rx="3" ry="2.2"/>"""
+  )
+
+  val pie = filled(
+    """<path d="M11 3a9 9 0 1 0 9 10h-9z"/><path d="M13 1v10h10A10 10 0 0 0 13 1z" opacity="0.7"/>"""
+  )
+
   val github = filled(
     """<path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>""",
     "0 0 16 16"

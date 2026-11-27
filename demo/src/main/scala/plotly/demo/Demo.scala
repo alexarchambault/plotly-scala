@@ -34,7 +34,8 @@ import scalatags.JsDom.tags2
       ("#ab63fa", "#d2a6ff"),
       Seq(
         lineandscatter.CategoricalDotPlot,
-        lineandscatter.GroupedScatterPlot
+        lineandscatter.GroupedScatterPlot,
+        lineandscatter.HighlightedPoints
       )
     ),
     Category(
@@ -47,7 +48,26 @@ import scalatags.JsDom.tags2
         bar.BarChartWithDirectLabels,
         bar.CustomizingIndividualBarColors,
         bar.WaterfallBarChart,
-        bar.RoundedBars
+        bar.RoundedBars,
+        bar.PatternedBars
+      )
+    ),
+    Category(
+      "Waterfall Charts",
+      Icons.waterfall,
+      ("#00cc96", "#636efa"),
+      Seq(
+        waterfall.BasicWaterfallChart,
+        waterfall.MultiCategoryWaterfallChart
+      )
+    ),
+    Category(
+      "Funnel Charts",
+      Icons.funnel,
+      ("#ffa15a", "#ef553b"),
+      Seq(
+        funnel.StackedFunnel,
+        funnel.FunnelAreaChart
       )
     ),
     Category(
@@ -60,11 +80,21 @@ import scalatags.JsDom.tags2
       )
     ),
     Category(
+      "Financial Charts",
+      Icons.financial,
+      ("#00cc96", "#ef553b"),
+      Seq(
+        financial.OhlcChart,
+        financial.CandlestickChart
+      )
+    ),
+    Category(
       "Time Series",
       Icons.timeSeries,
       ("#19d3f3", "#7fe6f8"),
       Seq(
-        timeseries.TimeSeries
+        timeseries.TimeSeries,
+        timeseries.PeriodPositioning
       )
     ),
     Category(
@@ -80,7 +110,8 @@ import scalatags.JsDom.tags2
       Icons.area,
       ("#00cc96", "#5ee8c0"),
       Seq(
-        area.BasicOverlaidAreaChart
+        area.BasicOverlaidAreaChart,
+        area.GradientAndPatternFills
       )
     ),
     Category(
@@ -91,7 +122,9 @@ import scalatags.JsDom.tags2
         heatmaps.BasicHeatmap,
         heatmaps.CategoricalAxisHeatmap,
         heatmaps.CustomColorScaleHeatmap,
-        heatmaps.AnnotatedHeatmap
+        heatmaps.AnnotatedHeatmap,
+        heatmaps.HeatmapWithText,
+        heatmaps.SharedColorAxis
       )
     ),
     Category(
@@ -100,7 +133,83 @@ import scalatags.JsDom.tags2
       ("#4a55e8", "#19d3f3"),
       Seq(
         histogram.BasicHistogram,
-        histogram.StyledBasicHistogram
+        histogram.StyledBasicHistogram,
+        histogram.CumulativeHistogram,
+        histogram.BivariateNormalHistogram,
+        histogram.HistogramContourWithPoints
+      )
+    ),
+    Category(
+      "Box Plots",
+      Icons.box,
+      ("#ab63fa", "#636efa"),
+      Seq(
+        box.NotchedBoxPlot,
+        box.PrecomputedBoxPlot
+      )
+    ),
+    Category(
+      "Violin Plots",
+      Icons.violin,
+      ("#ab63fa", "#ff6692"),
+      Seq(
+        violin.BasicViolinPlot,
+        violin.SplitViolinPlot
+      )
+    ),
+    Category(
+      "Hierarchical Charts",
+      Icons.hierarchical,
+      ("#fecb52", "#ef553b"),
+      Seq(
+        hierarchical.SunburstChart,
+        hierarchical.TreemapChart,
+        hierarchical.IcicleChart
+      )
+    ),
+    Category(
+      "Sankey Diagrams",
+      Icons.sankey,
+      ("#636efa", "#19d3f3"),
+      Seq(
+        sankey.EnergyFlowSankey
+      )
+    ),
+    Category(
+      "Polar Charts",
+      Icons.polar,
+      ("#ff6692", "#ab63fa"),
+      Seq(
+        polar.RadarChart,
+        polar.WindRose
+      )
+    ),
+    Category(
+      "3D Charts",
+      Icons.threeD,
+      ("#19d3f3", "#636efa"),
+      Seq(
+        threed.ClusteredScatterPlot,
+        threed.ConicalHelixLinePlot,
+        threed.SurfaceWithContours
+      )
+    ),
+    Category(
+      "Contour Plots",
+      Icons.contour,
+      ("#636efa", "#00cc96"),
+      Seq(
+        contour.BasicContourPlot,
+        contour.ContourLinesWithLabels
+      )
+    ),
+    Category(
+      "Pie Charts",
+      Icons.pie,
+      ("#b6e880", "#00cc96"),
+      Seq(
+        pie.BasicPieChart,
+        pie.DonutChart
       )
     )
   )

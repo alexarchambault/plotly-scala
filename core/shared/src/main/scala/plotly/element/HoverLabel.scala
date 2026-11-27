@@ -1,6 +1,6 @@
 package plotly.element
 
-import dataclass.data
+import dataclass.{data, since}
 
 @data(
   optionSetters = true,
@@ -15,5 +15,7 @@ import dataclass.data
     font: Option[HoverLabelFont] = None,
     align: Option[OneOrSeq[Alignment]] = None,
     namelength: Option[OneOrSeq[Int]] = None,
-    uirevision: Option[Element] = None
+    uirevision: Option[Element] = None,
+    @since("0.8.6")
+    showarrow: Option[Boolean] = None
 )

@@ -64,6 +64,18 @@ object JsoniterCodecsInternals {
     t
   }
 
+  // Returns the first token of the first element of the first element of the upcoming array of arrays
+  // (or ']' if one of them is empty), without consuming anything
+  private def peekFirstNestedArrayElementToken(in: JsonReader): Byte = {
+    in.setMark()
+    val isNestedArray = in.isNextToken('[') && in.isNextToken('[')
+    val t             = if (isNestedArray) in.nextToken() else 0: Byte
+    in.rollbackToMark()
+    if (!isNestedArray)
+      in.decodeError("expected '[['")
+    t
+  }
+
   private def stringCodec[T](encode: T => String)(decode: (String, JsonReader) => T): JsonValueCodec[T] =
     new JsonValueCodec[T] {
       def decodeValue(in: JsonReader, default: T): T = {
@@ -134,40 +146,93 @@ object JsoniterCodecsInternals {
     stringCodec(label)((s, in) => map.getOrElse(s, in.decodeError(s"Unrecognized $name: '$s'")))
   }
 
-  implicit val anchorCodec: JsonValueCodec[Anchor]                   = enumCodec[Anchor](_.label)
-  implicit val refCodec: JsonValueCodec[Ref]                         = enumCodec[Ref](_.label)
-  implicit val axisAnchorCodec: JsonValueCodec[AxisAnchor]           = enumCodec[AxisAnchor](_.label)
-  implicit val axisReferenceCodec: JsonValueCodec[AxisReference]     = enumCodec[AxisReference](_.label)
-  implicit val axisTypeCodec: JsonValueCodec[AxisType]               = enumCodec[AxisType](_.label)
-  implicit val barModeCodec: JsonValueCodec[BarMode]                 = enumCodec[BarMode](_.label)
-  implicit val boxModeCodec: JsonValueCodec[BoxMode]                 = enumCodec[BoxMode](_.label)
-  implicit val dashCodec: JsonValueCodec[Dash]                       = enumCodec[Dash](_.label)
-  implicit val fillCodec: JsonValueCodec[Fill]                       = enumCodec[Fill](_.label)
-  implicit val hoverModeCodec: JsonValueCodec[HoverMode]             = enumCodec[HoverMode](_.label)
-  implicit val lineShapeCodec: JsonValueCodec[LineShape]             = enumCodec[LineShape](_.label)
-  implicit val orientationCodec: JsonValueCodec[Orientation]         = enumCodec[Orientation](_.label)
-  implicit val traceOrderCodec: JsonValueCodec[TraceOrder]           = enumCodec[TraceOrder](_.label)
-  implicit val textPositionCodec: JsonValueCodec[TextPosition]       = enumCodec[TextPosition](_.label)
-  implicit val barTextPositionCodec: JsonValueCodec[BarTextPosition] = enumCodec[BarTextPosition](_.label)
-  implicit val sideCodec: JsonValueCodec[Side]                       = enumCodec[Side](_.label)
-  implicit val symbolCodec: JsonValueCodec[Symbol]                   = enumCodec[Symbol](_.label)
-  implicit val ticksCodec: JsonValueCodec[Ticks]                     = enumCodec[Ticks](_.label)
-  implicit val histNormCodec: JsonValueCodec[HistNorm]               = enumCodec[HistNorm](_.label)
-  implicit val sizeModeCodec: JsonValueCodec[SizeMode]               = enumCodec[SizeMode](_.label)
-  implicit val hoverOnCodec: JsonValueCodec[HoverOn]                 = enumCodec[HoverOn](_.label)
-  implicit val groupNormCodec: JsonValueCodec[GroupNorm]             = enumCodec[GroupNorm](_.label)
-  implicit val histFuncCodec: JsonValueCodec[HistFunc]               = enumCodec[HistFunc](_.label)
-  implicit val tickModeCodec: JsonValueCodec[TickMode]               = enumCodec[TickMode](_.mode)
-  implicit val patternCodec: JsonValueCodec[Pattern]                 = enumCodec[Pattern](_.label)
-  implicit val rowOrderCodec: JsonValueCodec[RowOrder]               = enumCodec[RowOrder](_.label)
-  implicit val alignmentCodec: JsonValueCodec[Alignment]             = enumCodec[Alignment](_.label)
-  implicit val colorModelCodec: JsonValueCodec[ColorModel]           = enumCodec[ColorModel](_.label)
+  implicit val anchorCodec: JsonValueCodec[Anchor]                     = enumCodec[Anchor](_.label)
+  implicit val refCodec: JsonValueCodec[Ref]                           = enumCodec[Ref](_.label)
+  implicit val axisAnchorCodec: JsonValueCodec[AxisAnchor]             = enumCodec[AxisAnchor](_.label)
+  implicit val axisReferenceCodec: JsonValueCodec[AxisReference]       = enumCodec[AxisReference](_.label)
+  implicit val axisTypeCodec: JsonValueCodec[AxisType]                 = enumCodec[AxisType](_.label)
+  implicit val barModeCodec: JsonValueCodec[BarMode]                   = enumCodec[BarMode](_.label)
+  implicit val boxModeCodec: JsonValueCodec[BoxMode]                   = enumCodec[BoxMode](_.label)
+  implicit val dashCodec: JsonValueCodec[Dash]                         = enumCodec[Dash](_.label)
+  implicit val fillCodec: JsonValueCodec[Fill]                         = enumCodec[Fill](_.label)
+  implicit val hoverModeCodec: JsonValueCodec[HoverMode]               = enumCodec[HoverMode](_.label)
+  implicit val lineShapeCodec: JsonValueCodec[LineShape]               = enumCodec[LineShape](_.label)
+  implicit val orientationCodec: JsonValueCodec[Orientation]           = enumCodec[Orientation](_.label)
+  implicit val traceOrderCodec: JsonValueCodec[TraceOrder]             = enumCodec[TraceOrder](_.label)
+  implicit val textPositionCodec: JsonValueCodec[TextPosition]         = enumCodec[TextPosition](_.label)
+  implicit val barTextPositionCodec: JsonValueCodec[BarTextPosition]   = enumCodec[BarTextPosition](_.label)
+  implicit val sideCodec: JsonValueCodec[Side]                         = enumCodec[Side](_.label)
+  implicit val symbolCodec: JsonValueCodec[Symbol]                     = enumCodec[Symbol](_.label)
+  implicit val ticksCodec: JsonValueCodec[Ticks]                       = enumCodec[Ticks](_.label)
+  implicit val histNormCodec: JsonValueCodec[HistNorm]                 = enumCodec[HistNorm](_.label)
+  implicit val sizeModeCodec: JsonValueCodec[SizeMode]                 = enumCodec[SizeMode](_.label)
+  implicit val hoverOnCodec: JsonValueCodec[HoverOn]                   = enumCodec[HoverOn](_.label)
+  implicit val groupNormCodec: JsonValueCodec[GroupNorm]               = enumCodec[GroupNorm](_.label)
+  implicit val histFuncCodec: JsonValueCodec[HistFunc]                 = enumCodec[HistFunc](_.label)
+  implicit val tickModeCodec: JsonValueCodec[TickMode]                 = enumCodec[TickMode](_.mode)
+  implicit val patternCodec: JsonValueCodec[Pattern]                   = enumCodec[Pattern](_.label)
+  implicit val rowOrderCodec: JsonValueCodec[RowOrder]                 = enumCodec[RowOrder](_.label)
+  implicit val alignmentCodec: JsonValueCodec[Alignment]               = enumCodec[Alignment](_.label)
+  implicit val colorModelCodec: JsonValueCodec[ColorModel]             = enumCodec[ColorModel](_.label)
+  implicit val sizeUnitCodec: JsonValueCodec[SizeUnit]                 = enumCodec[SizeUnit](_.label)
+  implicit val contourColoringCodec: JsonValueCodec[ContourColoring]   = enumCodec[ContourColoring](_.label)
+  implicit val violinSideCodec: JsonValueCodec[ViolinSide]             = enumCodec[ViolinSide](_.label)
+  implicit val spanModeCodec: JsonValueCodec[SpanMode]                 = enumCodec[SpanMode](_.label)
+  implicit val violinScaleModeCodec: JsonValueCodec[ViolinScaleMode]   = enumCodec[ViolinScaleMode](_.label)
+  implicit val connectorModeCodec: JsonValueCodec[ConnectorMode]       = enumCodec[ConnectorMode](_.label)
+  implicit val waterfallMeasureCodec: JsonValueCodec[WaterfallMeasure] =
+    enumCodec[WaterfallMeasure](_.label)
+  implicit val titlePositionCodec: JsonValueCodec[TitlePosition]         = enumCodec[TitlePosition](_.label)
+  implicit val categoryOrderCodec: JsonValueCodec[CategoryOrder]         = enumCodec[CategoryOrder](_.label)
+  implicit val thetaUnitCodec: JsonValueCodec[ThetaUnit]                 = enumCodec[ThetaUnit](_.label)
+  implicit val polarGridShapeCodec: JsonValueCodec[PolarGridShape]       = enumCodec[PolarGridShape](_.label)
+  implicit val branchValuesCodec: JsonValueCodec[BranchValues]           = enumCodec[BranchValues](_.label)
+  implicit val treemapPackingCodec: JsonValueCodec[TreemapPacking]       = enumCodec[TreemapPacking](_.label)
+  implicit val sankeyArrangementCodec: JsonValueCodec[SankeyArrangement] =
+    enumCodec[SankeyArrangement](_.label)
+  implicit val sankeyNodeAlignCodec: JsonValueCodec[SankeyNodeAlign]   = enumCodec[SankeyNodeAlign](_.label)
+  implicit val sankeySortCodec: JsonValueCodec[SankeySort]             = enumCodec[SankeySort](_.label)
+  implicit val sankeyDirectionCodec: JsonValueCodec[SankeyDirection]   = enumCodec[SankeyDirection](_.label)
+  implicit val calendarCodec: JsonValueCodec[Calendar]                 = enumCodec[Calendar](_.label)
+  implicit val periodAlignmentCodec: JsonValueCodec[PeriodAlignment]   = enumCodec[PeriodAlignment](_.label)
+  implicit val fontStyleCodec: JsonValueCodec[FontStyle]               = enumCodec[FontStyle](_.label)
+  implicit val fontVariantCodec: JsonValueCodec[FontVariant]           = enumCodec[FontVariant](_.label)
+  implicit val textCaseCodec: JsonValueCodec[TextCase]                 = enumCodec[TextCase](_.label)
+  implicit val patternShapeCodec: JsonValueCodec[PatternShape]         = enumCodec[PatternShape](_.label)
+  implicit val patternFillModeCodec: JsonValueCodec[PatternFillMode]   = enumCodec[PatternFillMode](_.label)
+  implicit val gradientTypeCodec: JsonValueCodec[GradientType]         = enumCodec[GradientType](_.label)
+  implicit val stackGapsCodec: JsonValueCodec[StackGaps]               = enumCodec[StackGaps](_.label)
+  implicit val markerAngleRefCodec: JsonValueCodec[MarkerAngleRef]     = enumCodec[MarkerAngleRef](_.label)
+  implicit val constrainTextCodec: JsonValueCodec[ConstrainText]       = enumCodec[ConstrainText](_.label)
+  implicit val insideTextAnchorCodec: JsonValueCodec[InsideTextAnchor] =
+    enumCodec[InsideTextAnchor](_.label)
+  implicit val cumulativeDirectionCodec: JsonValueCodec[CumulativeDirection] =
+    enumCodec[CumulativeDirection](_.label)
+  implicit val currentBinCodec: JsonValueCodec[CurrentBin]               = enumCodec[CurrentBin](_.label)
+  implicit val quartileMethodCodec: JsonValueCodec[QuartileMethod]       = enumCodec[QuartileMethod](_.label)
+  implicit val boxSizeModeCodec: JsonValueCodec[BoxSizeMode]             = enumCodec[BoxSizeMode](_.label)
+  implicit val boxHoverOnCodec: JsonValueCodec[BoxHoverOn]               = enumCodec[BoxHoverOn](_.label)
+  implicit val coordinateTypeCodec: JsonValueCodec[CoordinateType]       = enumCodec[CoordinateType](_.label)
+  implicit val rotationDirectionCodec: JsonValueCodec[RotationDirection] =
+    enumCodec[RotationDirection](_.label)
+  implicit val insideTextOrientationCodec: JsonValueCodec[InsideTextOrientation] =
+    enumCodec[InsideTextOrientation](_.label)
 
   implicit val scatterLayoutModeCodec: JsonValueCodec[ScatterLayoutMode] =
     enumCodec[ScatterLayoutMode](_.label)
 
-  private val boxMeanLabeledCodec   = enumCodec[BoxMean.Labeled](_.label)
-  private val boxPointsLabeledCodec = enumCodec[BoxPoints.Labeled](_.label)
+  private val boxMeanLabeledCodec = enumCodec[BoxMean.Labeled](_.label)
+  // Also reads "Outliers", that BoxPoints.Outliers used to be written as (and that some examples
+  // of the plotly.js documentation use, although plotly.js ignores it)
+  private val boxPointsLabeledCodec = {
+    stringCodec[BoxPoints.Labeled](_.label) { (s, in) =>
+      Enumerate[BoxPoints.Labeled]
+        .apply()
+        .find(_.label == s)
+        .orElse(Some(BoxPoints.Outliers).filter(_ => s == "Outliers"))
+        .getOrElse(in.decodeError(s"Unrecognized BoxPoints.Labeled: '$s'"))
+    }
+  }
 
   implicit val boxMeanCodec: JsonValueCodec[BoxMean] =
     new JsonValueCodec[BoxMean] {
@@ -182,6 +247,63 @@ object JsoniterCodecsInternals {
           case l: BoxMean.Labeled => boxMeanLabeledCodec.encodeValue(l, out)
         }
       def nullValue: BoxMean = null
+    }
+
+  private val zSmoothLabeledCodec = enumCodec[ZSmooth.Labeled](_.label)
+
+  implicit val zSmoothCodec: JsonValueCodec[ZSmooth] =
+    new JsonValueCodec[ZSmooth] {
+      def decodeValue(in: JsonReader, default: ZSmooth): ZSmooth =
+        if (peekToken(in) == 'f') {
+          in.readBoolean()
+          ZSmooth.False
+        } else
+          zSmoothLabeledCodec.decodeValue(in, null)
+      def encodeValue(x: ZSmooth, out: JsonWriter): Unit =
+        x match {
+          case ZSmooth.False      => out.writeVal(false)
+          case l: ZSmooth.Labeled => zSmoothLabeledCodec.encodeValue(l, out)
+        }
+      def nullValue: ZSmooth = null
+    }
+
+  implicit val fontWeightCodec: JsonValueCodec[FontWeight] =
+    new JsonValueCodec[FontWeight] {
+      def decodeValue(in: JsonReader, default: FontWeight): FontWeight =
+        if (peekToken(in) == '"')
+          in.readString(null) match {
+            case "normal" => FontWeight.Normal
+            case "bold"   => FontWeight.Bold
+            case other    => in.decodeError(s"Unrecognized font weight: '$other'")
+          }
+        else
+          FontWeight.Value(in.readInt())
+      def encodeValue(x: FontWeight, out: JsonWriter): Unit =
+        x match {
+          case FontWeight.Normal   => out.writeVal("normal")
+          case FontWeight.Bold     => out.writeVal("bold")
+          case FontWeight.Value(w) => out.writeVal(w)
+        }
+      def nullValue: FontWeight = null
+    }
+
+  implicit val visibleCodec: JsonValueCodec[Visible] =
+    new JsonValueCodec[Visible] {
+      def decodeValue(in: JsonReader, default: Visible): Visible =
+        peekToken(in) match {
+          case 't' | 'f' => Visible.fromBoolean(in.readBoolean())
+          case _         =>
+            val s = in.readString(null)
+            if (s == "legendonly") Visible.LegendOnly
+            else in.decodeError(s"Unrecognized visible value: '$s'")
+        }
+      def encodeValue(x: Visible, out: JsonWriter): Unit =
+        x match {
+          case Visible.True       => out.writeVal(true)
+          case Visible.False      => out.writeVal(false)
+          case Visible.LegendOnly => out.writeVal("legendonly")
+        }
+      def nullValue: Visible = null
     }
 
   implicit val boxPointsCodec: JsonValueCodec[BoxPoints] =
@@ -205,14 +327,8 @@ object JsoniterCodecsInternals {
       case ("skip", _)       => HoverInfo.Skip
       case ("none", _)       => HoverInfo.None
       case (combination, in) =>
-        val results = combination.split('+').map {
-          case "x"     => Right(HoverInfo.X)
-          case "y"     => Right(HoverInfo.Y)
-          case "z"     => Right(HoverInfo.Z)
-          case "color" => Right(HoverInfo.Color)
-          case "text"  => Right(HoverInfo.Text)
-          case "name"  => Right(HoverInfo.Name)
-          case other   => Left(other)
+        val results = combination.split('+').map { elem =>
+          HoverInfo.elementMap.get(elem).toRight(elem)
         }
         if (results.exists(_.isLeft))
           in.decodeError(s"Unrecognized hover info elements: ${results.flatMap(_.left.toSeq).mkString(", ")}")
@@ -222,6 +338,9 @@ object JsoniterCodecsInternals {
 
   implicit val scatterModeCodec: JsonValueCodec[ScatterMode] =
     flagCodec[ScatterMode, ScatterMode.Flag]("scatter mode", _.flags, _.label, ScatterMode.flagMap, ScatterMode(_))
+
+  implicit val textInfoCodec: JsonValueCodec[TextInfo] =
+    flagCodec[TextInfo, TextInfo.Flag]("text info", _.flags, _.label, TextInfo.flagMap, TextInfo(_))
 
   implicit val localDateTimeCodec: JsonValueCodec[LocalDateTime] =
     stringCodec[LocalDateTime](_.toString) { (s, in) =>
@@ -243,8 +362,9 @@ object JsoniterCodecsInternals {
     else
       None
 
+  // like in CSS, color names are case-insensitive
   private def parseStringColor(s: String): Option[Color.StringColor] =
-    if (Color.StringColor.colors(s)) Some(Color.StringColor(s))
+    if (Color.StringColor.colors(s.toLowerCase(java.util.Locale.ROOT))) Some(Color.StringColor(s))
     else None
 
   private val HexaColor3 = "#([0-9a-fA-F]{3})".r
@@ -293,11 +413,9 @@ object JsoniterCodecsInternals {
             .orElse(parseRGBA(s))
             .orElse(parseStringColor(s))
             .getOrElse(in.decodeError(s"Unrecognized color: '$s'"))
-        } else {
-          val r = in.readInt()
-          if (r >= 0 && r < 256) Color.RGB(r, 0, 0)
-          else in.decodeError(s"Unrecognized RGB color: $r")
-        }
+        } else
+          // numbers are mapped to colors by color scales
+          Color.Number(in.readDouble())
       // plotly.js >= 4 rejects the colors that aren't valid CSS colors, like HSL ones without
       // percentages
       def encodeValue(x: Color, out: JsonWriter): Unit =
@@ -306,12 +424,52 @@ object JsoniterCodecsInternals {
           case c: Color.StringColor => out.writeVal(c.color)
           case c: Color.RGB         => out.writeVal(s"rgb(${c.r}, ${c.g}, ${c.b})")
           case c: Color.HSL         => out.writeVal(s"hsl(${c.h}, ${c.s}%, ${c.l}%)")
+          case c: Color.Number      => doubleCodec.encodeValue(c.value, out)
         }
       def nullValue: Color = null
     }
 
+  // The levels of the color scales are numbers, that plotly.js also accepts as strings, like "0.5"
+  private val colorScaleLevelCodec: JsonValueCodec[Double] =
+    new JsonValueCodec[Double] {
+      def decodeValue(in: JsonReader, default: Double): Double =
+        if (peekToken(in) == '"') {
+          val s = in.readString(null)
+          Try(s.trim.toDouble).getOrElse(in.decodeError(s"Invalid color scale level: '$s'"))
+        } else
+          in.readDouble()
+      def encodeValue(x: Double, out: JsonWriter): Unit = out.writeVal(x)
+      def nullValue: Double                             = 0.0
+    }
+
+  private val colorScaleEntryCodec: JsonValueCodec[(Double, Color)] =
+    new JsonValueCodec[(Double, Color)] {
+      def decodeValue(in: JsonReader, default: (Double, Color)): (Double, Color) =
+        if (in.isNextToken('[')) {
+          val level = colorScaleLevelCodec.decodeValue(in, 0.0)
+          if (!in.isNextToken(',')) in.commaError()
+          val color = colorCodec.decodeValue(in, null)
+          if (!in.isNextToken(']')) in.arrayEndError()
+          (level, color)
+        } else
+          in.decodeError("expected '['")
+      def encodeValue(x: (Double, Color), out: JsonWriter): Unit = {
+        out.writeArrayStart()
+        colorScaleLevelCodec.encodeValue(x._1, out)
+        colorCodec.encodeValue(x._2, out)
+        out.writeArrayEnd()
+      }
+      def nullValue: (Double, Color) = null
+    }
+
   private val customColorScaleValuesCodec: JsonValueCodec[Seq[(Double, Color)]] =
-    JsonCodecMaker.make
+    new JsonValueCodec[Seq[(Double, Color)]] {
+      def decodeValue(in: JsonReader, default: Seq[(Double, Color)]): Seq[(Double, Color)] =
+        readSeq(in, colorScaleEntryCodec)
+      def encodeValue(x: Seq[(Double, Color)], out: JsonWriter): Unit =
+        writeSeq(x, out, colorScaleEntryCodec)
+      def nullValue: Seq[(Double, Color)] = null
+    }
 
   implicit val colorScaleCodec: JsonValueCodec[ColorScale] =
     new JsonValueCodec[ColorScale] {
@@ -329,6 +487,24 @@ object JsoniterCodecsInternals {
       def nullValue: ColorScale = null
     }
 
+  private val customOpacityScaleValuesCodec: JsonValueCodec[Seq[(Double, Double)]] =
+    JsonCodecMaker.make
+
+  implicit val opacityScaleCodec: JsonValueCodec[OpacityScale] =
+    new JsonValueCodec[OpacityScale] {
+      def decodeValue(in: JsonReader, default: OpacityScale): OpacityScale =
+        if (peekToken(in) == '"')
+          OpacityScale.NamedScale(in.readString(null))
+        else
+          OpacityScale.CustomScale(customOpacityScaleValuesCodec.decodeValue(in, null))
+      def encodeValue(x: OpacityScale, out: JsonWriter): Unit =
+        x match {
+          case s: OpacityScale.NamedScale  => out.writeVal(s.name)
+          case s: OpacityScale.CustomScale => customOpacityScaleValuesCodec.encodeValue(s.values, out)
+        }
+      def nullValue: OpacityScale = null
+    }
+
   implicit val elementCodec: JsonValueCodec[Element] =
     new JsonValueCodec[Element] {
       def decodeValue(in: JsonReader, default: Element): Element =
@@ -344,6 +520,7 @@ object JsoniterCodecsInternals {
 
   private val nestedDoublesCodec: JsonValueCodec[Seq[Seq[Double]]] = JsonCodecMaker.make
   private val nestedIntsCodec: JsonValueCodec[Seq[Seq[Int]]]       = JsonCodecMaker.make
+  private val nestedStringsCodec: JsonValueCodec[Seq[Seq[String]]] = JsonCodecMaker.make
 
   implicit val sequenceCodec: JsonValueCodec[Sequence] =
     new JsonValueCodec[Sequence] {
@@ -357,7 +534,10 @@ object JsoniterCodecsInternals {
             if (dateTimes.forall(_.nonEmpty)) Sequence.DateTimes(dateTimes.flatten)
             else Sequence.Strings(strings)
           case '[' =>
-            Sequence.NestedDoubles(nestedDoublesCodec.decodeValue(in, null))
+            if (peekFirstNestedArrayElementToken(in) == '"')
+              Sequence.NestedStrings(nestedStringsCodec.decodeValue(in, null))
+            else
+              Sequence.NestedDoubles(nestedDoublesCodec.decodeValue(in, null))
           case _ =>
             Sequence.Doubles(readSeq(in, doubleCodec))
         }
@@ -368,6 +548,7 @@ object JsoniterCodecsInternals {
           case Sequence.NestedInts(seq)    => nestedIntsCodec.encodeValue(seq, out)
           case Sequence.Strings(seq)       => writeSeq(seq, out, stringValueCodec)
           case Sequence.DateTimes(seq)     => writeSeq(seq, out, localDateTimeCodec)
+          case Sequence.NestedStrings(seq) => nestedStringsCodec.encodeValue(seq, out)
         }
       def nullValue: Sequence = null
     }
@@ -401,12 +582,16 @@ object JsoniterCodecsInternals {
       def nullValue: OneOrSeq[T] = null
     }
 
-  implicit val oneOrSeqAlignmentCodec: JsonValueCodec[OneOrSeq[Alignment]] = oneOrSeqCodec(alignmentCodec)
-  implicit val oneOrSeqColorCodec: JsonValueCodec[OneOrSeq[Color]]         = oneOrSeqCodec(colorCodec)
-  implicit val oneOrSeqDoubleCodec: JsonValueCodec[OneOrSeq[Double]]       = oneOrSeqCodec(doubleCodec)
-  implicit val oneOrSeqIntCodec: JsonValueCodec[OneOrSeq[Int]]             = oneOrSeqCodec(intValueCodec)
-  implicit val oneOrSeqStringCodec: JsonValueCodec[OneOrSeq[String]]       = oneOrSeqCodec(stringValueCodec)
-  implicit val oneOrSeqSymbolCodec: JsonValueCodec[OneOrSeq[Symbol]]       = oneOrSeqCodec(symbolCodec)
+  implicit val oneOrSeqAlignmentCodec: JsonValueCodec[OneOrSeq[Alignment]]       = oneOrSeqCodec(alignmentCodec)
+  implicit val oneOrSeqColorCodec: JsonValueCodec[OneOrSeq[Color]]               = oneOrSeqCodec(colorCodec)
+  implicit val oneOrSeqDoubleCodec: JsonValueCodec[OneOrSeq[Double]]             = oneOrSeqCodec(doubleCodec)
+  implicit val oneOrSeqIntCodec: JsonValueCodec[OneOrSeq[Int]]                   = oneOrSeqCodec(intValueCodec)
+  implicit val oneOrSeqStringCodec: JsonValueCodec[OneOrSeq[String]]             = oneOrSeqCodec(stringValueCodec)
+  implicit val oneOrSeqSymbolCodec: JsonValueCodec[OneOrSeq[Symbol]]             = oneOrSeqCodec(symbolCodec)
+  implicit val oneOrSeqPatternShapeCodec: JsonValueCodec[OneOrSeq[PatternShape]] =
+    oneOrSeqCodec(patternShapeCodec)
+  implicit val oneOrSeqGradientTypeCodec: JsonValueCodec[OneOrSeq[GradientType]] =
+    oneOrSeqCodec(gradientTypeCodec)
 
   implicit val errorCodec: JsonValueCodec[Error] =
     JsonCodecMaker.make(

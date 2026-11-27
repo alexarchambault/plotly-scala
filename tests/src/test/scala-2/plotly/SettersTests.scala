@@ -22,6 +22,37 @@ class SettersTests extends munit.FunSuite {
     classOf[Surface]                -> true,
     classOf[Heatmap]                -> true,
     classOf[Candlestick]            -> true,
+    classOf[Pie]                    -> true,
+    classOf[Contour]                -> true,
+    classOf[Histogram2d]            -> true,
+    classOf[Histogram2dContour]     -> true,
+    classOf[Violin]                 -> true,
+    classOf[Waterfall]              -> true,
+    classOf[Funnel]                 -> true,
+    classOf[Ohlc]                   -> true,
+    classOf[Scatter3d]              -> true,
+    classOf[ScatterPolar]           -> true,
+    classOf[ScatterPolarGl]         -> true,
+    classOf[BarPolar]               -> true,
+    classOf[Sunburst]               -> true,
+    classOf[Sankey]                 -> true,
+    classOf[SankeyNode]             -> true,
+    classOf[SankeyLink]             -> true,
+    classOf[Treemap]                -> true,
+    classOf[Icicle]                 -> true,
+    classOf[Leaf]                   -> true,
+    classOf[Root]                   -> true,
+    classOf[PathBar]                -> true,
+    classOf[Tiling]                 -> true,
+    classOf[Polar]                  -> true,
+    classOf[RadialAxis]             -> true,
+    classOf[AngularAxis]            -> true,
+    classOf[DirectionStyle]         -> true,
+    classOf[FunnelArea]             -> true,
+    classOf[Connector]              -> true,
+    classOf[BarStyle]               -> true,
+    classOf[ViolinBox]              -> true,
+    classOf[MeanLine]               -> true,
     classOf[Config]                 -> true,
     classOf[Annotation]             -> true,
     classOf[Axis]                   -> true,
@@ -37,38 +68,62 @@ class SettersTests extends munit.FunSuite {
     classOf[Error.Data]             -> true,
     classOf[Error.Percent]          -> true,
     classOf[Error.Constant]         -> true,
+    classOf[Error.Sqrt]             -> true,
     classOf[HoverLabel]             -> true,
     classOf[HoverLabelFont]         -> true,
     classOf[Line]                   -> true,
     classOf[Marker]                 -> true,
+    classOf[Domain]                 -> true,
+    classOf[LegendGroupTitle]       -> true,
+    classOf[Selection]              -> true,
+    classOf[ColorAxis]              -> true,
+    classOf[SurfaceContours]        -> true,
+    classOf[SurfaceContour]         -> true,
+    classOf[Projection]             -> true,
+    classOf[Lighting]               -> true,
+    classOf[LightPosition]          -> true,
+    classOf[FillPattern]            -> true,
+    classOf[FillGradient]           -> true,
+    classOf[MarkerGradient]         -> true,
+    classOf[SelectionMarker]        -> true,
+    classOf[SelectionTextFont]      -> true,
+    classOf[ColorBar]               -> true,
+    classOf[Contours]               -> true,
     classOf[AxisAnchor.Reference]   -> false,
     classOf[Bins]                   -> false,
     classOf[BoxMean.Bool]           -> false,
     classOf[BoxPoints.Bool]         -> false,
     classOf[Color.HSL]              -> false,
+    classOf[Color.Number]           -> false,
     classOf[Color.RGB]              -> false,
     classOf[Color.RGBA]             -> false,
     classOf[Color.StringColor]      -> false,
     classOf[ColorScale.CustomScale] -> false,
     classOf[ColorScale.NamedScale]  -> false,
-    classOf[Cumulative]             -> false,
+    classOf[Cumulative]             -> true,
     classOf[LocalDateTime]          -> false,
     classOf[ScatterMode]            -> false,
     classOf[Symbol.Circle]          -> false,
     classOf[Symbol.Cross]           -> false,
     classOf[Symbol.Diamond]         -> false,
     classOf[Symbol.Square]          -> false,
-    classOf[TextFont]               -> false
+    classOf[TextFont]               -> true,
+    classOf[TextInfo]               -> false
   )
 
   for ((cls, optionSetters) <- classes)
     test(s"${cls.getName} has setters for all its fields") {
       val fields = cls.getDeclaredFields.toSeq.filter(f => !Modifier.isStatic(f.getModifiers))
       // On the classes with option setters, withValues (their nullOptionCopyMethodName), and the
-      // methods of the default values of its parameters, aren't setters
-      val setters = cls.getMethods.toSeq
+      // methods of the default values of its parameters, aren't setters. The setters of a values
+      // field (pie traces have one) are also named withValues, and take a single parameter.
+      val hasValuesField = fields.exists(_.getName == "values")
+      val setters        = cls.getMethods.toSeq
         .filter(_.getName.startsWith("with"))
-        .filter(m => !optionSetters || m.getName.takeWhile(_ != '$') != "withValues")
+        .filter { m =>
+          !optionSetters || m.getName.takeWhile(_ != '$') != "withValues" ||
+          (hasValuesField && m.getName == "withValues" && m.getParameterCount == 1)
+        }
         .groupBy(_.getName)
       assert(fields.nonEmpty)
       for (field <- fields) {

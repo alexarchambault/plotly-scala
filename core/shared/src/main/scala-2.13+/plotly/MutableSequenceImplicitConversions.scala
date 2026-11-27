@@ -1,6 +1,6 @@
 package plotly
 
-import plotly.Sequence.{DateTimes, Doubles, NestedDoubles, NestedInts, Strings}
+import plotly.Sequence.{DateTimes, Doubles, NestedDoubles, NestedInts, NestedStrings, Strings}
 import plotly.element.LocalDateTime
 
 import scala.collection.{Seq => BaseScalaSeq}
@@ -24,5 +24,7 @@ trait MutableSequenceImplicitConversions {
     Strings(s.toSeq)
   implicit def fromMutableDateTimes(seq: BaseScalaSeq[LocalDateTime]): Sequence =
     DateTimes(seq.toSeq)
+  implicit def fromMutableNestedStringSeq(s: BaseScalaSeq[BaseScalaSeq[String]]): Sequence =
+    NestedStrings(s.map(_.toSeq).toSeq)
 
 }

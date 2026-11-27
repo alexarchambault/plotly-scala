@@ -234,10 +234,15 @@ class DocumentationTests extends munit.FunSuite {
     "basic/line-plots",
     "basic/bar",
     "basic/horizontal-bar",
-    // TODO? Pie charts
+    "basic/pie",
+    "basic/sunburst",
+    "basic/sankey",
+    "basic/treemap",
     "financial/time-series",
     "financial/candlestick-charts",
-//    "financial/ohlc",
+    "financial/ohlc",
+    "financial/waterfall",
+    "financial/funnel",
     "basic/bubble",
     "basic/area",
     "fundamentals/sizing",
@@ -254,24 +259,43 @@ class DocumentationTests extends munit.FunSuite {
     // TODO 2D Density plots
     "statistical/histogram",
     "scientific/heatmap",
-    // TODO 2D Histograms
-    // TODO Wind rose charts
-    // TODO Contour plots
+    "statistical/histogram2d",
+    "statistical/histogram2dcontour",
+    "scientific/wind-rose",
+    "scientific/contour",
     // TODO Heatmaps
     // TODO Heatmap and contour colorscales
-    // TODO Polar charts
+    "scientific/scatterpolar",
+    "scientific/radar",
     "scientific/log",
     // TODO Financial charts
     // TODO Maps
-    "3d/3d-surface"
+    "3d/3d-surface",
+    "3d/3d-scatter",
+    "3d/3d-line"
   )
 
   val subDirs = subDirNames.map(new File(dir, _))
+
+  // posts that can't be run or decoded, for reasons unrelated to plotly-scala
+  val ignoredPosts = Map(
+    "basic/pie/2020-01-14-inside-text-orientation.html"              -> "its layout is an array rather than an object",
+    "financial/waterfall/2015-04-09-horizontal-waterfall-chart.html" ->
+      "its connector line has dash: 0, that isn't a dash style (and plotly-scala doesn't support autorange: reversed yet)",
+    "financial/waterfall/2015-04-09-style-waterfall.html" -> "deep sky blue isn't a valid color",
+    "financial/funnel/2019-06-27-multi-funnelarea.html"   -> "its layout has showlegend: 'true', a string",
+    "financial/funnel/2019-06-27-stacked-funnel.html"     -> "its layout has showlegend: 'True', a string",
+    "financial/funnel/2019-06-27-funnelarea.html"         ->
+      "its shapes have numbers as x0 and x1, that plotly-scala's Shape only accepts as strings",
+    "3d/3d-line/2015-04-09-simple-3d-line+markers.html" ->
+      "its marker size isn't an integer, that plotly-scala's Marker only accepts"
+  )
 
   for {
     subDir <- subDirs
     post   <- subDir.listFiles().sorted
     if !post.getName.startsWith(".")
+    ignoreReason = ignoredPosts.get(dir.toPath.relativize(post.toPath).toString)
   } {
     test(post.getPath) {
       val rawContent = new String(Files.readAllBytes(post.toPath), "UTF-8")
@@ -296,8 +320,20 @@ class DocumentationTests extends munit.FunSuite {
           ""
         )
 
-      if (content.contains("d3.csv"))
-        println(s"Ignoring $post (d3.csv not implemented)")
+      // the pages of the documentation (rather than its examples) have a permalink, like the index
+      // pages of each chart type, that list their examples
+      val isPage = rawContent.linesIterator
+        .drop(1)
+        .takeWhile(_ != "---")
+        .exists(
+          _.startsWith("permalink:")
+        )
+      if (ignoreReason.nonEmpty)
+        println(s"Ignoring $post (${ignoreReason.get})")
+      else if (isPage)
+        println(s"Ignoring $post (documentation page)")
+      else if (content.contains("d3.csv") || content.contains("d3.json"))
+        println(s"Ignoring $post (d3.csv and d3.json not implemented)")
       else {
 
         val lines = content.linesIterator.toVector

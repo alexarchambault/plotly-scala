@@ -48,5 +48,32 @@ import plotly.element._
     scattermode: Option[ScatterLayoutMode] = None,
     scattergap: Option[Double] = None,
     // in pixels (plotly.js also accepts a percentage of the bar width, like "25%")
-    barcornerradius: Option[Double] = None
+    barcornerradius: Option[Double] = None,
+    // default colors of the sectors of pie traces
+    piecolorway: Option[Seq[Color]] = None,
+    hiddenlabels: Option[Seq[String]] = None,
+    violinmode: Option[BoxMode] = None,
+    violingap: Option[Double] = None,
+    violingroupgap: Option[Double] = None,
+    waterfallmode: Option[BoxMode] = None,
+    waterfallgap: Option[Double] = None,
+    waterfallgroupgap: Option[Double] = None,
+    funnelmode: Option[BarMode] = None,
+    funnelgap: Option[Double] = None,
+    funnelgroupgap: Option[Double] = None,
+    funnelareacolorway: Option[Seq[Color]] = None,
+    polar: Option[Polar] = None,
+    polar2: Option[Polar] = None,
+    polar3: Option[Polar] = None,
+    polar4: Option[Polar] = None,
+    sunburstcolorway: Option[Seq[Color]] = None,
+    treemapcolorway: Option[Seq[Color]] = None,
+    iciclecolorway: Option[Seq[Color]] = None,
+    extendsunburstcolors: Option[Boolean] = None,
+    extendtreemapcolors: Option[Boolean] = None,
+    extendiciclecolors: Option[Boolean] = None,
+    extendpiecolors: Option[Boolean] = None,
+    extendfunnelareacolors: Option[Boolean] = None,
+    coloraxis: Option[ColorAxis] = None,
+    coloraxis2: Option[ColorAxis] = None
 )
