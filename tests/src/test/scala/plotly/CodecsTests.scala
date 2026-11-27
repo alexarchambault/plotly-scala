@@ -346,6 +346,20 @@ class CodecsTests extends munit.FunSuite {
     )
   }
 
+  test("Trace codec should round-trip selection styles") {
+    roundTrip(
+      Scatter(Seq(1.0, 2.0)).withValues(
+        selectedpoints = Seq(1),
+        selected =
+          Selection().withValues(marker = SelectionMarker().withValues(color = Color.StringColor("red"), size = 12.0)),
+        unselected = Selection().withValues(
+          marker = SelectionMarker().withValues(opacity = 0.3),
+          textfont = SelectionTextFont().withValues(color = Color.StringColor("gray"))
+        )
+      )
+    )
+  }
+
   test("Trace codec should reject unknown enum values") {
     assert(Try(readFromString[Trace]("""{"y": [1], "textposition": "nowhere"}""")).isFailure)
   }

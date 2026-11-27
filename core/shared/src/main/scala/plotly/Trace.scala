@@ -76,7 +76,9 @@ sealed abstract class Trace extends Product with Serializable
     orientation: Option[Orientation] = None,
     alignmentgroup: Option[String] = None,
     offsetgroup: Option[String] = None,
-    cliponaxis: Option[Boolean] = None
+    cliponaxis: Option[Boolean] = None,
+    selected: Option[Selection] = None,
+    unselected: Option[Selection] = None
 ) extends Trace
 
 object Scatter {
@@ -147,7 +149,9 @@ object Scatter {
     xaxis: Option[AxisReference] = None,
     yaxis: Option[AxisReference] = None,
     alignmentgroup: Option[String] = None,
-    offsetgroup: Option[String] = None
+    offsetgroup: Option[String] = None,
+    selected: Option[Selection] = None,
+    unselected: Option[Selection] = None
 ) extends Trace
 
 object Box {
@@ -260,7 +264,9 @@ object Box {
     yhoverformat: Option[String] = None,
     alignmentgroup: Option[String] = None,
     offsetgroup: Option[String] = None,
-    cliponaxis: Option[Boolean] = None
+    cliponaxis: Option[Boolean] = None,
+    selected: Option[Selection] = None,
+    unselected: Option[Selection] = None
 ) extends Trace
 
 @data(
@@ -315,7 +321,9 @@ object Box {
     orientation: Option[Orientation] = None,
     alignmentgroup: Option[String] = None,
     offsetgroup: Option[String] = None,
-    cliponaxis: Option[Boolean] = None
+    cliponaxis: Option[Boolean] = None,
+    selected: Option[Selection] = None,
+    unselected: Option[Selection] = None
 ) extends Trace
 
 object Histogram {
@@ -807,7 +815,9 @@ object Histogram2dContour {
     zorder: Option[Int] = None,
     selectedpoints: Option[Seq[Int]] = None,
     xhoverformat: Option[String] = None,
-    yhoverformat: Option[String] = None
+    yhoverformat: Option[String] = None,
+    selected: Option[Selection] = None,
+    unselected: Option[Selection] = None
 ) extends Trace
 
 object Violin {
@@ -1171,7 +1181,9 @@ object Scatter3d {
     texttemplate: Option[OneOrSeq[String]] = None,
     texttemplatefallback: Option[Element] = None,
     selectedpoints: Option[Seq[Int]] = None,
-    cliponaxis: Option[Boolean] = None
+    cliponaxis: Option[Boolean] = None,
+    selected: Option[Selection] = None,
+    unselected: Option[Selection] = None
 ) extends Trace
 
 object ScatterPolar {
@@ -1227,7 +1239,9 @@ object ScatterPolar {
     hoverlabel: Option[HoverLabel] = None,
     texttemplate: Option[OneOrSeq[String]] = None,
     texttemplatefallback: Option[Element] = None,
-    selectedpoints: Option[Seq[Int]] = None
+    selectedpoints: Option[Seq[Int]] = None,
+    selected: Option[Selection] = None,
+    unselected: Option[Selection] = None
 ) extends Trace
 
 object ScatterPolarGl {
@@ -1278,7 +1292,9 @@ object ScatterPolarGl {
     uirevision: Option[Element] = None,
     hovertemplatefallback: Option[Element] = None,
     hoverlabel: Option[HoverLabel] = None,
-    selectedpoints: Option[Seq[Int]] = None
+    selectedpoints: Option[Seq[Int]] = None,
+    selected: Option[Selection] = None,
+    unselected: Option[Selection] = None
 ) extends Trace
 
 object BarPolar {

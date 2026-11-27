@@ -34,7 +34,8 @@ import scalatags.JsDom.tags2
       ("#ab63fa", "#d2a6ff"),
       Seq(
         lineandscatter.CategoricalDotPlot,
-        lineandscatter.GroupedScatterPlot
+        lineandscatter.GroupedScatterPlot,
+        lineandscatter.HighlightedPoints
       )
     ),
     Category(
