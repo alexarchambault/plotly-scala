@@ -505,7 +505,8 @@ object Histogram {
     transpose: Option[Boolean] = None,
     xtype: Option[CoordinateType] = None,
     ytype: Option[CoordinateType] = None,
-    zauto: Option[Boolean] = None
+    zauto: Option[Boolean] = None,
+    coloraxis: Option[String] = None
 ) extends Trace
 
 object Heatmap {
@@ -686,7 +687,8 @@ object Heatmap {
     zhoverformat: Option[String] = None,
     textfont: Option[Font] = None,
     xtype: Option[CoordinateType] = None,
-    ytype: Option[CoordinateType] = None
+    ytype: Option[CoordinateType] = None,
+    coloraxis: Option[String] = None
 ) extends Trace
 
 object Contour {
@@ -756,7 +758,8 @@ object Contour {
     yhoverformat: Option[String] = None,
     zhoverformat: Option[String] = None,
     textfont: Option[Font] = None,
-    zauto: Option[Boolean] = None
+    zauto: Option[Boolean] = None,
+    coloraxis: Option[String] = None
 ) extends Trace
 
 object Histogram2d {
@@ -824,7 +827,8 @@ object Histogram2d {
     yhoverformat: Option[String] = None,
     zhoverformat: Option[String] = None,
     textfont: Option[Font] = None,
-    zauto: Option[Boolean] = None
+    zauto: Option[Boolean] = None,
+    coloraxis: Option[String] = None
 ) extends Trace
 
 object Histogram2dContour {

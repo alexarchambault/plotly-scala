@@ -123,7 +123,8 @@ import scalatags.JsDom.tags2
         heatmaps.CategoricalAxisHeatmap,
         heatmaps.CustomColorScaleHeatmap,
         heatmaps.AnnotatedHeatmap,
-        heatmaps.HeatmapWithText
+        heatmaps.HeatmapWithText,
+        heatmaps.SharedColorAxis
       )
     ),
     Category(

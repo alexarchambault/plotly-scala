@@ -76,6 +76,7 @@ class SettersTests extends munit.FunSuite {
     classOf[Domain]                 -> true,
     classOf[LegendGroupTitle]       -> true,
     classOf[Selection]              -> true,
+    classOf[ColorAxis]              -> true,
     classOf[SurfaceContours]        -> true,
     classOf[SurfaceContour]         -> true,
     classOf[Projection]             -> true,

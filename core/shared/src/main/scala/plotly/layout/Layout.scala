@@ -73,5 +73,7 @@ import plotly.element._
     extendtreemapcolors: Option[Boolean] = None,
     extendiciclecolors: Option[Boolean] = None,
     extendpiecolors: Option[Boolean] = None,
-    extendfunnelareacolors: Option[Boolean] = None
+    extendfunnelareacolors: Option[Boolean] = None,
+    coloraxis: Option[ColorAxis] = None,
+    coloraxis2: Option[ColorAxis] = None
 )

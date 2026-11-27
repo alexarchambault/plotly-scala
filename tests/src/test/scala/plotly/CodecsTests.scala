@@ -478,6 +478,15 @@ class CodecsTests extends munit.FunSuite {
     roundTrip(Surface().withValues(opacityscale = OpacityScale.NamedScale("extremes")))
   }
 
+  test("Codecs should round-trip color axes") {
+    roundTrip(Heatmap(Seq(Seq(1.0, 2.0))).withValues(coloraxis = "coloraxis"))
+    val layout = Layout().withValues(
+      coloraxis = ColorAxis().withValues(colorscale = ColorScale.NamedScale("Viridis"), cmin = 0.0, cmax = 10.0),
+      coloraxis2 = ColorAxis().withValues(showscale = false)
+    )
+    assertEquals(readFromString[Layout](writeToString(layout)), layout)
+  }
+
   test("Trace codec should reject unknown enum values") {
     assert(Try(readFromString[Trace]("""{"y": [1], "textposition": "nowhere"}""")).isFailure)
   }

@@ -30,5 +30,6 @@ import dataclass.{data, since}
     showscale: Option[Boolean] = None,
     colorbar: Option[ColorBar] = None,
     backoff: Option[OneOrSeq[Double]] = None,
-    simplify: Option[Boolean] = None
+    simplify: Option[Boolean] = None,
+    coloraxis: Option[String] = None
 )
