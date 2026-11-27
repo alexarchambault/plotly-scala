@@ -404,6 +404,28 @@ class CodecsTests extends munit.FunSuite {
     assertEquals(ujson.read(json)("error_y")("type"), ujson.Str("sqrt"))
   }
 
+  test("Trace codec should round-trip bar and histogram attributes") {
+    roundTrip(
+      Bar(Seq("a", "b"), Seq(3.0, 4.0)).withValues(
+        textangle = 0.0,
+        constraintext = ConstrainText.Both,
+        insidetextanchor = InsideTextAnchor.Start,
+        insidetextfont = Font(10),
+        offset = -0.2,
+        error_x = Error.Percent(5.0)
+      )
+    )
+    roundTrip(
+      Histogram(Seq(1.0, 2.0, 2.5)).withValues(
+        nbinsx = 20,
+        bingroup = "g",
+        textposition = BarTextPosition.Outside,
+        cumulative =
+          Cumulative(true).withValues(direction = CumulativeDirection.Decreasing, currentbin = CurrentBin.Half)
+      )
+    )
+  }
+
   test("Trace codec should reject unknown enum values") {
     assert(Try(readFromString[Trace]("""{"y": [1], "textposition": "nowhere"}""")).isFailure)
   }

@@ -311,6 +311,18 @@ class SchemaTests extends munit.FunSuite {
     compareValues(values(scatter("marker")("angleref")), Enumerate[MarkerAngleRef].apply().map(_.label).toSet)
   }
 
+  test("Bar and histogram enums should be exhaustive") {
+    val histogram              = SchemaTests.traceAttributes("histogram")
+    def values(v: ujson.Value) = v("values").arr.map(_.str).toSet
+    compareValues(values(histogram("constraintext")), Enumerate[ConstrainText].apply().map(_.label).toSet)
+    compareValues(values(histogram("insidetextanchor")), Enumerate[InsideTextAnchor].apply().map(_.label).toSet)
+    compareValues(
+      values(histogram("cumulative")("direction")),
+      Enumerate[CumulativeDirection].apply().map(_.label).toSet
+    )
+    compareValues(values(histogram("cumulative")("currentbin")), Enumerate[CurrentBin].apply().map(_.label).toSet)
+  }
+
   test("Text position should be exhaustive") {
     val fromSchema = SchemaTests
       .enumeratedAttributeValues("scatter", "textposition")

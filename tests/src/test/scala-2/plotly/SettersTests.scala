@@ -94,7 +94,7 @@ class SettersTests extends munit.FunSuite {
     classOf[Color.StringColor]      -> false,
     classOf[ColorScale.CustomScale] -> false,
     classOf[ColorScale.NamedScale]  -> false,
-    classOf[Cumulative]             -> false,
+    classOf[Cumulative]             -> true,
     classOf[LocalDateTime]          -> false,
     classOf[ScatterMode]            -> false,
     classOf[Symbol.Circle]          -> false,

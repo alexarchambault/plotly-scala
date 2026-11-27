@@ -269,7 +269,15 @@ object Box {
     offsetgroup: Option[String] = None,
     cliponaxis: Option[Boolean] = None,
     selected: Option[Selection] = None,
-    unselected: Option[Selection] = None
+    unselected: Option[Selection] = None,
+    textfont: Option[Font] = None,
+    insidetextfont: Option[Font] = None,
+    outsidetextfont: Option[Font] = None,
+    textangle: Option[Double] = None,
+    constraintext: Option[ConstrainText] = None,
+    insidetextanchor: Option[InsideTextAnchor] = None,
+    offset: Option[OneOrSeq[Double]] = None,
+    error_x: Option[Error] = None
 ) extends Trace
 
 @data(
@@ -326,7 +334,21 @@ object Box {
     offsetgroup: Option[String] = None,
     cliponaxis: Option[Boolean] = None,
     selected: Option[Selection] = None,
-    unselected: Option[Selection] = None
+    unselected: Option[Selection] = None,
+    textfont: Option[Font] = None,
+    insidetextfont: Option[Font] = None,
+    outsidetextfont: Option[Font] = None,
+    textangle: Option[Double] = None,
+    textposition: Option[BarTextPosition] = None,
+    constraintext: Option[ConstrainText] = None,
+    insidetextanchor: Option[InsideTextAnchor] = None,
+    error_x: Option[Error] = None,
+    error_y: Option[Error] = None,
+    nbinsx: Option[Int] = None,
+    nbinsy: Option[Int] = None,
+    ybins: Option[Bins] = None,
+    autobiny: Option[Boolean] = None,
+    bingroup: Option[String] = None
 ) extends Trace
 
 object Histogram {
@@ -895,7 +917,10 @@ object Violin {
     yperiodalignment: Option[PeriodAlignment] = None,
     xhoverformat: Option[String] = None,
     yhoverformat: Option[String] = None,
-    cliponaxis: Option[Boolean] = None
+    cliponaxis: Option[Boolean] = None,
+    textangle: Option[Double] = None,
+    constraintext: Option[ConstrainText] = None,
+    insidetextanchor: Option[InsideTextAnchor] = None
 ) extends Trace
 
 object Waterfall {
@@ -966,7 +991,10 @@ object Waterfall {
     yperiodalignment: Option[PeriodAlignment] = None,
     xhoverformat: Option[String] = None,
     yhoverformat: Option[String] = None,
-    cliponaxis: Option[Boolean] = None
+    cliponaxis: Option[Boolean] = None,
+    textangle: Option[Double] = None,
+    constraintext: Option[ConstrainText] = None,
+    insidetextanchor: Option[InsideTextAnchor] = None
 ) extends Trace
 
 object Funnel {

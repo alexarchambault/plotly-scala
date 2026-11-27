@@ -131,6 +131,7 @@ import scalatags.JsDom.tags2
       Seq(
         histogram.BasicHistogram,
         histogram.StyledBasicHistogram,
+        histogram.CumulativeHistogram,
         histogram.BivariateNormalHistogram,
         histogram.HistogramContourWithPoints
       )
