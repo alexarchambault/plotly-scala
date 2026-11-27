@@ -115,6 +115,34 @@ Seq(
 ).plot("plot.html", Layout().withValues(title = "Level"))
 ```
 
+### Raw plotly.js figures
+
+Figures can also be passed as "raw" plotly.js JSON, like what `fig.to_json()` returns in plotly-python, or a figure from the plotly.js documentation. This JSON is passed to plotly.js as is, so it can use any plotly.js feature, even those that plotly-scala doesn't support yet. It must be a JSON object, with `data`, and optionally `layout`, `config`, or `frames`, fields:
+```scala
+val figure =
+  """{
+    "data": [{"type": "sankey", "node": {"label": ["A", "B", "C"]},
+              "link": {"source": [0, 0], "target": [1, 2], "value": [8, 4]}}],
+    "layout": {"title": {"text": "Flows"}}
+  }"""
+```
+Plot it with
+```scala
+// from almond
+plotly.Almond.plotJson(figure)
+
+// from Scala.js, attaching it to the div element with id 'plot'
+plotly.Plotly.plotJson("plot", figure)
+// or via Plotly.newPlot / Plotly.react
+plotly.Plotly.react.fromJson("plot", figure)
+
+// on the JVM, writing an HTML file and opening it in a browser
+plotly.Plotly.plotJson("plot.html", figure, title = "Flows")
+// or get the JavaScript plotting it in a div element with id 'plot'
+plotly.Plotly.jsSnippetFromJson("plot", figure)
+```
+These methods throw an `IllegalArgumentException` if `figure` isn't a valid JSON object.
+
 
 ## Rationale
 
